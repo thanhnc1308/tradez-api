@@ -140,7 +140,7 @@ cython_debug/
 # Pycharm
 .idea/
 
-db/
-db
-db/docker-compose.yml
+dbconfig/
+dbconfig
+dbconfig/docker-compose.yml
 business/crawler/data/
