@@ -1,11 +1,15 @@
+"""
+Relative Strength Index
+"""
 import statistics as stats
 import pandas as pd
 
 
-def calculate(df, time_period=20):
+def calculate(df, length=20, source='Close'):
     """
+    :param source: Open Close High Low
     :param df: data
-    :param time_period: look back period to compute gains & losses
+    :param length: look back period to compute gains & losses
     :return:
     """
     gain_history = []  # history of gains over look back period (0 if no gain, magnitude of gain if gain
@@ -14,7 +18,7 @@ def calculate(df, time_period=20):
     avg_loss_values = []  # track avg losses for visualization purposes
     rsi_values = []  # track computed RSI values
     last_price = 0  # current_price - last_price > 0 => gain. current_price - last_price < 0 => loss.
-    close = df['Close']
+    close = df[source]
     for close_price in close:
         if last_price == 0:
             last_price = close_price
@@ -22,7 +26,7 @@ def calculate(df, time_period=20):
         loss_history.append(max(0, last_price - close_price))
         last_price = close_price
         # maximum observations is equal to lookback period
-        if len(gain_history) > time_period:
+        if len(gain_history) > length:
             del (gain_history[0])
             del (loss_history[0])
 

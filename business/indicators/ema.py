@@ -1,13 +1,16 @@
+"""
+Exponential Moving Average
+"""
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 
-def calculate(df, num_periods=20):
-    smooth_coefficient = 2 / (num_periods + 1)  # smoothing constant
+def calculate(df, length=20, source='Close'):
+    smooth_coefficient = 2 / (length + 1)  # smoothing constant
     ema_p = 0
     ema_values = []  # to hold computed EMA values
-    close = df['Close']
+    close = df[source]
     for close_price in close:
         if ema_p == 0:  # first observation, EMA = current-price
             ema_p = close_price
