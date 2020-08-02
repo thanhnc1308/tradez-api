@@ -1,0 +1,12 @@
+version: '3'
+services:
+  database:
+    image: "postgres"
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: 12345678@Abc
+      POSTGRES_DB: trading_system
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./trading_system:/var/lib/postgresql/data/
