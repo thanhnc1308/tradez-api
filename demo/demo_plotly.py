@@ -14,4 +14,4 @@ fig.update_layout(
     title='The BTC-USD Chart',
     yaxis_title='Price in $'
 )
-plotly.show_candlestick_patterns(fig=fig,df=data,filter_fn=single_candle.is_doji)
+plotly.show_candlestick_patterns(fig=fig, df=data, filter_fn=single_candle.is_doji)

@@ -144,3 +144,4 @@ dbconfig/
 dbconfig
 dbconfig/docker-compose.yml
 business/crawler/data/
+migrations
