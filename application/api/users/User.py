@@ -13,7 +13,8 @@ class User(db.Model):
     facebook = db.Column(db.String(100), unique=True)
     telegram = db.Column(db.String(100), unique=True)
 
-    def __init__(self, username, email, password, facebook, telegram):
+    def __init__(self, username, email, password, facebook, telegram, id=uuid.uuid4()):
+        self.id = id
         self.username = username
         self.email = email
         self.password = password
@@ -23,3 +24,6 @@ class User(db.Model):
     def __repr__(self):
         return "<User %s>" % self.username
 
+    def save(self):
+        db.session.add(self)
+        db.session.commit()
