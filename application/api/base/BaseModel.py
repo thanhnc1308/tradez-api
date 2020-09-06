@@ -51,6 +51,10 @@ class BaseModel(CRUDMixin, db.Model):
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
+    # __mapper_args__ = {
+    #     "order_by": created_at
+    # }
+
 
 # class SurrogatePK(object):
 #     """A mixin that adds a surrogate integer 'primary key' column named

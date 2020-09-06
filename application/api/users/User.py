@@ -16,6 +16,13 @@ class User(BaseModel):
     facebook = db.Column(db.String(100), unique=True)
     telegram = db.Column(db.String(100), unique=True)
 
+    __mapper_args__ = {
+        "order_by": username
+    }
+
+    # trading_logs = db.relationship('trading_log', backref='users', lazy='select')
+    # emails = db.relationship("ContactEmail", back_populates="contact", cascade="all, delete-orphan")
+
     def __init__(self, username, email, password, facebook, telegram, **kwargs):
         db.Model.__init__(
             self,

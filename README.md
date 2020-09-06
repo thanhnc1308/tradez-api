@@ -9,7 +9,7 @@
 2. Init database
 ./manage.py flask db init
 - creating models we will use the commands 
-./manage.py flask db migrate 
+./manage.py flask db migrate
 ./manage.py flask db upgrade
 2. Run flask with config
 - Run by flask command line: FLASK_CONFIG="development" flask run
@@ -76,3 +76,6 @@ opbeat = Opbeat()
 # Done
 - paging_filter, flask-httpauth, reference column
 https://github.com/joshfriend/flask-restful-demo
+- StockController: Schema marshmallow, api blueprint
+https://github.com/erdem/flask-restful-example
+- 

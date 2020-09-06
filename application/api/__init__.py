@@ -5,6 +5,7 @@ from flask_restful import Api, fields
 
 api_blueprint = Blueprint("api", __name__, url_prefix='/api')
 api = Api(api_blueprint)
+# api.prefix = '/apiv2'
 
 # Marshaled fields for links in meta section
 link_fields = {
