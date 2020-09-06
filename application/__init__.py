@@ -1,6 +1,5 @@
 from flask import Flask
-from flask_restful import Api
-from application.api.users import UserListController, UserController
+from application.api import api_blueprint
 from application.extensions import db, migrate, jwt
 
 
@@ -36,6 +35,5 @@ def configure_extensions(app):
 
 
 def configure_blueprint(app):
-    api = Api(app)
-    api.add_resource(UserListController.UserListController, '/users', endpoint='users')
-    api.add_resource(UserController.UserController, '/user/<string:id>', endpoint='user')
+    app.register_blueprint(api_blueprint)
+

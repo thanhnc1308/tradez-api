@@ -2,11 +2,13 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_jwt import JWT
+from flask_httpauth import HTTPBasicAuth
 # from flask_cache import Cache
 
 db = SQLAlchemy()
 migrate = Migrate()
 jwt = JWT()
+auth = HTTPBasicAuth()
 # cache = Cache()
 
 login_manager = LoginManager()

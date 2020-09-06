@@ -54,3 +54,25 @@ ubuntu-advantage-tools==20.3
 toml==0.10.1
 ubuntu-drivers-common==0.0.0
 SQLAlchemy==1.3.19
+
+# To learn
+@wraps(func)
+    def wrapper(*args, **kwargs):
+make_response
+decorators
+@staticmethod
+@property
+updated_at = db.Column(db.DateTime(), nullable=False, default=lambda: datetime.utcnow())
+created_at = db.Column(db.DateTime(), nullable=False, default=lambda: datetime.utcnow())
+def __init__(self,*args,**kwargs):
+from flask_login import login_required, login_user, logout_user
+from werkzeug.security import check_password_hash
+@functools.wraps(func)
+    def wrapper(*args, **kwargs):
+@post_load
+from opbeat.contrib.flask import Opbeat
+opbeat = Opbeat()
+
+# Done
+- paging_filter, flask-httpauth, reference column
+https://github.com/joshfriend/flask-restful-demo
