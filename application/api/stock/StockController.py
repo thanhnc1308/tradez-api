@@ -7,11 +7,11 @@ from application.api.stock.StockSchema import stock_schema, stock_list_schema
 stock_api = Blueprint('stock_api', __name__, url_prefix='/api/stock')
 
 
-@stock_api.route('/', methods=["GET"])
-@stock_api.route('/<string:index>/', methods=["GET"])
-def retrieve_stock(index=None):
-    if index:
-        stock = Stock.query.filter_by(index=index).first_or_404()
+@stock_api.route('', methods=["GET"])
+@stock_api.route('<string:id>', methods=["GET"])
+def retrieve_stock(id=None):
+    if id:
+        stock = Stock.query.filter_by(id=id).first_or_404()
         res = stock_schema.dump(stock)
         return res, HTTPStatus.OK
 
@@ -30,9 +30,9 @@ def create_stock():
     return stock_schema.dump(stock_schema.instance), HTTPStatus.CREATED
 
 
-@stock_api.route('/<string:index>/', methods=["PUT", "PATCH"])
-def update_stock(index):
-    stock = Stock.query.filter_by(index=index).first_or_404()
+@stock_api.route('/<string:id>', methods=["PUT", "PATCH"])
+def update_stock(id):
+    stock = Stock.query.filter_by(id=id).first_or_404()
 
     data = request.get_json()
 
@@ -50,8 +50,8 @@ def update_stock(index):
     return stock_schema.dump(updated_stock), HTTPStatus.ACCEPTED
 
 
-@stock_api.route('/<string:index>/', methods=["DELETE"])
-def delete_stock(index):
-    stock = Stock.query.filter_by(index=index).first_or_404()
+@stock_api.route('/<string:id>', methods=["DELETE"])
+def delete_stock(id):
+    stock = Stock.query.filter_by(id=id).first_or_404()
     stock.delete()
-    return index, HTTPStatus.NO_CONTENT
+    return jsonify(id), HTTPStatus.NO_CONTENT
