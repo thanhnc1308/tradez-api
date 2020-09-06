@@ -78,4 +78,9 @@ opbeat = Opbeat()
 https://github.com/joshfriend/flask-restful-demo
 - StockController: Schema marshmallow, api blueprint
 https://github.com/erdem/flask-restful-example
-- 
+- pytest
+https://github.com/alexandre-old/flask-rest-template
+- MongoEngine
+https://github.com/alexandre-old/flask-rest-template
+- middlewares and admin
+https://github.com/solnsumei/flask-rest-api-setup

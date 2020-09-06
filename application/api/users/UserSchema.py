@@ -1,16 +1,26 @@
-from marshmallow import Schema, fields, post_load, validates, ValidationError
+from marshmallow import Schema, fields, post_load, validates, ValidationError, validate
 
 
 class UserSchema(Schema):
     id = fields.Str(dump_only=True)
     username = fields.Str(required=True)
     password = fields.Str(required=True)
-    email = fields.Str(required=True)
+    # password = fields.Str(load_only=True, required=True, validate=lambda p: validate_len(p, 8)) # validate_len from validators.py
+    email = fields.Email(required=True)
     facebook = fields.Str()
     telegram = fields.Str()
+    # phone = fields.Int(
+    #     validate=[validate.Length(min=11, max=15), lambda p: validate_len(p, 11)]
+    # )
     # emails = fields.Nested(ContactEmailSchema, many=True, required=True)
     created_at = fields.DateTime(dump_only=True)
     update_at = fields.DateTime(dump_only=True)
+
+    @post_load()
+    def user_details_strip(self, data):
+        data['email'] = data['email'].lower().strip()
+
+
     # uri = fields.Method("get_item_uri")
     #
     # def get_item_uri(self, obj):
@@ -69,3 +79,4 @@ class UserSchema(Schema):
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
+user_summary = UserSchema(exclude=('updated_at',))

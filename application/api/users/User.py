@@ -64,5 +64,9 @@ class User(BaseModel):
     def get_by_username(cls, username):
         return cls.query.filter_by(username=username).first()
 
+    @classmethod
+    def get_by_email(cls, email):
+        return cls.query.filter_by(email=email).first()
+
     def __repr__(self):
         return "<User %s>" % self.username

@@ -6,7 +6,7 @@
 import string
 import random
 import os
-
+import bson
 from datetime import datetime
 # import bson
 #
@@ -46,3 +46,12 @@ def make_dir(dir_path):
             os.mkdir(dir_path)
     except Exception as e:
         raise e
+
+
+def is_a_valid_object_id(object_id):
+    """Verify if the value is valid as an object id.
+    :object_id: a string object
+    :returns: True or False
+
+    """
+    return bson.objectid.ObjectId.is_valid(object_id)

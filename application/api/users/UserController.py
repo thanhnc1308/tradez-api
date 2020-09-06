@@ -8,6 +8,7 @@ from application.helpers import paginate
 from application.auth import self_only
 from application.extensions import auth
 from http import HTTPStatus
+from flask_jwt import jwt_required
 
 user_fields = {
     'id': fields.String,
@@ -33,8 +34,17 @@ user_parser.add_argument('facebook', type=str)
 user_parser.add_argument('telegram', type=str)
 
 
+def is_an_available_username(username):
+    """Verify if an username is available.
+    :username: a string object
+    :returns: True or False
+    """
+    return User.query.filter_by(username=username).first() is None
+
+
 class UserController(Resource):
     # @marshal_with(user_fields)
+    @jwt_required()
     def get(self, id=None, username=None):
         try:
             user = None
@@ -94,7 +104,10 @@ class UserListController(Resource):
 
     def post(self):
         try:
-            new_user = User.create(**user_parser.parse_args())
+            args = user_parser.parse_args()
+            # check if username is available
+            # if is_an_available_username(username=args['username'])
+            new_user = User.create(**args)
             # errors = user_schema.validate(request.form)
             # if errors:
             #     abort(400, str(errors))
