@@ -4,7 +4,6 @@ from application.api.stock.StockController import stock_api
 from application.extensions import db, migrate, jwt
 from werkzeug.exceptions import HTTPException
 from werkzeug.exceptions import default_exceptions
-from application.jwt import set_jwt_handlers
 
 
 def create_app(config_name):
@@ -14,7 +13,6 @@ def create_app(config_name):
     configure_hook(app)
     configure_blueprint(app)
     configure_extensions(app)
-    set_jwt_handlers(jwt)
 
     @app.errorhandler(Exception)
     def handle_error(e):
@@ -46,7 +44,7 @@ def configure_hook(app):
 
 def configure_extensions(app):
     db.init_app(app)
-    jwt.init_app(app)
+    # jwt.init_app(app)
     migrate.init_app(app, db)
 
 

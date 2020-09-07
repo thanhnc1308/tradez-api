@@ -1,5 +1,6 @@
 from webargs.flaskparser import use_args, use_kwargs
 from marshmallow import Schema, fields
+from application.api.base.PagingSchema import PagingSchema
 
 
 class BaseSchema(Schema):
@@ -30,5 +31,14 @@ class BaseSchema(Schema):
         return use_args(factory, **kwargs)
 
 
+class BaseListSchema(Schema):
+    __abstract__ = True
+
+    items = fields.List(fields.Nested(BaseSchema()))
+    meta = fields.Nested(PagingSchema())
+
+
 class SluggableSchema(BaseSchema):
     slug = fields.String(dump_only=True)
+
+

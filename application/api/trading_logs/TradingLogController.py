@@ -1,12 +1,10 @@
-from flask import abort, request
+from flask import abort
 from flask_restful import Resource, reqparse, marshal_with, fields
 
 from application.api import api, meta_fields
-from application.auth import self_only
 from application.api.trading_logs.TradingLog import TradingLog
 from application.api.users.User import User
 from application.helpers import paginate
-from application.extensions import auth
 
 trading_log_parser = reqparse.RequestParser()
 trading_log_parser.add_argument('user_id', type=str)

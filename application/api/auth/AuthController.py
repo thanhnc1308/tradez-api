@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from werkzeug.security import safe_str_cmp
 from application.api.users.User import User
-from application.api.users.UserSchema import UserSchema, user_schema, user_summary
+from application.api.users.UserSchema import UserSchema, user_schema
 from application.api import api
 
 
@@ -41,7 +41,7 @@ class Register(Resource):
 
         return {
             'success': True,
-            'user': user_summary.dump(user).data
+            'user': user_schema.dump(user).data
         }, 201
 
 

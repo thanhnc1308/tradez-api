@@ -1,15 +1,11 @@
 from application.extensions import db
-import uuid
-from sqlalchemy.dialects.postgresql import UUID
 from application.api.base.BaseModel import BaseModel
-from sqlalchemy.ext.hybrid import hybrid_property
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
 class User(BaseModel):
     __tablename__ = "users"
 
-    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     username = db.Column(db.String(100), nullable=False)
     email = db.Column(db.String(100), unique=True, nullable=False)
     password = db.Column(db.String(500), nullable=False)
@@ -19,9 +15,6 @@ class User(BaseModel):
     __mapper_args__ = {
         "order_by": username
     }
-
-    # trading_logs = db.relationship('trading_log', backref='users', lazy='select')
-    # emails = db.relationship("ContactEmail", back_populates="contact", cascade="all, delete-orphan")
 
     def __init__(self, username, email, password, facebook, telegram, **kwargs):
         db.Model.__init__(

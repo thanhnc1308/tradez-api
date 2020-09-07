@@ -96,33 +96,13 @@ class CRUDMixin(object):
 class BaseModel(CRUDMixin, db.Model):
     """Base model class that includes CRUD convenience methods."""
     __abstract__ = True
-    # id = db.Column(db.Integer, primary_key=True)
+    id = db.Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, unique=True, nullable=False)
     created_at = db.Column(db.DateTime, default=db.func.now())
-    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+    updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
     # __mapper_args__ = {
     #     "order_by": created_at
     # }
-
-
-# class SurrogatePK(object):
-#     """A mixin that adds a surrogate integer 'primary key' column named
-#     ``id`` to any declarative-mapped class.
-#     """
-#     __table_args__ = {'extend_existing': True}
-#
-#     id = db.Column(db.Integer, primary_key=True)
-#
-#     @classmethod
-#     def get_by_id(cls, id):
-#         if id <= 0:
-#             raise ValueError('ID must not be negative or zero!')
-#         if any(
-#             (isinstance(id, basestring) and id.isdigit(),
-#              isinstance(id, (int, float))),
-#         ):
-#             return cls.query.get(int(id))
-#         return None
 
 
 def ReferenceCol(tablename, nullable=False, pk_name='id', **kwargs):

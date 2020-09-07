@@ -1,12 +1,9 @@
 from flask import g, make_response, jsonify, abort, request
 from flask_restful import Resource, reqparse, fields, marshal, marshal_with
 from application.api.users.User import User
-from application.extensions import db
 from application.api import api, meta_fields
 from application.api.users.UserSchema import user_schema, users_schema
 from application.helpers import paginate
-from application.auth import self_only
-from application.extensions import auth
 from http import HTTPStatus
 from flask_jwt import jwt_required
 
@@ -43,8 +40,6 @@ def is_an_available_username(username):
 
 
 class UserController(Resource):
-    # @marshal_with(user_fields)
-    @jwt_required()
     def get(self, id=None, username=None):
         try:
             user = None
@@ -54,7 +49,6 @@ class UserController(Resource):
                 user = User.get_by_id(id)
             # user = User.query.get_or_404(id)
             # user = User.query.filter_by(username=username).first_or_404()
-            # user = db.session.query(User).filter(User.id == id).first()
             if not user:
                 abort(404, message="Not found")
             return user_schema.dump(user), HTTPStatus.OK
@@ -63,11 +57,7 @@ class UserController(Resource):
                 'error': str(e)
             }
 
-    # @auth.login_required
-    # @self_only
     def put(self, id):
-        # only authenticated global g.user can update
-        # g.user.update(**user_parser.parse_args())
         user = User.query.filter_by(id=id).first()
         if not user:
             abort(404, "Not found")
@@ -76,10 +66,7 @@ class UserController(Resource):
         # user = User.query.get_or_404(id)
         return user_schema.dump(user)
 
-    # @auth.login_required
-    # @self_only
     def delete(self, id):
-        # g.user.delete()
         user = User.query.filter_by(id=id).first()
         if not user:
             abort(404, "Not found")
