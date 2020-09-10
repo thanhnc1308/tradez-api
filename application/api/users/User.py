@@ -16,17 +16,9 @@ class User(BaseModel):
         "order_by": username
     }
 
-    def __init__(self, username, email, password, facebook, telegram, **kwargs):
-        db.Model.__init__(
-            self,
-            username=username,
-            email=email,
-            raw_password=password,
-            facebook=facebook,
-            telegram=telegram,
-            **kwargs
-        )
-        self.set_password(password)
+    def __init__(self, **kwargs):
+        db.Model.__init__(self, **kwargs)
+        self.set_password(kwargs.get('password'))
 
     @property
     def raw_password(self):
@@ -41,17 +33,6 @@ class User(BaseModel):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
-
-    @classmethod
-    def get_by_id(cls, user_id):
-        """
-        :rtype: object
-        :type user_id: int
-        """
-        try:
-            return User.query.filter_by(id=user_id).one()
-        except Exception as e:
-            return str(e)
 
     @classmethod
     def get_by_username(cls, username):

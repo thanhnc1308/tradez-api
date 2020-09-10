@@ -4,7 +4,7 @@ import functools
 from flask import request, url_for
 
 
-def paginate(max_per_page=100):
+def paginate(schema=None, max_per_page=100):
     def decorator(func):
         @functools.wraps(func)
         def wrapped(*args, **kwargs):
