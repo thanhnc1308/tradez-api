@@ -41,7 +41,7 @@ def paginate(schema=None, max_per_page=100):
                 'meta': meta
             }
 
-            return result, 200
+            return schema.dump(result), 200
         return wrapped
     return decorator
 
