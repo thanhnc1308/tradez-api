@@ -35,5 +35,5 @@ class UserListController(BaseListController):
             )
 
 
-api.add_resource(UserController, '/user/<string:id>', '/user/<username>', endpoint='user')
+api.add_resource(UserController, '/users/<string:id>', '/users/<username>', endpoint='user')
 api.add_resource(UserListController, '/users', endpoint='users')
