@@ -2,6 +2,7 @@ from flask import make_response, jsonify, abort, request
 from flask_restful import Resource
 from application.helpers import paginate
 from http import HTTPStatus
+from marshmallow import ValidationError
 
 
 class BaseController(Resource):
@@ -63,6 +64,10 @@ class BaseListController(Resource):
             new_item = self.model.create(**request.form)
             return {
                 'user': self.schema.dump(new_item)
+            }
+        except ValidationError as e:
+            return {
+                'message': str(e.valid_data)
             }
         except Exception as e:
             return {

@@ -3,20 +3,26 @@ from flask import Blueprint, jsonify
 from flask import request
 from application.api.stock.Stock import Stock
 from application.api.stock.StockSchema import stock_schema, stock_list_schema
+from application.helpers import verify_token
 
 stock_api = Blueprint('stock_api', __name__, url_prefix='/api/stock')
 
 
 @stock_api.route('', methods=["GET"])
 @stock_api.route('<string:id>', methods=["GET"])
-def retrieve_stock(id=None):
-    if id:
-        stock = Stock.query.filter_by(id=id).first_or_404()
-        res = stock_schema.dump(stock)
-        return res, HTTPStatus.OK
+@verify_token
+def retrieve_stock(current_user, id=None):
+    try:
+        print('current_user', current_user)
+        if id:
+            stock = Stock.query.filter_by(id=id).first_or_404()
+            res = stock_schema.dump(stock)
+            return res, HTTPStatus.OK
 
-    stock = Stock.query.all()
-    res = stock_list_schema.dump(stock)
+        stock = Stock.query.all()
+        res = stock_list_schema.dump(stock)
+    except Exception as e:
+        print(e)
     return jsonify(res), HTTPStatus.OK
 
 

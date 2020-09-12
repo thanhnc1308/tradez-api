@@ -1,12 +1,32 @@
 #!/usr/bin/env python3
+from flask import request, url_for, jsonify
+import jwt
+from functools import wraps
+from application.api.users.User import User
 
-import functools
-from flask import request, url_for
+
+def verify_token(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = None
+        if 'x-access-token' in request.headers:
+            token = request.headers['x-access-token']
+        if token is None:
+            return jsonify({"Message": "Token is missing"}), 401
+        try:
+            data = jwt.decode(token, 'SECRET_KEY')  # app.config['SECRET_KEY']
+            # current_user = User.query.filter_by(username=data['username']).first()
+            current_user = data
+            return f(current_user, *args, **kwargs)
+        except Exception as e:
+            print(e)
+            return jsonify({"Message": "Token is missing or invalid"}), 401
+    return decorator
 
 
 def paginate(schema=None, max_per_page=100):
     def decorator(func):
-        @functools.wraps(func)
+        @wraps(func)
         def wrapped(*args, **kwargs):
             page = request.args.get('page', 1, type=int)
             per_page = min(request.args.get('per_page', max_per_page,

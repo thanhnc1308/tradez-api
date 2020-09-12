@@ -3,6 +3,7 @@ from flask_sqlalchemy import get_debug_queries
 from application.api import api_blueprint
 from application.api.mail.MailController import mail_api
 from application.api.stock.StockController import stock_api
+from application.api.auth.AuthController import auth_api
 from application.extensions import db, migrate, jwt, mail
 from werkzeug.exceptions import HTTPException
 from werkzeug.exceptions import default_exceptions
@@ -54,6 +55,7 @@ def configure_blueprint(app):
     app.register_blueprint(api_blueprint)
     app.register_blueprint(stock_api)
     app.register_blueprint(mail_api)
+    app.register_blueprint(auth_api)
 
 
 def configure_mail_extension(app):

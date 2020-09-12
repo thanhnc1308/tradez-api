@@ -4,6 +4,7 @@ from application.api.users.UserSchema import user_schema, user_paging_schema
 from application.api.base.BaseController import BaseController, BaseListController
 from application.helpers import paginate
 from flask import make_response
+from application.helpers import verify_token
 
 
 def is_an_available_username(username):
@@ -25,6 +26,7 @@ class UserListController(BaseListController):
     paging_schema = user_paging_schema
 
     @paginate(schema=user_paging_schema, max_per_page=10)
+    # @verify_token
     def get(self):
         try:
             users = User.query

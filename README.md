@@ -84,3 +84,6 @@ https://github.com/alexandre-old/flask-rest-template
 https://github.com/alexandre-old/flask-rest-template
 - middlewares and admin
 https://github.com/solnsumei/flask-rest-api-setup
+
+# Problems
+- The following paths are ignored by one of your .gitignore files: dbconfig Use -f if you really want to add them.
