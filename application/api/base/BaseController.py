@@ -1,4 +1,4 @@
-from flask import make_response, jsonify, abort, request
+from flask import make_response, jsonify, abort, request, url_for
 from flask_restful import Resource
 from application.helpers import paginate
 from http import HTTPStatus
@@ -86,6 +86,40 @@ class BaseListController(Resource):
 class BasePagingController(Resource):
     model = None
     paging_schema = None
+
+    def get(self):
+        max_per_page = 10
+        page = request.args.get('page', 1, type=int)
+        per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
+
+        p = self.model.query.paginate(page, per_page)
+
+        meta = {
+            'page': page,
+            'per_page': per_page,
+            'total': p.total,
+            'pages': p.pages,
+        }
+
+        links = {}
+        if p.has_next:
+            links['next'] = url_for(request.endpoint, page=p.next_num,
+                                    per_page=per_page)
+        if p.has_prev:
+            links['prev'] = url_for(request.endpoint, page=p.prev_num,
+                                    per_page=per_page)
+        links['first'] = url_for(request.endpoint, page=1,
+                                 per_page=per_page)
+        links['last'] = url_for(request.endpoint, page=p.pages,
+                                per_page=per_page)
+
+        meta['links'] = links
+        result = {
+            'items': p.items,
+            'meta': meta
+        }
+
+        return self.paging_schema.dump(result), 200
 
     # @paginate(schema=paging_schema, max_per_page=10)
     # def get(self):

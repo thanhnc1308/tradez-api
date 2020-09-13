@@ -28,4 +28,4 @@ class UserListSchema(BaseListSchema):
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
-user_paging_schema = UserListSchema()
+users_paging_schema = UserListSchema()
