@@ -1,12 +1,12 @@
-from flask import Flask, jsonify
+from flask import Flask
 from flask_sqlalchemy import get_debug_queries
 from application.api.users.UserController import user_api
 from application.api.mail.MailController import mail_api
 from application.api.stock.StockController import stock_api
 from application.api.auth.AuthController import auth_api
 from application.extensions import db, migrate, jwt, mail
-from werkzeug.exceptions import HTTPException
 from werkzeug.exceptions import default_exceptions
+from application.helpers import get_error_response
 
 
 def create_app(config_name):
@@ -19,10 +19,7 @@ def create_app(config_name):
 
     @app.errorhandler(Exception)
     def handle_error(e):
-        code = 500
-        if isinstance(e, HTTPException):
-            code = e.code
-        return jsonify(error=str(e)), code
+        return get_error_response(e)
 
     for ex in default_exceptions:
         app.register_error_handler(ex, handle_error)

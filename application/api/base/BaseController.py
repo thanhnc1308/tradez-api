@@ -1,10 +1,7 @@
 from flask import make_response, jsonify, abort, request, url_for
 from flask_restful import Resource
-from application.helpers import paginate
 from http import HTTPStatus
 from marshmallow import ValidationError
-import traceback
-import sys
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -47,6 +44,7 @@ class BaseController(Resource):
 
 class BaseListController(Resource):
     model = None
+    schema = None
     list_schema = None
     paging_schema = None
 

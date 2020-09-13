@@ -2,7 +2,11 @@
 from flask import request, url_for, jsonify
 import jwt
 from functools import wraps
+from werkzeug.exceptions import HTTPException
 from application.api.users.User import User
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 
 def verify_token(f):
@@ -120,3 +124,17 @@ def paginate(schema=None, max_per_page=100):
 #             status_code, description, data])), status_code[-1]
 #
 #     return make_response
+
+
+def get_error_response(e):
+    logger.exception(e)
+    code = 500
+    message = str(e)
+    if isinstance(e, HTTPException):
+        code = e.code
+    if e.description:
+        message = e.description
+    return jsonify(error={
+        'type': e.__class__.__name__,
+        'message': message
+    }), code
