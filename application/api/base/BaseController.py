@@ -48,11 +48,16 @@ class BaseController(Resource):
 class BaseListController(Resource):
     model = None
     list_schema = None
+    paging_schema = None
 
     def get(self):
+        paging_filter = request.args.get('paging_filter', 1, type=int)
         try:
-            data = self.model.get_all()
-            return self.list_schema.dump(data)
+            if paging_filter == 1:
+                return self.get_paging()
+            else:
+                data = self.model.get_all()
+                return self.list_schema.dump(data)
         except Exception as e:
             logger.exception(e)
             # print(traceback.format_exc())
@@ -63,32 +68,8 @@ class BaseListController(Resource):
                 str(e)
             )
 
-    def post(self):
-        try:
-            print(request.form)
-            errors = self.schema.validate(request.form)
-            if errors:
-                abort(HTTPStatus.BAD_REQUEST, str(errors))
-            new_item = self.model.create(**request.form)
-            return {
-                'user': self.schema.dump(new_item)
-            }
-        except ValidationError as e:
-            return {
-                'message': str(e.valid_data)
-            }
-        except Exception as e:
-            return {
-                'message': str(e)
-            }
-
-
-class BasePagingController(Resource):
-    model = None
-    paging_schema = None
-
-    def get(self):
-        max_per_page = 10
+    def get_paging(self):
+        max_per_page = 100
         page = request.args.get('page', 1, type=int)
         per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
 
@@ -121,17 +102,21 @@ class BasePagingController(Resource):
 
         return self.paging_schema.dump(result), 200
 
-    # @paginate(schema=paging_schema, max_per_page=10)
-    # def get(self):
-    #     try:
-    #         data = self.model.query
-    #         return data
-    #     except Exception as e:
-    #         logger.exception(e)
-    #         # print(traceback.format_exc())
-    #         # traceback.print_exc()
-    #         # traceback.print_stack()
-    #         # print(sys.exc_info()[2])
-    #         return make_response(
-    #             str(e)
-    #         )
+    def post(self):
+        try:
+            print(request.form)
+            errors = self.schema.validate(request.form)
+            if errors:
+                abort(HTTPStatus.BAD_REQUEST, str(errors))
+            new_item = self.model.create(**request.form)
+            return {
+                'user': self.schema.dump(new_item)
+            }
+        except ValidationError as e:
+            return {
+                'message': str(e.valid_data)
+            }
+        except Exception as e:
+            return {
+                'message': str(e)
+            }
