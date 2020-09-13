@@ -87,3 +87,4 @@ https://github.com/solnsumei/flask-rest-api-setup
 
 # Problems
 - The following paths are ignored by one of your .gitignore files: dbconfig Use -f if you really want to add them.
+git check-ignore -v -f dbconfig

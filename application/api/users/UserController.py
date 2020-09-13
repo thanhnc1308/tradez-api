@@ -25,17 +25,6 @@ class UserListController(BaseListController):
     schema = user_schema
     paging_schema = user_paging_schema
 
-    @paginate(schema=user_paging_schema, max_per_page=10)
-    # @verify_token
-    def get(self):
-        try:
-            users = User.query
-            return users
-        except Exception as e:
-            return make_response(
-                str(e)
-            )
-
 
 api.add_resource(UserController, '/users/<string:id>', '/users/<username>', endpoint='user')
 api.add_resource(UserListController, '/users', endpoint='users')
