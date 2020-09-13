@@ -55,6 +55,16 @@ class BaseListController(Resource):
             if paging_filter == 1:
                 return self.get_paging()
             else:
+                # build query
+                # filters = []
+                # for conditions in query:
+                #     if conditions[0] == 'id':
+                #         filters.append(Member.id.in_(conditions[1].split(',')))
+                #     else:
+                #         for term in conditions[1].split(','):
+                #             filters.append(Member.__dict__[conditions[0]].ilike('%' + term + '%'))
+                # members = Member.query.filter(or_(*filters))
+                # db.users.filter(or_(db.users.name == 'Ryan', db.users.country == 'England'))
                 data = self.model.get_all()
                 return self.list_schema.dump(data)
         except Exception as e:

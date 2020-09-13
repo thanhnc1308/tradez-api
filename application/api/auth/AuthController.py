@@ -1,19 +1,25 @@
 from flask import Blueprint, request, jsonify, make_response
 import jwt
 import datetime
-import json
-from flask_restful import Resource
-from werkzeug.security import safe_str_cmp
 from application.api.users.User import User
-from application.api.users.UserSchema import UserSchema, user_schema
-# from application.api import api
+from application.api.users.UserSchema import user_schema
 
 auth_api = Blueprint('auth_api', __name__, url_prefix='/api/auth')
 
 
 @auth_api.route('/register', methods=['POST'])
 def register():
-    pass
+    data = request.form
+    user_schema.validate(data)
+    # if username is None or password is None:
+    #     abort(400)  # missing arguments
+    # if User.query.filter_by(username=username).first() is not None:
+    #     abort(400)  # existing user
+    new_user = User.create(data)
+    return {
+        'success': True,
+        'data': user_schema.dump(new_user)
+    }, 201
 
 
 @auth_api.route('/login', methods=['GET'])
@@ -29,8 +35,8 @@ def login():
         )
 
     # check if user exists
-    user = None
-    if user:
+    user = User.get_by_username(auth.username)
+    if not user:
         return make_response(
             'Could not verify',
             401,
@@ -40,7 +46,7 @@ def login():
         )
 
     # check password here
-    if True:
+    if user.check_password(auth.password):
         token = jwt.encode({
             'user': request.authorization.username,  # it's better to return a public_id field here
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
@@ -56,46 +62,3 @@ def login():
             'WWW-Authenticate': 'Basic realm="Login required"'
         }
     )
-
-
-# ref: https://github.com/solnsumei/flask-rest-api-setup
-# class Register(Resource):
-#     @staticmethod
-#     @UserSchema.validate_fields(locations=('json',))
-#     def post(args):
-#
-#         if not safe_str_cmp(args['password'], args['password_confirmation']):
-#             return {
-#                 'success': False,
-#                 'errors': {
-#                     'password': ['Password and password confirmation do not match']}
-#             }, 409
-#
-#         user = User.find_by_email(args['email'])
-#         if user:
-#             return {
-#                 'success': False,
-#                 'error': 'Email has already been taken'
-#             }, 409
-#
-#         is_admin = False
-#         if User.count_all() < 1:
-#             is_admin = True
-#
-#         phone = None
-#
-#         if 'phone' in args:
-#             phone = args['phone']
-#
-#         hashed_password = User.generate_hash(args['password'])
-#
-#         user = User(args['name'], hashed_password, args['email'], phone, is_admin)
-#         user.save_to_db()
-#
-#         return {
-#             'success': True,
-#             'user': user_schema.dump(user).data
-#         }, 201
-#
-#
-# api.add_resource(Register, '/signup')
