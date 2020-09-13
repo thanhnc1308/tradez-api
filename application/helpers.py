@@ -132,9 +132,10 @@ def get_error_response(e):
     message = str(e)
     if isinstance(e, HTTPException):
         code = e.code
-    if e.description:
+    if hasattr(e, 'description'):
         message = e.description
-    return jsonify(error={
+    return {
+        'success': False,
         'type': e.__class__.__name__,
         'message': message
-    }), code
+    }, code

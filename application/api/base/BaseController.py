@@ -1,10 +1,7 @@
 from flask import make_response, jsonify, abort, request, url_for
 from flask_restful import Resource
 from http import HTTPStatus
-from marshmallow import ValidationError
-import logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
+from application.helpers import get_error_response
 
 
 class BaseController(Resource):
@@ -18,28 +15,32 @@ class BaseController(Resource):
                 abort(404, "Not found")
             return self.schema.dump(data), HTTPStatus.OK
         except Exception as e:
-            return {
-                'error': str(e)
-            }
+            return get_error_response(e)
 
     def put(self, id):
-        data = self.model.query.filter_by(id=id).first()
-        if not data:
-            abort(404, "Not found")
-        errors = self.schema.validate(request.form)
-        if errors:
-            abort(HTTPStatus.BAD_REQUEST, str(errors))
-        data.update(**request.form)
-        return self.schema.dump(data)
+        try:
+            data = self.model.query.filter_by(id=id).first()
+            if not data:
+                abort(404, "Not found")
+            errors = self.schema.validate(request.form)
+            if errors:
+                abort(HTTPStatus.BAD_REQUEST, str(errors))
+            data.update(**request.form)
+            return self.schema.dump(data)
+        except Exception as e:
+            return get_error_response(e)
 
     def delete(self, id):
-        data = self.model.query.filter_by(id=id).first()
-        if not data:
-            abort(404, "Not found")
-        data.delete()
-        return make_response(
-            jsonify(id)
-        )
+        try:
+            data = self.model.query.filter_by(id=id).first()
+            if not data:
+                abort(404, "Not found")
+            data.delete()
+            return make_response(
+                jsonify(id)
+            )
+        except Exception as e:
+            return get_error_response(e)
 
 
 class BaseListController(Resource):
@@ -57,14 +58,7 @@ class BaseListController(Resource):
                 data = self.model.get_all()
                 return self.list_schema.dump(data)
         except Exception as e:
-            logger.exception(e)
-            # print(traceback.format_exc())
-            # traceback.print_exc()
-            # traceback.print_stack()
-            # print(sys.exc_info()[2])
-            return make_response(
-                str(e)
-            )
+            return get_error_response(e)
 
     def get_paging(self):
         max_per_page = 100
@@ -97,24 +91,16 @@ class BaseListController(Resource):
             'items': p.items,
             'meta': meta
         }
-
         return self.paging_schema.dump(result), 200
 
     def post(self):
         try:
-            print(request.form)
             errors = self.schema.validate(request.form)
             if errors:
                 abort(HTTPStatus.BAD_REQUEST, str(errors))
             new_item = self.model.create(**request.form)
             return {
-                'user': self.schema.dump(new_item)
-            }
-        except ValidationError as e:
-            return {
-                'message': str(e.valid_data)
+                'data': self.schema.dump(new_item)
             }
         except Exception as e:
-            return {
-                'message': str(e)
-            }
+            return get_error_response(e)

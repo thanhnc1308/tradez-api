@@ -1,6 +1,6 @@
 from werkzeug.exceptions import HTTPException
 
 
-class UnauthorizedException(HTTPException):
-    code = 401
-    description = 'test'
+class DatabaseException:
+    code = 500
+    description = 'Database exception'
