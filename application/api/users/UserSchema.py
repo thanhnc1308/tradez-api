@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, post_load
+from marshmallow import fields, post_load
 from application.api.base.BaseSchema import BaseSchema, BaseListSchema
 
 

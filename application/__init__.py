@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from flask_sqlalchemy import get_debug_queries
-from application.api import api_blueprint
+from application.api.users.UserController import user_api
 from application.api.mail.MailController import mail_api
 from application.api.stock.StockController import stock_api
 from application.api.auth.AuthController import auth_api
@@ -52,7 +52,7 @@ def configure_extensions(app):
 
 
 def configure_blueprint(app):
-    app.register_blueprint(api_blueprint)
+    app.register_blueprint(user_api)
     app.register_blueprint(stock_api)
     app.register_blueprint(mail_api)
     app.register_blueprint(auth_api)

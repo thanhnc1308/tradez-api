@@ -6,7 +6,7 @@ from flask_restful import Resource
 from werkzeug.security import safe_str_cmp
 from application.api.users.User import User
 from application.api.users.UserSchema import UserSchema, user_schema
-from application.api import api
+# from application.api import api
 
 auth_api = Blueprint('auth_api', __name__, url_prefix='/api/auth')
 

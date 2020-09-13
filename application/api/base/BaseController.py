@@ -47,14 +47,12 @@ class BaseController(Resource):
 
 class BaseListController(Resource):
     model = None
-    schema = None
-    paging_schema = None
+    list_schema = None
 
-    @paginate(schema=paging_schema, max_per_page=10)
     def get(self):
         try:
-            data = self.model.query
-            return data
+            data = self.model.get_all()
+            return self.list_schema.dump(data)
         except Exception as e:
             logger.exception(e)
             # print(traceback.format_exc())
@@ -84,3 +82,22 @@ class BaseListController(Resource):
                 'message': str(e)
             }
 
+
+class BasePagingController(Resource):
+    model = None
+    paging_schema = None
+
+    # @paginate(schema=paging_schema, max_per_page=10)
+    # def get(self):
+    #     try:
+    #         data = self.model.query
+    #         return data
+    #     except Exception as e:
+    #         logger.exception(e)
+    #         # print(traceback.format_exc())
+    #         # traceback.print_exc()
+    #         # traceback.print_stack()
+    #         # print(sys.exc_info()[2])
+    #         return make_response(
+    #             str(e)
+    #         )
