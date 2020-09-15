@@ -38,6 +38,9 @@ $ FLASK_ENV="development" FLASK_CONFIG="development" docker-compose -f docker/de
 
 - Run ./manage.py compose up -d and ./manage.py compose down and have the environment variables automatically passed to the system
 
+# Unit test
+- Run pytest
+
 # Notes
 - Need to install: sudo apt-get install libpq-dev before installing the 'psycopg2' library
 - Permission Denied for docker-compose: try with sudo

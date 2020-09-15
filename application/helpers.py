@@ -12,6 +12,12 @@ logger = logging.getLogger(__name__)
 def verify_token(f):
     @wraps(f)
     def decorator(*args, **kwargs):
+        # Get the access token from the header
+        auth_header = request.headers.get('Authorization')
+        access_token = auth_header.split(" ")[1]
+        # if access_token:
+        # Attempt to decode the token and get the User ID
+        # user_id = User.decode_token(access_token)
         token = None
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']

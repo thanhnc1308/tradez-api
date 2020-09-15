@@ -52,7 +52,7 @@ def login():
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
         }, 'SECRET_KEY')  # app.config['SECRET_KEY']
         return jsonify({
-            'token': token.decode('UTF-8')
+            'access_token': token.decode('UTF-8')
         })
 
     return make_response(
