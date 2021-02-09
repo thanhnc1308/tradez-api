@@ -6,15 +6,27 @@
 # Run the app
 1. Give permission to manage.py
 - chmod 775 manage.py
+2. Create venv
+- sudo apt-get install python3-venv
+- sudo apt-get install python3-tk
+- python3 -m venv .venv
+- source .venv/bin/activate
+- pip3 install -r requirements/development.txt
+- python3 -m pip install <package>
+- pip3 freeze > requirements.txt
 2. Init database
-./manage.py flask db init
-- creating models we will use the commands 
-./manage.py flask db migrate
-./manage.py flask db upgrade
-2. Run flask with config
+- ./manage.py flask db init
+- ./manage.py flask db stamp head
+- ./manage.py flask db migrate
+- ./manage.py flask db upgrade
+3. Update database
+- ./manage.py flask db stamp head
+- ./manage.py flask db migrate
+- ./manage.py flask db upgrade
+4. Run flask with config
 - Run by flask command line: FLASK_CONFIG="development" flask run
 - Run with manage.py: ./manage.py flask run
-3. Build the image
+5. Build the image
 - FLASK_ENV="development" FLASK_CONFIG="development" docker-compose -f docker/development.yml build web
 - If you need to explore the container you can login directly with
 
@@ -38,6 +50,11 @@ $ FLASK_ENV="development" FLASK_CONFIG="development" docker-compose -f docker/de
 
 - Run ./manage.py compose up -d and ./manage.py compose down and have the environment variables automatically passed to the system
 
+# Install package
+- python3 -m pip install flask_jwt_extended
+- python3 -m pip install flask_mail
+- python3 -m pip install marshmallow
+- python3 -m pip install webargs
 # Unit test
 - Run pytest
 

@@ -7,6 +7,10 @@ class CRUDMixin(object):
     """Mixin that adds convenience methods for CRUD (create, read, update, delete)
     operations.
     """
+    @classmethod
+    def execute(cls, sql):
+        result = db.engine.execute(sql)
+        return result
 
     @classmethod
     def create(cls, **kwargs):

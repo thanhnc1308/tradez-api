@@ -137,6 +137,16 @@ def create_initial_db():
 
 
 @cli.command()
+def deletev():
+    try:
+        run_sql([f"drop table if exists public.alembic_version"])
+    except Exception:
+        print(
+            f"Drop failed"
+        )
+
+
+@cli.command()
 @click.argument("filenames", nargs=-1)
 def test(filenames):
     os.environ["APPLICATION_CONFIG"] = "testing"

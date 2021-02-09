@@ -1,8 +1,8 @@
 from marshmallow import Schema, fields, post_load, validates, ValidationError
-from application.api.stock.Stock import Stock
+from application.api.stock.StockPrice import StockPrice
 
 
-class StockSchema(Schema):
+class StockPriceSchema(Schema):
     id = fields.String(dump_only=True)
     index = fields.String(required=True)
 
