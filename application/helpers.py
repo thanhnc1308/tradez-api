@@ -13,8 +13,10 @@ def verify_token(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         # Get the access token from the header
-        auth_header = request.headers.get('Authorization')
-        access_token = auth_header.split(" ")[1]
+        # auth_header = request.headers.get('Authorization')
+        # if auth_header is None:
+        #     return {"message": "Token is missing"}, 401
+        # access_token = auth_header.split(" ")[1]
         # if access_token:
         # Attempt to decode the token and get the User ID
         # user_id = User.decode_token(access_token)
@@ -22,15 +24,14 @@ def verify_token(f):
         if 'x-access-token' in request.headers:
             token = request.headers['x-access-token']
         if token is None:
-            return jsonify({"Message": "Token is missing"}), 401
+            return {"message": "Token is missing"}, 401
         try:
             data = jwt.decode(token, 'SECRET_KEY')  # app.config['SECRET_KEY']
             # current_user = User.query.filter_by(username=data['username']).first()
             current_user = data
             return f(current_user, *args, **kwargs)
         except Exception as e:
-            print(e)
-            return jsonify({"Message": "Token is missing or invalid"}), 401
+            return {"message": "Invalid user"}, 401
     return decorator
 
 

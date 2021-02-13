@@ -2,6 +2,7 @@ from flask import make_response, jsonify, abort, request, url_for
 from flask_restful import Resource
 from http import HTTPStatus
 from application.helpers import get_error_response
+from application.helpers import verify_token
 
 
 class BaseController(Resource):
@@ -49,7 +50,9 @@ class BaseListController(Resource):
     list_schema = None
     paging_schema = None
 
-    def get(self):
+    @verify_token
+    def get(current_user, self):
+        print('current_user', current_user)
         paging_filter = request.args.get('paging_filter', 1, type=int)
         try:
             if paging_filter == 1:
