@@ -105,6 +105,9 @@ class BaseListController(Resource):
 
     def post(self):
         try:
+            print('request.form', request.form)
+            print('request.data', request.data)
+            print('request.json', request.json)
             errors = self.schema.validate(request.form)
             if errors:
                 abort(HTTPStatus.BAD_REQUEST, str(errors))

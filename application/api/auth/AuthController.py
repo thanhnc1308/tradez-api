@@ -15,7 +15,7 @@ def register():
     #     abort(400)  # missing arguments
     # if User.query.filter_by(username=username).first() is not None:
     #     abort(400)  # existing user
-    new_user = User.create(data)
+    new_user = User.create(**data)
     return {
         'success': True,
         'data': user_schema.dump(new_user)
