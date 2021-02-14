@@ -49,7 +49,7 @@ def login():
     if user.check_password(auth.password):
         token = jwt.encode({
             'user': request.authorization.username,  # it's better to return a public_id field here
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=30)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=300)
         }, 'SECRET_KEY')  # app.config['SECRET_KEY']
         return jsonify({
             'access_token': token.decode('UTF-8')

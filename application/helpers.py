@@ -4,6 +4,7 @@ import jwt
 from functools import wraps
 from werkzeug.exceptions import HTTPException
 from application.api.users.User import User
+from application.api.users.UserSchema import user_schema
 import logging
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
@@ -28,8 +29,13 @@ def verify_token(f):
         try:
             data = jwt.decode(token, 'SECRET_KEY')  # app.config['SECRET_KEY']
             # current_user = User.query.filter_by(username=data['username']).first()
-            current_user = data
-            return f(current_user, *args, **kwargs)
+            # current_user = data
+            print('here')
+            current_user = User.get_by_username('ncthanh')
+            print('verify token', user_schema.dump(current_user))
+            # current_user = User.get_by_id('38c1bba1-b13c-434c-bb32-8c32c99c2f8c')
+            print('here 1')
+            return f(user_schema.dump(current_user), *args, **kwargs)
         except Exception as e:
             return {"message": "Invalid user"}, 401
     return decorator

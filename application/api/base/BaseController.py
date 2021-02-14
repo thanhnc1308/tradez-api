@@ -9,7 +9,8 @@ class BaseController(Resource):
     model = None
     schema = None
 
-    def get(self, id=None):
+    @verify_token
+    def get(current_user, self, id=None):
         try:
             data = self.model.get_by_id(id)
             if not data:
@@ -18,28 +19,29 @@ class BaseController(Resource):
         except Exception as e:
             return get_error_response(e)
 
-    def put(self, id):
+    @verify_token
+    def put(current_user, self, id):
         try:
             data = self.model.query.filter_by(id=id).first()
             if not data:
                 abort(404, "Not found")
-            errors = self.schema.validate(request.form)
+            parameters = request.form.to_dict()
+            errors = self.schema.validate(parameters)
             if errors:
                 abort(HTTPStatus.BAD_REQUEST, str(errors))
-            data.update(**request.form)
+            data.update(**parameters)
             return self.schema.dump(data)
         except Exception as e:
             return get_error_response(e)
 
-    def delete(self, id):
+    @verify_token
+    def delete(current_user, self, id):
         try:
             data = self.model.query.filter_by(id=id).first()
             if not data:
                 abort(404, "Not found")
             data.delete()
-            return make_response(
-                jsonify(id)
-            )
+            return self.schema.dump(data), HTTPStatus.OK
         except Exception as e:
             return get_error_response(e)
 
@@ -106,15 +108,20 @@ class BaseListController(Resource):
         }
         return self.paging_schema.dump(result), 200
 
-    def post(self):
+    @verify_token
+    def post(current_user, self):
+        print('post', current_user)
         try:
-            print('request.form', request.form)
-            print('request.data', request.data)
-            print('request.json', request.json)
-            errors = self.schema.validate(request.form)
+            # print('request.form', request.form)
+            # print('request.data', request.data)
+            # print('request.json', request.json)
+            parameters = request.form.to_dict()
+            errors = self.schema.validate(parameters)
             if errors:
                 abort(HTTPStatus.BAD_REQUEST, str(errors))
-            new_item = self.model.create(**request.form)
+            if 'user_id' not in parameters:
+               parameters['user_id'] = current_user['id']
+            new_item = self.model.create(**parameters)
             return {
                 'data': self.schema.dump(new_item)
             }
