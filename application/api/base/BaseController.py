@@ -15,7 +15,10 @@ class BaseController(Resource):
             data = self.model.get_by_id(id)
             if not data:
                 abort(404, "Not found")
-            return self.schema.dump(data), HTTPStatus.OK
+            return {
+                'code': 200,
+                'data': self.schema.dump(data)
+            }
         except Exception as e:
             return get_error_response(e)
 
@@ -30,7 +33,10 @@ class BaseController(Resource):
             if errors:
                 abort(HTTPStatus.BAD_REQUEST, str(errors))
             data.update(**parameters)
-            return self.schema.dump(data)
+            return {
+                'code': 200,
+                'data': self.schema.dump(data)
+            }
         except Exception as e:
             return get_error_response(e)
 
@@ -41,7 +47,10 @@ class BaseController(Resource):
             if not data:
                 abort(404, "Not found")
             data.delete()
-            return self.schema.dump(data), HTTPStatus.OK
+            return {
+                'code': 200,
+                'data': self.schema.dump(data)
+            }
         except Exception as e:
             return get_error_response(e)
 
@@ -71,7 +80,10 @@ class BaseListController(Resource):
                 # members = Member.query.filter(or_(*filters))
                 # db.users.filter(or_(db.users.name == 'Ryan', db.users.country == 'England'))
                 data = self.model.get_all()
-                return self.list_schema.dump(data)
+                return {
+                    'code': 200,
+                    'data': self.list_schema.dump(data)
+                }
         except Exception as e:
             return get_error_response(e)
 
@@ -106,7 +118,10 @@ class BaseListController(Resource):
             'items': p.items,
             'meta': meta
         }
-        return self.paging_schema.dump(result), 200
+        return {
+            'code': 200,
+            'data': self.paging_schema.dump(result)
+        }
 
     @verify_token
     def post(current_user, self):
@@ -123,6 +138,7 @@ class BaseListController(Resource):
                parameters['user_id'] = current_user['id']
             new_item = self.model.create(**parameters)
             return {
+                'code': 200,
                 'data': self.schema.dump(new_item)
             }
         except Exception as e:

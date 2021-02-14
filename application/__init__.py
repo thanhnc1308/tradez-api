@@ -5,7 +5,7 @@ from application.api.mail.MailController import mail_api
 from application.api.stock.StockController import stock_api
 from application.api.journal.JournalController import journal_api
 from application.api.auth.AuthController import auth_api
-from application.extensions import db, migrate, jwt, mail
+from application.extensions import db, migrate, jwt, mail, cors
 from werkzeug.exceptions import default_exceptions
 from application.helpers import get_error_response
 
@@ -47,6 +47,7 @@ def configure_extensions(app):
     migrate.init_app(app, db)
     configure_mail_extension(app)  # this configuration must be before mail.init_app(app)
     mail.init_app(app)
+    cors.init_app(app)
 
 
 def configure_blueprint(app):
