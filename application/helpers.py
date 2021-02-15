@@ -22,8 +22,8 @@ def verify_token(f):
         # Attempt to decode the token and get the User ID
         # user_id = User.decode_token(access_token)
         token = None
-        if 'x-access-token' in request.headers:
-            token = request.headers['x-access-token']
+        if 'Authorization' in request.headers:
+            token = request.headers['Authorization']
         if token is None:
             return {"message": "Token is missing"}, 401
         try:

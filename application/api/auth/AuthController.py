@@ -1,6 +1,8 @@
 from flask import Blueprint, request, jsonify, make_response
 import jwt
+import json
 import datetime
+from application.api.base.ServiceResponse import ServiceResponse
 from application.api.users.User import User
 from application.api.users.UserSchema import user_schema
 
@@ -22,10 +24,17 @@ def register():
     }, 201
 
 
-@auth_api.route('/login', methods=['GET'])
+@auth_api.route('/login', methods=['POST'])
 def login():
-    auth = request.authorization
-    if not auth or not auth.username or not auth.password:
+    res = ServiceResponse()
+    auth = json.loads(request.data)
+    # print('auth', auth)
+    # print('request.form', request.form)
+    # print('request.data', request.data)
+    # print('request.json', request.json)
+    username = auth.get('username')
+    password = auth.get('password')
+    if not auth or username is None or password is None:
         return make_response(
             'Could not verify',
             401,
@@ -35,7 +44,7 @@ def login():
         )
 
     # check if user exists
-    user = User.get_by_username(auth.username)
+    user = User.get_by_username(username)
     if not user:
         return make_response(
             'Could not verify',
@@ -46,14 +55,16 @@ def login():
         )
 
     # check password here
-    if user.check_password(auth.password):
+    if user.check_password(password):
         token = jwt.encode({
-            'user': request.authorization.username,  # it's better to return a public_id field here
+            'user': username,  # it's better to return a public_id field here
             'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=300)
         }, 'SECRET_KEY')  # app.config['SECRET_KEY']
-        return jsonify({
-            'access_token': token.decode('UTF-8')
-        })
+        return res.on_success(data=token.decode('UTF-8'))
+        # return jsonify({
+        #     'code': 200,
+        #     'data': token.decode('UTF-8')
+        # })
 
     return make_response(
         'Could not verify',
