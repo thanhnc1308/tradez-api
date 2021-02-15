@@ -20,7 +20,7 @@ def verify_token(f):
             return {"message": "Token is missing"}, 401
         try:
             data = jwt.decode(token, 'SECRET_KEY')  # app.config['SECRET_KEY']
-            username = data['user']
+            username = data.get('user')
             current_user = User.get_by_username(username)
             return f(user_schema.dump(current_user), *args, **kwargs)
         except Exception as e:

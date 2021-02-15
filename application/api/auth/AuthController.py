@@ -54,13 +54,9 @@ def login():
     if user.check_password(password):
         token = jwt.encode({
             'user': username,  # it's better to return a public_id field here
-            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=300)
+            'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60*24*7)
         }, 'SECRET_KEY')  # app.config['SECRET_KEY']
         return res.on_success(data=token.decode('UTF-8'))
-        # return jsonify({
-        #     'code': 200,
-        #     'data': token.decode('UTF-8')
-        # })
 
     return make_response(
         'Could not verify',
