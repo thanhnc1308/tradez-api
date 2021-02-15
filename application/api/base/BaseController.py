@@ -29,7 +29,6 @@ class BaseController(Resource):
             if not data:
                 return res.on_error(code=HTTPStatus.NOT_FOUND, message="Not found")
             parameters = request.json
-            print('parameters', parameters)
             errors = self.schema.validate(parameters)
             if errors:
                 return res.on_error(message=str(errors))
@@ -117,9 +116,6 @@ class BaseListController(Resource):
     def post(current_user, self):
         res = ServiceResponse()
         try:
-            # print('request.form', request.form)
-            # print('request.data', request.data)
-            # print('request.json', request.json)
             parameters = request.json
             errors = self.schema.validate(parameters)
             if errors:

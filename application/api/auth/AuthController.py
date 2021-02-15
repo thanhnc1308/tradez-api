@@ -28,10 +28,6 @@ def register():
 def login():
     res = ServiceResponse()
     auth = json.loads(request.data)
-    # print('auth', auth)
-    # print('request.form', request.form)
-    # print('request.data', request.data)
-    # print('request.json', request.json)
     username = auth.get('username')
     password = auth.get('password')
     if not auth or username is None or password is None:

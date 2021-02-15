@@ -10,7 +10,6 @@ def get_stock_index(symbol):
     # url = f'https://svr4.fireant.vn/api/Data/Companies/CompanyInfo?symbol={symbol}'
     # response = requests.get(url=url)
     # if response.ok:
-    #     print('ok')
     #     result = json.loads(response.content)
     new_item = {
         'symbol': symbol

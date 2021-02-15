@@ -69,6 +69,8 @@ class CRUDMixin(object):
         """Update specific fields of a record."""
         # Prevent changing ID of object
         kwargs.pop('id', None)
+        # Set latest updated_at
+        kwargs['updated_at'] = db.func.now()
         for attr, value in kwargs.items():
             # Flask-RESTful makes everything None by default
             if value is not None:

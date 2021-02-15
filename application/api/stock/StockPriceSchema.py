@@ -16,7 +16,6 @@ class StockPriceSchema(Schema):
 
     # @post_load
     # def create_contact(self, data):
-    #     print('posted data', data)
     #     stock = Stock(**data)
     #     Stock.session.add(stock)
     #     Stock.session.commit()
