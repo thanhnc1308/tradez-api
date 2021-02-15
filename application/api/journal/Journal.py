@@ -9,9 +9,10 @@ class Journal(BaseModel):
     __table_args__ = {'extend_existing': True}
 
     user_id = db.Column(UUID(as_uuid=True))
-    journal_date = db.Column(db.DateTime)
+    journal_date = db.Column(db.Date)
     symbol = db.Column(db.String(50), nullable=False)
     transaction_type = db.Column(db.String(10), nullable=False)
+    status = db.Column(db.String(10)) # win/lose
     entry = db.Column(db.Numeric)
     exit = db.Column(db.Numeric)
     pnl = db.Column(db.Numeric)

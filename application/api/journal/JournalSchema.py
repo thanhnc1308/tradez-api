@@ -5,14 +5,15 @@ from application.api.journal.Journal import Journal
 
 class JournalSchema(BaseSchema):
     user_id = fields.UUID()
-    journal_date = fields.Date(required=True)
+    journal_date = fields.DateTime(required=True)
     symbol = fields.Str(required=True)
     transaction_type = fields.Str(required=True)
-    entry = fields.Number()
-    exit = fields.Number()
-    pnl = fields.Number()
-    screenshot = fields.Str()
-    comment = fields.Str()
+    status = fields.Str(allow_none=True)
+    entry = fields.Number(allow_none=True)
+    exit = fields.Number(allow_none=True)
+    pnl = fields.Number(allow_none=True)
+    screenshot = fields.Str(required=False, allow_none=True)
+    comment = fields.Str(allow_none=True)
 
 
 class JournalListSchema(BaseListSchema):

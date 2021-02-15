@@ -11,6 +11,7 @@ class ServiceResponse:
         return jsonify(
             {
                 'code': 200,
+                'success': True,
                 'data': data,
                 'message': ''
             }
@@ -20,6 +21,7 @@ class ServiceResponse:
         return jsonify(
             {
                 'code': code,
+                'success': False,
                 'data': None,
                 'message': message
             }
@@ -29,6 +31,7 @@ class ServiceResponse:
         return jsonify(
             {
                 'code': code,
+                'success': False,
                 'data': None,
                 'message': message
             }

@@ -17,7 +17,7 @@ api.add_resource(JournalController, '/<string:id>', endpoint='journal')
 
 
 class JournalListController(BaseListController):
-    model = Journal
+    model = Journal()
     schema = journal_schema
     list_schema = journals_schema
     paging_schema = journals_paging_schema

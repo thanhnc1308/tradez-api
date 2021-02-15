@@ -6,9 +6,9 @@ from application.api.base.PagingSchema import PagingSchema
 class BaseSchema(Schema):
     __abstract__ = True
 
-    id = fields.UUID(dump_only=True)
-    created_at = fields.DateTime(dump_only=True)
-    updated_at = fields.DateTime(dump_only=True)
+    id = fields.UUID()
+    created_at = fields.DateTime()
+    updated_at = fields.DateTime()
 
     @classmethod
     def validate_fields(cls, args_type=None, schema_kwargs=None, **kwargs):

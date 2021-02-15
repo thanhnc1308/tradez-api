@@ -1,9 +1,10 @@
 from flask import make_response, jsonify, abort, request, url_for
 from flask_restful import Resource
+from sqlalchemy import desc
 from http import HTTPStatus
 from application.helpers import get_error_response
 from application.helpers import verify_token
-
+from application.api.base.ServiceResponse import ServiceResponse
 
 class BaseController(Resource):
     model = None
@@ -11,46 +12,41 @@ class BaseController(Resource):
 
     @verify_token
     def get(current_user, self, id=None):
+        res = ServiceResponse()
         try:
             data = self.model.get_by_id(id)
             if not data:
-                abort(404, "Not found")
-            return {
-                'code': 200,
-                'data': self.schema.dump(data)
-            }
+                return res.on_error(code=HTTPStatus.NOT_FOUND, message="Not found")
+            return res.on_success(data=self.schema.dump(data))
         except Exception as e:
             return get_error_response(e)
 
     @verify_token
     def put(current_user, self, id):
+        res = ServiceResponse()
         try:
             data = self.model.query.filter_by(id=id).first()
             if not data:
-                abort(404, "Not found")
-            parameters = request.form.to_dict()
+                return res.on_error(code=HTTPStatus.NOT_FOUND, message="Not found")
+            parameters = request.json
+            print('parameters', parameters)
             errors = self.schema.validate(parameters)
             if errors:
-                abort(HTTPStatus.BAD_REQUEST, str(errors))
+                return res.on_error(message=str(errors))
             data.update(**parameters)
-            return {
-                'code': 200,
-                'data': self.schema.dump(data)
-            }
+            return res.on_success(data=self.schema.dump(data))
         except Exception as e:
             return get_error_response(e)
 
     @verify_token
     def delete(current_user, self, id):
+        res = ServiceResponse()
         try:
             data = self.model.query.filter_by(id=id).first()
             if not data:
-                abort(404, "Not found")
+                return res.on_error(code=HTTPStatus.NOT_FOUND, message="Not found")
             data.delete()
-            return {
-                'code': 200,
-                'data': self.schema.dump(data)
-            }
+            return res.on_success(data=self.schema.dump(data))
         except Exception as e:
             return get_error_response(e)
 
@@ -63,7 +59,7 @@ class BaseListController(Resource):
 
     @verify_token
     def get(current_user, self):
-        print('current_user', current_user)
+        res = ServiceResponse()
         paging_filter = request.args.get('paging_filter', 1, type=int)
         try:
             if paging_filter == 1:
@@ -80,19 +76,16 @@ class BaseListController(Resource):
                 # members = Member.query.filter(or_(*filters))
                 # db.users.filter(or_(db.users.name == 'Ryan', db.users.country == 'England'))
                 data = self.model.get_all()
-                return {
-                    'code': 200,
-                    'data': self.list_schema.dump(data)
-                }
+                return res.on_success(data=self.list_schema.dump(data))
         except Exception as e:
             return get_error_response(e)
 
     def get_paging(self):
+        res = ServiceResponse()
         max_per_page = 100
         page = request.args.get('page', 1, type=int)
         per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
-
-        p = self.model.query.paginate(page, per_page)
+        p = self.model.query.order_by(desc('updated_at')).paginate(page, per_page)
 
         meta = {
             'page': page,
@@ -118,28 +111,22 @@ class BaseListController(Resource):
             'items': p.items,
             'meta': meta
         }
-        return {
-            'code': 200,
-            'data': self.paging_schema.dump(result)
-        }
+        return res.on_success(data=self.paging_schema.dump(result))
 
     @verify_token
     def post(current_user, self):
-        print('post', current_user)
+        res = ServiceResponse()
         try:
             # print('request.form', request.form)
             # print('request.data', request.data)
             # print('request.json', request.json)
-            parameters = request.form.to_dict()
+            parameters = request.json
             errors = self.schema.validate(parameters)
             if errors:
-                abort(HTTPStatus.BAD_REQUEST, str(errors))
+                return res.on_error(message=str(errors))
             if 'user_id' not in parameters:
                parameters['user_id'] = current_user['id']
             new_item = self.model.create(**parameters)
-            return {
-                'code': 200,
-                'data': self.schema.dump(new_item)
-            }
+            return res.on_success(data=self.schema.dump(new_item))
         except Exception as e:
             return get_error_response(e)
