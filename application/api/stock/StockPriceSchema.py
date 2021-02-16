@@ -4,37 +4,17 @@ from application.api.stock.StockPrice import StockPrice
 
 class StockPriceSchema(Schema):
     id = fields.String(dump_only=True)
-    index = fields.String(required=True)
-
-    @validates('index')
-    def validate_index(self, index, **kwargs):
-        if bool(Stock.query.filter_by(index=index).first()):
-            raise ValidationError(
-                '"{index}" index already exists, '
-                'please use a different index.'.format(index=index)
-            )
-
-    # @post_load
-    # def create_contact(self, data):
-    #     stock = Stock(**data)
-    #     Stock.session.add(stock)
-    #     Stock.session.commit()
-    #     self.instance = stock
-
-    # def update(self, stock, data):
-    #     stock.update(**data)
-        # contact.username = data.get('username', contact.username)
-        # contact.first_name = data.get('first_name', contact.first_name)
-        # contact.last_name = data.get('last_name', contact.last_name)
-        # emails = data.get('emails')
-        # if emails:
-        #     ContactEmail.query.filter_by(contact_id=contact.id).delete()
-        #     db.session.commit()
-        #     new_contact_emails = [ContactEmail(email=d.get('email')) for d in emails]
-        #     contact.emails.extend(new_contact_emails)
-        #     db.session.add_all(new_contact_emails)
-        # db.session.commit()
+    symbol = fields.String(required=True)
+    stock_date = fields.Date()
+    currency_unit = fields.String()
+    open_price = fields.Number()
+    high_price = fields.Number()
+    low_price = fields.Number()
+    close_price = fields.Number()
+    volume = fields.Number()
+    ema200 = fields.Number()
 
 
-stock_schema = StockSchema()
-stock_list_schema = StockSchema(many=True)
+
+stock_price_schema = StockPriceSchema()
+stock_price_list_schema = StockPriceSchema(many=True)

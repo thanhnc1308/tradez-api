@@ -5,20 +5,35 @@ from application.api.stock.StockPrice import StockPrice
 from application.api.stock.StockSchema import stock_schema, stock_list_schema
 from application.helpers import verify_token
 from application.api.stock import crawler
+from application.helpers import verify_token
 
 stock_api = Blueprint('stock_api', __name__, url_prefix='/api/stock')
 
+@stock_api.route('/historical_price', methods=['GET'])
+def get_historical_price(symbol, from_date, to_date):
+    print('request.query', request.query)
+    return {
+        'ok'
+    }
 
-@stock_api.route('/all', methods=['GET'])
-def get_all_stock_indices():
-    try:
-        data = crawler.get_all_stock_indices()
-        return {
-            'count': len(data),
-            'data': data
-        }
-    except Exception as e:
-        print(e)
+
+@stock_api.route('/market_info', methods=['GET'])
+def get_market_info(symbol, from_date, to_date):
+    print('request.query', request.query)
+    return {
+        'ok'
+    }
+
+# @stock_api.route('/all', methods=['GET'])
+# def get_all_stock_indices():
+#     try:
+#         data = crawler.get_all_stock_indices()
+#         return {
+#             'count': len(data),
+#             'data': data
+#         }
+#     except Exception as e:
+#         print(e)
 
 @stock_api.route('/crawl_all', methods=['GET'])
 def crawl_all():
@@ -38,58 +53,3 @@ def crawl(stock_index):
         return 'ok'
     except Exception as e:
         print(e)
-
-
-@stock_api.route('', methods=["GET"])
-@stock_api.route('<string:id>', methods=["GET"])
-@verify_token
-def retrieve_stock(current_user, id=None):
-    try:
-        print('current_user', current_user)
-        if id:
-            stock = Stock.query.filter_by(id=id).first_or_404()
-            res = stock_schema.dump(stock)
-            return res, HTTPStatus.OK
-
-        stock = Stock.query.all()
-        res = stock_list_schema.dump(stock)
-    except Exception as e:
-        print(e)
-    return jsonify(res), HTTPStatus.OK
-
-
-@stock_api.route('', methods=["POST"])
-def create_stock():
-    data = request.get_json()
-    print('data: ', data)
-    validated_data, errors = stock_schema.load(data)
-    if errors:
-        return jsonify('errors'), HTTPStatus.BAD_REQUEST
-    return stock_schema.dump(stock_schema.instance), HTTPStatus.CREATED
-
-
-@stock_api.route('/<string:id>', methods=["PUT", "PATCH"])
-def update_stock(id):
-    stock = Stock.query.filter_by(id=id).first_or_404()
-
-    data = request.get_json()
-
-    schema = stock_schema
-    if request.method == 'PATCH':
-        errors = schema.validate(data, partial=True)
-    else:
-        errors = schema.validate(data)
-
-    if errors:
-        return jsonify(errors), HTTPStatus.BAD_REQUEST
-
-    schema.update_stock(stock, data)
-    updated_stock = Stock.query.filter_by(id=stock.id).first()
-    return stock_schema.dump(updated_stock), HTTPStatus.ACCEPTED
-
-
-@stock_api.route('/<string:id>', methods=["DELETE"])
-def delete_stock(id):
-    stock = Stock.query.filter_by(id=id).first_or_404()
-    stock.delete()
-    return jsonify(id), HTTPStatus.NO_CONTENT

@@ -9,6 +9,7 @@ class CRUDMixin(object):
     """
     @classmethod
     def execute(cls, sql):
+        # TODO: check sql injection
         result = db.engine.execute(sql)
         return result
 
