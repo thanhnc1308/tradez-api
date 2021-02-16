@@ -1,9 +1,8 @@
 from marshmallow import Schema, fields, post_load, validates, ValidationError
 from application.api.stock.StockPrice import StockPrice
+from application.api.base.BaseSchema import BaseSchema, BaseListSchema
 
-
-class StockPriceSchema(Schema):
-    id = fields.String(dump_only=True)
+class StockPriceSchema(BaseSchema):
     symbol = fields.String(required=True)
     stock_date = fields.Date()
     currency_unit = fields.String()
@@ -15,6 +14,9 @@ class StockPriceSchema(Schema):
     ema200 = fields.Number()
 
 
+class StockPriceListSchema(BaseListSchema):
+    items = fields.List(fields.Nested(StockPriceSchema()))
 
 stock_price_schema = StockPriceSchema()
 stock_price_list_schema = StockPriceSchema(many=True)
+stock_price_paging_schema = StockPriceListSchema()

@@ -2,7 +2,7 @@ from http import HTTPStatus
 from flask import Blueprint, jsonify
 from flask import request
 from application.api.stock.StockPrice import StockPrice
-from application.api.stock.StockPriceSchema import stock_price_schema, stock_price_list_schema
+from application.api.stock.StockPriceSchema import stock_price_schema, stock_price_list_schema, stock_price_paging_schema
 from application.helpers import verify_token
 from application.helpers import get_error_response
 from application.api.base.ServiceResponse import ServiceResponse
@@ -10,6 +10,7 @@ from application.api.base.ServiceResponse import ServiceResponse
 # import pandas as pd
 from application.utility.datetime_utils import subtract_days
 from datetime import date, timedelta
+from sqlalchemy import desc
 
 stock_price_api = Blueprint('stock_price_api', __name__, url_prefix='/api/stock_price')
 
@@ -18,9 +19,23 @@ stock_price_api = Blueprint('stock_price_api', __name__, url_prefix='/api/stock_
 def get_historical_price():
     res = ServiceResponse()
     try:
+        max_per_page = 100
         data = []
-        print('request.args', request.args)
-        return res.on_success(data=data)
+        symbol = request.args.get('symbol', "", type=str)
+        page = request.args.get('page', 1, type=int)
+        per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
+        data = StockPrice.query.order_by(desc('updated_at')).filter_by(symbol=symbol).paginate(page, per_page)
+        meta = {
+            'page': page,
+            'per_page': per_page,
+            'total': data.total,
+            'pages': data.pages,
+        }
+        result = {
+            'items': data.items,
+            'meta': meta
+        }
+        return res.on_success(data=stock_price_paging_schema.dump(result))
     except Exception as e:
         return get_error_response(e)
 
@@ -30,16 +45,30 @@ def get_historical_price():
 def get_market_info():
     res = ServiceResponse()
     try:
+        max_per_page = 100
         data = []
-        # today = date.today()
+        page = request.args.get('page', 1, type=int)
+        per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
         today = date.today()
         today_str = today.strftime('%m/%d/%Y')
         yesterday = subtract_days(today, 1).strftime('%m/%d/%Y')
         the_day_before_yesterday = subtract_days(today, 18).strftime('%m/%d/%Y')
-        data.append(today_str)
-        data.append(yesterday)
-        data.append(the_day_before_yesterday)
-        test = StockPrice.find_by(stock_date=the_day_before_yesterday)
-        return res.on_success(data=stock_price_list_schema.dumps(test))
+
+        # TODO: filter stock_date = today and yesterday
+        data = StockPrice.query.order_by(desc('updated_at')).filter_by(stock_date=the_day_before_yesterday).paginate(page, per_page)
+
+        # TODO: calculate voletile
+
+        meta = {
+            'page': page,
+            'per_page': per_page,
+            'total': data.total,
+            'pages': data.pages,
+        }
+        result = {
+            'items': data.items,
+            'meta': meta
+        }
+        return res.on_success(data=stock_price_paging_schema.dump(result))
     except Exception as e:
         return get_error_response(e)
