@@ -1,10 +1,12 @@
 from marshmallow import Schema, fields, post_load, validates, ValidationError
 from application.api.stock.Stock import Stock
+from application.api.base.BaseSchema import BaseSchema, BaseListSchema
 
 
 class StockSchema(Schema):
     id = fields.String(dump_only=True)
-    index = fields.String(required=True)
+    symbol = fields.String()
+    company_name = fields.String()
 
     @validates('index')
     def validate_index(self, index, **kwargs):
@@ -36,5 +38,10 @@ class StockSchema(Schema):
         # db.session.commit()
 
 
+class StockListSchema(BaseListSchema):
+    items = fields.List(fields.Nested(StockSchema()))
+
+
 stock_schema = StockSchema()
 stock_list_schema = StockSchema(many=True)
+stock_paging_schema = StockListSchema()
