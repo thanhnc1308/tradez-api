@@ -7,10 +7,10 @@ from application.helpers import verify_token
 from application.helpers import get_error_response
 from application.api.base.ServiceResponse import ServiceResponse
 # import numpy as np
-# import pandas as pd
+import pandas as pd
 from application.utility.datetime_utils import subtract_days
-from datetime import date, timedelta
-from sqlalchemy import desc
+from datetime import date, timedelta, datetime
+from sqlalchemy import desc, asc
 from sqlalchemy import and_, or_, not_
 
 
@@ -23,18 +23,27 @@ def get_historical_price_all():
     try:
         data = []
         symbol = request.args.get('symbol', "", type=str)
-        from_date = request.args.get('from_date', "01/01/2010", type=date)
-        to_date = request.args.get('to_date', "01/01/2110", type=date)
-        data = StockPrice.query.order_by(desc('updated_at')).filter(
+        from_date = request.args.get('from_date', "01/01/2010", type=str)
+        to_date = request.args.get('to_date', "01/01/2110", type=str)
+        data = StockPrice.query.order_by(asc('updated_at')).filter(
             and_(
                 StockPrice.symbol==symbol,
                 StockPrice.stock_date>=from_date,
                 StockPrice.stock_date<=to_date
             )
         )
-        return res.on_success(data=stock_price_list_schema.dump(data))
+        data = stock_price_list_schema.dump(data)
+        data = list(map(map_row_to_candlestick, data))
+        return res.on_success(data=data)
     except Exception as e:
         return get_error_response(e)
+
+
+def map_row_to_candlestick(row):
+    return {
+        'x': datetime.strptime(row['stock_date'], '%Y-%m-%d'),
+        'y': [row['open_price'],row['high_price'],row['low_price'],row['close_price']]
+    }
 
 
 @stock_price_api.route('/historical_price', methods=['GET'])
