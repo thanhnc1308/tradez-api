@@ -39,7 +39,8 @@ def configure_app(app, config_name=None):
 
 
 def configure_hook(app):
-    app.after_request(sql_debug)
+    # app.after_request(sql_debug)
+    pass
 
 
 def configure_extensions(app):
