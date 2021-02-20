@@ -2,7 +2,6 @@ from flask import make_response, jsonify, abort, request, url_for
 from flask_restful import Resource
 from sqlalchemy import desc
 from http import HTTPStatus
-from application.helpers import get_error_response
 from application.helpers import verify_token
 from application.api.base.ServiceResponse import ServiceResponse
 
@@ -16,10 +15,11 @@ class BaseController(Resource):
         try:
             data = self.model.get_by_id(id)
             if not data:
-                return res.on_error(code=HTTPStatus.NOT_FOUND, message="Not found")
-            return res.on_success(data=self.schema.dump(data))
+                res.on_error(code=HTTPStatus.NOT_FOUND, user_message="Not found")
+            res.on_success(data=self.schema.dump(data))
         except Exception as e:
-            return get_error_response(e)
+            res.on_exception(e)
+        return res
 
     @verify_token
     def put(current_user, self, id):
@@ -27,15 +27,16 @@ class BaseController(Resource):
         try:
             data = self.model.query.filter_by(id=id).first()
             if not data:
-                return res.on_error(code=HTTPStatus.NOT_FOUND, message="Not found")
+                res.on_error(code=HTTPStatus.NOT_FOUND, user_message="Not found")
             parameters = request.json
             errors = self.schema.validate(parameters)
             if errors:
-                return res.on_error(message=str(errors))
+                res.on_error(user_message=str(errors))
             data.update(**parameters)
-            return res.on_success(data=self.schema.dump(data))
+            res.on_success(data=self.schema.dump(data))
         except Exception as e:
-            return get_error_response(e)
+            res.on_exception(e)
+        return res
 
     @verify_token
     def delete(current_user, self, id):
@@ -43,11 +44,12 @@ class BaseController(Resource):
         try:
             data = self.model.query.filter_by(id=id).first()
             if not data:
-                return res.on_error(code=HTTPStatus.NOT_FOUND, message="Not found")
+                res.on_error(code=HTTPStatus.NOT_FOUND, user_message="Not found")
             data.delete()
-            return res.on_success(data=self.schema.dump(data))
+            res.on_success(data=self.schema.dump(data))
         except Exception as e:
-            return get_error_response(e)
+            res.on_exception(e)
+        return res
 
 
 class BaseListController(Resource):
@@ -75,42 +77,47 @@ class BaseListController(Resource):
                 # members = Member.query.filter(or_(*filters))
                 # db.users.filter(or_(db.users.name == 'Ryan', db.users.country == 'England'))
                 data = self.model.get_all()
-                return res.on_success(data=self.list_schema.dump(data))
+                res.on_success(data=self.list_schema.dump(data))
         except Exception as e:
-            return get_error_response(e)
+            res.on_exception(e)
+        return res
 
     def get_paging(self):
         res = ServiceResponse()
-        max_per_page = 100
-        page = request.args.get('page', 1, type=int)
-        per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
-        p = self.model.query.order_by(desc('updated_at')).paginate(page, per_page)
+        try:
+            max_per_page = 100
+            page = request.args.get('page', 1, type=int)
+            per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
+            p = self.model.query.order_by(desc('updated_at')).paginate(page, per_page)
 
-        meta = {
-            'page': page,
-            'per_page': per_page,
-            'total': p.total,
-            'pages': p.pages,
-        }
+            meta = {
+                'page': page,
+                'per_page': per_page,
+                'total': p.total,
+                'pages': p.pages,
+            }
 
-        links = {}
-        if p.has_next:
-            links['next'] = url_for(request.endpoint, page=p.next_num,
+            links = {}
+            if p.has_next:
+                links['next'] = url_for(request.endpoint, page=p.next_num,
+                                        per_page=per_page)
+            if p.has_prev:
+                links['prev'] = url_for(request.endpoint, page=p.prev_num,
+                                        per_page=per_page)
+            links['first'] = url_for(request.endpoint, page=1,
                                     per_page=per_page)
-        if p.has_prev:
-            links['prev'] = url_for(request.endpoint, page=p.prev_num,
+            links['last'] = url_for(request.endpoint, page=p.pages,
                                     per_page=per_page)
-        links['first'] = url_for(request.endpoint, page=1,
-                                 per_page=per_page)
-        links['last'] = url_for(request.endpoint, page=p.pages,
-                                per_page=per_page)
 
-        meta['links'] = links
-        result = {
-            'items': p.items,
-            'meta': meta
-        }
-        return res.on_success(data=self.paging_schema.dump(result))
+            meta['links'] = links
+            result = {
+                'items': p.items,
+                'meta': meta
+            }
+            res.on_success(data=self.paging_schema.dump(result))
+        except Exception as e:
+            res.on_exception(e)
+        return res
 
     @verify_token
     def post(current_user, self):
@@ -119,10 +126,11 @@ class BaseListController(Resource):
             parameters = request.json
             errors = self.schema.validate(parameters)
             if errors:
-                return res.on_error(message=str(errors))
+                res.on_error(user_message=str(errors))
             if 'user_id' not in parameters:
                parameters['user_id'] = current_user['id']
             new_item = self.model.create(**parameters)
-            return res.on_success(data=self.schema.dump(new_item))
+            res.on_success(data=self.schema.dump(new_item))
         except Exception as e:
-            return get_error_response(e)
+            res.on_exception(e)
+        return res

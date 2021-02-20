@@ -5,7 +5,6 @@ from application.api.stock.StockPrice import StockPrice
 from application.api.stock.StockPriceSchema import stock_price_schema, stock_price_list_schema, stock_price_paging_schema
 from application.api.stock.MarketInfoSchema import market_info_paging_schema
 from application.helpers import verify_token
-from application.helpers import get_error_response
 from application.api.base.ServiceResponse import ServiceResponse
 # import numpy as np
 import pandas as pd
@@ -35,17 +34,16 @@ def get_historical_price_all(current_user):
             )
         )
         data = stock_price_list_schema.dump(data)
+        def map_row_to_candlestick(row):
+            return {
+            'x': parse_date(row['stock_date'], '%Y-%m-%d'),
+            'y': [row['open_price'],row['high_price'],row['low_price'],row['close_price']]
+        }
         data = list(map(map_row_to_candlestick, data))
-        return res.on_success(data=data)
+        res.on_success(data=data)
     except Exception as e:
-        return get_error_response(e)
-
-
-def map_row_to_candlestick(row):
-    return {
-        'x': parse_date(row['stock_date'], '%Y-%m-%d'),
-        'y': [row['open_price'],row['high_price'],row['low_price'],row['close_price']]
-    }
+        res.on_exception(e)
+    return res
 
 
 @stock_price_api.route('/historical_price', methods=['GET'])
@@ -77,9 +75,10 @@ def get_historical_price(current_user):
             'items': data.items,
             'meta': meta
         }
-        return res.on_success(data=stock_price_paging_schema.dump(result))
+        res.on_success(data=stock_price_paging_schema.dump(result))
     except Exception as e:
-        return get_error_response(e)
+        res.on_exception(e)
+    return res
 
 
 @stock_price_api.route('/market_info', methods=['GET'])
@@ -123,7 +122,8 @@ def get_market_info(current_user):
                 'items': df.to_dict('records'),
                 'meta': meta
             }
-            return res.on_success(data=market_info_paging_schema.dump(result))
-        return res.on_success(data=[])
+            res.on_success(data=market_info_paging_schema.dump(result))
+        res.on_success(data=[])
     except Exception as e:
-        return get_error_response(e)
+        res.on_exception(e)
+    return res

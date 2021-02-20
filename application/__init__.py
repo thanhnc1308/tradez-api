@@ -8,7 +8,6 @@ from application.api.journal.JournalController import journal_api
 from application.api.auth.AuthController import auth_api
 from application.extensions import db, migrate, jwt, mail, cors
 from werkzeug.exceptions import default_exceptions
-from application.helpers import get_error_response
 
 
 def create_app(config_name):
@@ -21,7 +20,9 @@ def create_app(config_name):
 
     @app.errorhandler(Exception)
     def handle_error(e):
-        return get_error_response(e)
+        return {
+            "message": str(e)
+        }
 
     for ex in default_exceptions:
         app.register_error_handler(ex, handle_error)
