@@ -19,7 +19,7 @@ class BaseController(Resource):
             res.on_success(data=self.schema.dump(data))
         except Exception as e:
             res.on_exception(e)
-        return res
+        return res.build()
 
     @verify_token
     def put(current_user, self, id):
@@ -36,7 +36,7 @@ class BaseController(Resource):
             res.on_success(data=self.schema.dump(data))
         except Exception as e:
             res.on_exception(e)
-        return res
+        return res.build()
 
     @verify_token
     def delete(current_user, self, id):
@@ -49,7 +49,7 @@ class BaseController(Resource):
             res.on_success(data=self.schema.dump(data))
         except Exception as e:
             res.on_exception(e)
-        return res
+        return res.build()
 
 
 class BaseListController(Resource):
@@ -80,7 +80,7 @@ class BaseListController(Resource):
                 res.on_success(data=self.list_schema.dump(data))
         except Exception as e:
             res.on_exception(e)
-        return res
+        return res.build()
 
     def get_paging(self):
         res = ServiceResponse()
@@ -117,7 +117,7 @@ class BaseListController(Resource):
             res.on_success(data=self.paging_schema.dump(result))
         except Exception as e:
             res.on_exception(e)
-        return res
+        return res.build()
 
     @verify_token
     def post(current_user, self):
@@ -133,4 +133,4 @@ class BaseListController(Resource):
             res.on_success(data=self.schema.dump(new_item))
         except Exception as e:
             res.on_exception(e)
-        return res
+        return res.build()

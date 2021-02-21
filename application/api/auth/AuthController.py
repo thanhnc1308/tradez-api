@@ -26,7 +26,7 @@ def register():
             res.on_error(code=99, user_message='Error when create new user')
     except Exception as ex:
         res.on_exception(ex)
-    return res
+    return res.build()
 
 @auth_api.route('/login', methods=['POST'])
 def login():
@@ -54,4 +54,4 @@ def login():
         res.on_error(code=401, user_message='Could not verify')
     except Exception as ex:
         res.on_exception(ex)
-    return res
+    return res.build()

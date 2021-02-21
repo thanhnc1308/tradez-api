@@ -43,7 +43,7 @@ def get_historical_price_all(current_user):
         res.on_success(data=data)
     except Exception as e:
         res.on_exception(e)
-    return res
+    return res.build()
 
 
 @stock_price_api.route('/historical_price', methods=['GET'])
@@ -78,7 +78,7 @@ def get_historical_price(current_user):
         res.on_success(data=stock_price_paging_schema.dump(result))
     except Exception as e:
         res.on_exception(e)
-    return res
+    return res.build()
 
 
 @stock_price_api.route('/market_info', methods=['GET'])
@@ -126,4 +126,4 @@ def get_market_info(current_user):
         res.on_success(data=[])
     except Exception as e:
         res.on_exception(e)
-    return res
+    return res.build()
