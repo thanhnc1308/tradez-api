@@ -92,6 +92,7 @@ def get_market_info(current_user):
         per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
         # today_date = date.today()
         today_date = parse_date('12/01/2021')
+        print('today_date', is_weekday(today_date))
         if is_weekday(today_date):
             today = format_date(today_date)
             yesterday = format_date(get_yesterday_weekday(today_date))
@@ -123,7 +124,8 @@ def get_market_info(current_user):
                 'meta': meta
             }
             res.on_success(data=market_info_paging_schema.dump(result))
-        res.on_success(data=[])
+        else:
+            res.on_success(data=[])
     except Exception as e:
         res.on_exception(e)
     return res.build()
