@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify
 from application.api.base.ServiceResponse import ServiceResponse
 from flask import request
 from application.api.stock.Stock import Stock
+from application.api.stock.BLStockScreener import screen_stock
 from application.api.stock.StockSchema import stock_schema, stock_list_schema
 from application.helpers import verify_token
 from application.api.stock import crawler
@@ -87,15 +88,12 @@ Returns:
     list: list of stock satisfied condition
 """
 @stock_screener_api.route('', methods=['POST'])
-def screen_stock():
+def stock_screener():
     res = ServiceResponse()
     try:
-        # parse base64 param
-        print('request.form', request.form)
-        print('request.json', request.json)
-        print('request.data', request.data)
-
-        # do filter here
+        params = request.json.copy()
+        data = screen_stock(params)
+        res.on_success(data=data)
     except Exception as e:
         res.on_exception(e)
     return res.build()

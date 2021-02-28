@@ -40,6 +40,7 @@ class ServiceResponse:
 
     def on_exception(self, e):
         logger.exception(e)
+        print(e)
         self.success = False
 
         code = 99
