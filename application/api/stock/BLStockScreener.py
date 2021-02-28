@@ -27,11 +27,13 @@ def screen_stock(params):
     data = []
     filters = params.get('filters')
     columns = params.get('columns')
+    limit = params.get('limit') or 20
+    offset = params.get('offset') or 0
     sql_columns = build_sql_columns(columns)
     sql_filters = build_sql_filters(filters)
-    sql = f'select {sql_columns} from {DEFAULT_SCHEMA}.stock_price where (1 = 1) {sql_filters};'
-    print(sql)
-    # data = Stock.execute(sql)
+    sql = f'select {sql_columns} from {DEFAULT_SCHEMA}.stock_price where (1 = 1) {sql_filters} offset {offset} limit {limit};'
+    # print(sql)
+    data = Stock.execute(sql)
     return [dict(row) for row in data]
 
 def build_sql_filters(filters):

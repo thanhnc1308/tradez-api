@@ -6,13 +6,13 @@ from application.api.stock.StockPriceSchema import stock_price_schema, stock_pri
 from application.api.stock.MarketInfoSchema import market_info_paging_schema
 from application.helpers import verify_token
 from application.api.base.ServiceResponse import ServiceResponse
-# import numpy as np
 import pandas as pd
 from application.utility.datetime_utils import subtract_days, is_weekday, parse_date, format_date, get_yesterday_weekday, get_the_day_before_yesterday_weekday
 from datetime import date, timedelta, datetime
 from sqlalchemy import desc, asc
 from sqlalchemy import and_, or_, not_
 from decimal import Decimal
+from application.api.stock.BLStockPrice import calculate_indicator_by_symbol, get_indicators, get_symbols, calculate_indicators_by_list_symbol
 
 
 stock_price_api = Blueprint('stock_price_api', __name__, url_prefix='/api/stock_price')
@@ -126,6 +126,22 @@ def get_market_info(current_user):
             res.on_success(data=market_info_paging_schema.dump(result))
         else:
             res.on_success(data=[])
+    except Exception as e:
+        res.on_exception(e)
+    return res.build()
+
+
+@stock_price_api.route('/calculate', methods=['GET'])
+# @verify_token
+# def calculate(current_user):
+def calculate():
+    res = ServiceResponse()
+    try:
+        indicator = request.args.get('indicator', 'all', type=str)
+        symbol = request.args.get('symbol', 'all', type=str)
+        indicators = get_indicators(indicator)
+        symbols = get_symbols(symbol)
+        calculate_indicators_by_list_symbol(indicators, symbols)
     except Exception as e:
         res.on_exception(e)
     return res.build()

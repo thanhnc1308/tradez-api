@@ -3,10 +3,10 @@ Exponential Moving Average
 """
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 
 
-def calculate(df, length=20, source='Close'):
+def calculate(df, length=200, source='close'):
     smooth_coefficient = 2 / (length + 1)  # smoothing constant
     ema_p = 0
     ema_values = []  # to hold computed EMA values
@@ -38,20 +38,20 @@ def double_moving_average(df, short_ma=20, long_ma=100):
     return signals
 
 
-def draw_dual_ma(df):
-    """
-    df must have short_ma, long_ma, orders columns
-    :param df:
-    :return:
-    """
-    ts = double_moving_average(df)
-    fig = plt.figure()
-    ax1 = fig.add_subplot(111, ylabel='Google price in $')
-    df["Close"].plot(ax=ax1, color='g', lw=.5)
-    ts["short_ma"].plot(ax=ax1, color='r', lw=2.)
-    ts["long_ma"].plot(ax=ax1, color='b', lw=2.)
-    ax1.plot(ts.loc[ts.orders == 1.0].index, df["Close"][ts.orders == 1.0], '^', markersize=7, color='k')
-    ax1.plot(ts.loc[ts.orders == -1.0].index, df["Close"][ts.orders == -1.0], 'v', markersize=7, color='k')
-    plt.legend(["Price", "Short mavg", "Long mavg", "Buy", "Sell"])
-    plt.title("Double Moving Average Trading Strategy")
-    plt.show()
+# def draw_dual_ma(df):
+#     """
+#     df must have short_ma, long_ma, orders columns
+#     :param df:
+#     :return:
+#     """
+#     ts = double_moving_average(df)
+#     fig = plt.figure()
+#     ax1 = fig.add_subplot(111, ylabel='Google price in $')
+#     df["Close"].plot(ax=ax1, color='g', lw=.5)
+#     ts["short_ma"].plot(ax=ax1, color='r', lw=2.)
+#     ts["long_ma"].plot(ax=ax1, color='b', lw=2.)
+#     ax1.plot(ts.loc[ts.orders == 1.0].index, df["Close"][ts.orders == 1.0], '^', markersize=7, color='k')
+#     ax1.plot(ts.loc[ts.orders == -1.0].index, df["Close"][ts.orders == -1.0], 'v', markersize=7, color='k')
+#     plt.legend(["Price", "Short mavg", "Long mavg", "Buy", "Sell"])
+#     plt.title("Double Moving Average Trading Strategy")
+#     plt.show()

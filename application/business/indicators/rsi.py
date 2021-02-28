@@ -5,7 +5,7 @@ import statistics as stats
 import pandas as pd
 
 
-def calculate(df, length=20, source='Close'):
+def calculate(df, length=14, source='close'):
     """
     :param source: Open Close High Low
     :param df: data
