@@ -1,3 +1,0 @@
-"""
-Money Flow Index
-"""

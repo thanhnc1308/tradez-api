@@ -1,3 +1,0 @@
-"""
-Commodity Channel Index
-"""

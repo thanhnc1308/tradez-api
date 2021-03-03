@@ -1,3 +1,0 @@
-"""
-Moving Average Convergence Divergence
-"""

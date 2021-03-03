@@ -29,12 +29,14 @@ def calculate_indicator_by_symbol(indicators, symbol):
         df[indicator] = calculate_by_indicator(indicator, df)
         # print('===================================', df.head())
         print('===================================', df.tail())
-    # for row in data:
-    #     data_updated = {}
-    #     for indicator in indicators:
-    #         data_updated[indicator] = calculate_by_indicator(indicator, row)
-    #     row.update(**data_updated)
-    #     break
+    for row in data:
+        data_updated = {}
+        for indicator in indicators:
+            dict_row = stock_price_schema.dump(row)
+            indicator_row = df[df['stock_date'] == dict_row['stock_date']]
+            data_updated[indicator] = indicator_row[indicator][0]
+        # row.update(**data_updated)
+        break
 
 def calculate_by_indicator(indicator, df):
     if indicator == 'rsi14':

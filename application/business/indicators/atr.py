@@ -1,3 +1,0 @@
-"""
-Average True Range
-"""
