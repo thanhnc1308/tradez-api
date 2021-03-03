@@ -5,3 +5,7 @@ flask-migrate
 flask_restful
 flask-cors
 pandas
+backtrader
+flask_jwt_extended
+flask_mail
+marshmallow
