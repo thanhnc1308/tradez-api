@@ -1,7 +1,9 @@
 import pandas as pd
 from pandas_datareader import data
-SRC = './business/crawler/data/'
-
+import os
+dir_path = os.path.dirname(os.path.realpath(__file__))
+SRC = os.path.join(dir_path, 'data/')
+print(SRC)
 
 def crawl(index, source, start_date, end_date, file_name):
     """
@@ -13,7 +15,7 @@ def crawl(index, source, start_date, end_date, file_name):
     :param file_name: name.csv
     :return: Pandas DataFrame
     """
-    file_dir = SRC + file_name
+    file_dir = os.path.join(SRC, file_name)
     try:
         crawled_data = pd.read_csv(file_dir)
         print('File data found...reading data')

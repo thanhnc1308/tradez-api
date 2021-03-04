@@ -1,14 +1,7 @@
-"""
-.. module:: trend
-   :synopsis: Trend Indicators.
-
-.. moduleauthor:: Dario Lopez Padial (Bukosabino)
-
-"""
 import numpy as np
 import pandas as pd
 
-from ta.utils import IndicatorMixin, _ema, _get_min_max, _sma
+from application.business.indicators.utils import IndicatorMixin, _ema, _get_min_max, _sma
 
 
 class AroonIndicator(IndicatorMixin):

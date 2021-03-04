@@ -1,10 +1,3 @@
-"""
-.. module:: utils
-   :synopsis: Utils classes and functions.
-
-.. moduleauthor:: Dario Lopez Padial (Bukosabino)
-
-"""
 import math
 
 import numpy as np

@@ -1,14 +1,7 @@
-"""
-.. module:: volatility
-   :synopsis: Volatility Indicators.
-
-.. moduleauthor:: Dario Lopez Padial (Bukosabino)
-
-"""
 import numpy as np
 import pandas as pd
 
-from ta.utils import IndicatorMixin
+from application.business.indicators.utils import IndicatorMixin
 
 
 class AverageTrueRange(IndicatorMixin):
