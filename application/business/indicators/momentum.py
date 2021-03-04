@@ -12,8 +12,6 @@ class RSIIndicator(IndicatorMixin):
     primarily used to attempt to identify overbought or oversold conditions in
     the trading of an asset.
 
-    https://www.investopedia.com/terms/r/rsi.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -57,8 +55,6 @@ class TSIIndicator(IndicatorMixin):
     """True strength index (TSI)
 
     Shows both trend direction and overbought/oversold conditions.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:true_strength_index
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -117,8 +113,6 @@ class UltimateOscillator(IndicatorMixin):
 
     Larry Williams' (1976) signal, a momentum oscillator designed to capture
     momentum across three different timeframes.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ultimate_oscillator
 
     BP = Close - Minimum(Low or Prior Close).
     TR = Maximum(High or Prior Close)  -  Minimum(Low or Prior Close)
@@ -204,7 +198,7 @@ class UltimateOscillator(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         ultimate_osc = self._check_fillna(self._uo, value=50)
-        return pd.Series(ultimate_osc, name="uo")
+        return pd.Series(ultimate_osc, name="ultimate_oscillator")
 
 
 class StochasticOscillator(IndicatorMixin):
@@ -214,8 +208,6 @@ class StochasticOscillator(IndicatorMixin):
     oscillator presents the location of the closing price of a
     stock in relation to the high and low range of the price
     of a stock over a period of time, typically a 14-day period.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:stochastic_oscillator_fast_slow_and_full
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -249,7 +241,7 @@ class StochasticOscillator(IndicatorMixin):
         smax = self._high.rolling(self._window, min_periods=min_periods).max()
         self._stoch_k = 100 * (self._close - smin) / (smax - smin)
 
-    def stoch(self) -> pd.Series:
+    def stoch_k(self) -> pd.Series:
         """Stochastic Oscillator
 
         Returns:
@@ -258,7 +250,7 @@ class StochasticOscillator(IndicatorMixin):
         stoch_k = self._check_fillna(self._stoch_k, value=50)
         return pd.Series(stoch_k, name="stoch_k")
 
-    def stoch_signal(self) -> pd.Series:
+    def stoch_d(self) -> pd.Series:
         """Signal Stochastic Oscillator
 
         Returns:
@@ -269,7 +261,7 @@ class StochasticOscillator(IndicatorMixin):
             self._smooth_window, min_periods=min_periods
         ).mean()
         stoch_d = self._check_fillna(stoch_d, value=50)
-        return pd.Series(stoch_d, name="stoch_k_signal")
+        return pd.Series(stoch_d, name="stoch_d")
 
 
 class KAMAIndicator(IndicatorMixin):
@@ -281,8 +273,6 @@ class KAMAIndicator(IndicatorMixin):
     prices from a greater distance. This trend-following indicator can be
     used to identify the overall trend, time turning points and filter price
     movements.
-
-    https://www.tradingview.com/ideas/kama/
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -366,8 +356,6 @@ class ROCIndicator(IndicatorMixin):
     can be used to identify the overall trend. Identifying overbought or
     oversold extremes comes naturally to the Rate-of-Change oscillator.
 
-    https://school.stockcharts.com/doku.php?id=technical_indicators:rate_of_change_roc_and_momentum
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -386,28 +374,24 @@ class ROCIndicator(IndicatorMixin):
             / self._close.shift(self._window)
         ) * 100
 
-    def roc(self) -> pd.Series:
+    def rate_of_change(self) -> pd.Series:
         """Rate of Change (ROC)
 
         Returns:
             pandas.Series: New feature generated.
         """
         roc_series = self._check_fillna(self._roc)
-        return pd.Series(roc_series, name="roc")
+        return pd.Series(roc_series, name="rate_of_change")
 
 
 class AwesomeOscillatorIndicator(IndicatorMixin):
     """Awesome Oscillator
-
-    From: https://www.tradingview.com/wiki/Awesome_Oscillator_(AO)
 
     The Awesome Oscillator is an indicator used to measure market momentum. AO
     calculates the difference of a 34 Period and 5 Period Simple Moving
     Averages. The Simple Moving Averages that are used are not calculated
     using closing price but rather each bar's midpoints. AO is generally used
     to affirm trends or to anticipate possible reversals.
-
-    From: https://www.ifcm.co.uk/ntx-indicators/awesome-oscillator
 
     Awesome Oscillator is a 34-period simple moving average, plotted through
     the central points of the bars (H+L)/2, and subtracted from the 5-period
@@ -461,7 +445,7 @@ class AwesomeOscillatorIndicator(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         ao_series = self._check_fillna(self._ao, value=0)
-        return pd.Series(ao_series, name="ao")
+        return pd.Series(ao_series, name="awesome_oscillator")
 
 
 class WilliamsRIndicator(IndicatorMixin):
@@ -487,8 +471,6 @@ class WilliamsRIndicator(IndicatorMixin):
     Lowest Low = lowest low for the look-back period
     Highest High = highest high for the look-back period
     %R is multiplied by -100 correct the inversion and move the decimal.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:williams_r
 
     The Williams %R oscillates from 0 to -100. When the indicator produces
     readings from 0 to -20, this indicates overbought market conditions. When
@@ -534,7 +516,7 @@ class WilliamsRIndicator(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         wr_series = self._check_fillna(self._wr, value=-50)
-        return pd.Series(wr_series, name="wr")
+        return pd.Series(wr_series, name="williams_r")
 
 
 class StochRSIIndicator(IndicatorMixin):
@@ -544,9 +526,6 @@ class StochRSIIndicator(IndicatorMixin):
     indicators in order to create a more sensitive indicator that is attuned to
     a specific security's historical performance rather than a generalized analysis
     of price change.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:stochrsi
-    https://www.investopedia.com/terms/s/stochrsi.asp
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -581,25 +560,25 @@ class StochRSIIndicator(IndicatorMixin):
         )
         self._stochrsi_k = self._stochrsi.rolling(self._smooth1).mean()
 
-    def stochrsi(self):
+    def stoch_rsi(self):
         """Stochastic RSI
 
         Returns:
             pandas.Series: New feature generated.
         """
         stochrsi_series = self._check_fillna(self._stochrsi)
-        return pd.Series(stochrsi_series, name="stochrsi")
+        return pd.Series(stochrsi_series, name="stoch_rsi")
 
-    def stochrsi_k(self):
+    def stoch_rsi_k(self):
         """Stochastic RSI %k
 
         Returns:
             pandas.Series: New feature generated.
         """
         stochrsi_k_series = self._check_fillna(self._stochrsi_k)
-        return pd.Series(stochrsi_k_series, name="stochrsi_k")
+        return pd.Series(stochrsi_k_series, name="stoch_rsi_k")
 
-    def stochrsi_d(self):
+    def stoch_rsi_d(self):
         """Stochastic RSI %d
 
         Returns:
@@ -607,15 +586,13 @@ class StochRSIIndicator(IndicatorMixin):
         """
         stochrsi_d_series = self._stochrsi_k.rolling(self._smooth2).mean()
         stochrsi_d_series = self._check_fillna(stochrsi_d_series)
-        return pd.Series(stochrsi_d_series, name="stochrsi_d")
+        return pd.Series(stochrsi_d_series, name="stoch_rsi_d")
 
 
 class PercentagePriceOscillator(IndicatorMixin):
     """
     The Percentage Price Oscillator (PPO) is a momentum oscillator that measures
     the difference between two moving averages as a percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:price_oscillators_ppo
 
     Args:
         close(pandas.Series): dataset 'Price' column.
@@ -688,8 +665,6 @@ class PercentageVolumeOscillator(IndicatorMixin):
     The Percentage Volume Oscillator (PVO) is a momentum oscillator for volume.
     The PVO measures the difference between two volume-based moving averages as a
     percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:percentage_volume_oscillator_pvo
 
     Args:
         volume(pandas.Series): dataset 'Volume' column.
@@ -765,8 +740,6 @@ def rsi(close, window=14, fillna=False) -> pd.Series:
     primarily used to attempt to identify overbought or oversold conditions in
     the trading of an asset.
 
-    https://www.investopedia.com/terms/r/rsi.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -782,8 +755,6 @@ def tsi(close, window_slow=25, window_fast=13, fillna=False) -> pd.Series:
     """True strength index (TSI)
 
     Shows both trend direction and overbought/oversold conditions.
-
-    https://en.wikipedia.org/wiki/True_strength_index
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -815,8 +786,6 @@ def ultimate_oscillator(
 
     Larry Williams' (1976) signal, a momentum oscillator designed to capture
     momentum across three different timeframes.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ultimate_oscillator
 
     BP = Close - Minimum(Low or Prior Close).
     TR = Maximum(High or Prior Close)  -  Minimum(Low or Prior Close)
@@ -856,7 +825,7 @@ def ultimate_oscillator(
     ).ultimate_oscillator()
 
 
-def stoch(high, low, close, window=14, smooth_window=3, fillna=False) -> pd.Series:
+def stoch_k(high, low, close, window=14, smooth_window=3, fillna=False) -> pd.Series:
     """Stochastic Oscillator
 
     Developed in the late 1950s by George Lane. The stochastic
@@ -864,8 +833,6 @@ def stoch(high, low, close, window=14, smooth_window=3, fillna=False) -> pd.Seri
     stock in relation to the high and low range of the price
     of a stock over a period of time, typically a 14-day period.
 
-    https://www.investopedia.com/terms/s/stochasticoscillator.asp
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -885,18 +852,16 @@ def stoch(high, low, close, window=14, smooth_window=3, fillna=False) -> pd.Seri
         window=window,
         smooth_window=smooth_window,
         fillna=fillna,
-    ).stoch()
+    ).stoch_k()
 
 
-def stoch_signal(
+def stoch_d(
     high, low, close, window=14, smooth_window=3, fillna=False
 ) -> pd.Series:
     """Stochastic Oscillator Signal
 
     Shows SMA of Stochastic Oscillator. Typically a 3 day SMA.
 
-    https://www.investopedia.com/terms/s/stochasticoscillator.asp
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -915,13 +880,11 @@ def stoch_signal(
         window=window,
         smooth_window=smooth_window,
         fillna=fillna,
-    ).stoch_signal()
+    ).stoch_d()
 
 
 def williams_r(high, low, close, lbp=14, fillna=False) -> pd.Series:
     """Williams %R
-
-    From: http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:williams_r
 
     Developed by Larry Williams, Williams %R is a momentum indicator that is
     the inverse of the Fast Stochastic Oscillator. Also referred to as %R,
@@ -943,8 +906,6 @@ def williams_r(high, low, close, lbp=14, fillna=False) -> pd.Series:
     Lowest Low = lowest low for the look-back period
     Highest High = highest high for the look-back period
     %R is multiplied by -100 correct the inversion and move the decimal.
-
-    From: https://www.investopedia.com/terms/w/williamsr.asp
     The Williams %R oscillates from 0 to -100. When the indicator produces
     readings from 0 to -20, this indicates overbought market conditions. When
     readings are -80 to -100, it indicates oversold market conditions.
@@ -967,15 +928,11 @@ def williams_r(high, low, close, lbp=14, fillna=False) -> pd.Series:
 def awesome_oscillator(high, low, window1=5, window2=34, fillna=False) -> pd.Series:
     """Awesome Oscillator
 
-    From: https://www.tradingview.com/wiki/Awesome_Oscillator_(AO)
-
     The Awesome Oscillator is an indicator used to measure market momentum. AO
     calculates the difference of a 34 Period and 5 Period Simple Moving
     Averages. The Simple Moving Averages that are used are not calculated
     using closing price but rather each bar's midpoints. AO is generally used
     to affirm trends or to anticipate possible reversals.
-
-    From: https://www.ifcm.co.uk/ntx-indicators/awesome-oscillator
 
     Awesome Oscillator is a 34-period simple moving average, plotted through
     the central points of the bars (H+L)/2, and subtracted from the 5-period
@@ -1015,8 +972,6 @@ def kama(close, window=10, pow1=2, pow2=30, fillna=False) -> pd.Series:
     used to identify the overall trend, time turning points and filter price
     movements.
 
-    https://www.tradingview.com/ideas/kama/
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n number of periods for the efficiency ratio.
@@ -1032,7 +987,7 @@ def kama(close, window=10, pow1=2, pow2=30, fillna=False) -> pd.Series:
     ).kama()
 
 
-def roc(close: pd.Series, window: int = 12, fillna: bool = False) -> pd.Series:
+def rate_of_change(close: pd.Series, window: int = 12, fillna: bool = False) -> pd.Series:
     """Rate of Change (ROC)
 
     The Rate-of-Change (ROC) indicator, which is also referred to as simply
@@ -1048,8 +1003,6 @@ def roc(close: pd.Series, window: int = 12, fillna: bool = False) -> pd.Series:
     can be used to identify the overall trend. Identifying overbought or
     oversold extremes comes naturally to the Rate-of-Change oscillator.
 
-    https://school.stockcharts.com/doku.php?id=technical_indicators:rate_of_change_roc_and_momentum
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n periods.
@@ -1059,10 +1012,10 @@ def roc(close: pd.Series, window: int = 12, fillna: bool = False) -> pd.Series:
         pandas.Series: New feature generated.
 
     """
-    return ROCIndicator(close=close, window=window, fillna=fillna).roc()
+    return ROCIndicator(close=close, window=window, fillna=fillna).rate_of_change()
 
 
-def stochrsi(
+def stoch_rsi(
     close: pd.Series,
     window: int = 14,
     smooth1: int = 3,
@@ -1076,8 +1029,6 @@ def stochrsi(
     a specific security's historical performance rather than a generalized analysis
     of price change.
 
-    https://www.investopedia.com/terms/s/stochrsi.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period
@@ -1089,10 +1040,10 @@ def stochrsi(
     """
     return StochRSIIndicator(
         close=close, window=window, smooth1=smooth1, smooth2=smooth2, fillna=fillna
-    ).stochrsi()
+    ).stoch_rsi()
 
 
-def stochrsi_k(
+def stoch_rsi_k(
     close: pd.Series,
     window: int = 14,
     smooth1: int = 3,
@@ -1106,8 +1057,6 @@ def stochrsi_k(
     a specific security's historical performance rather than a generalized analysis
     of price change.
 
-    https://www.investopedia.com/terms/s/stochrsi.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period
@@ -1119,10 +1068,10 @@ def stochrsi_k(
     """
     return StochRSIIndicator(
         close=close, window=window, smooth1=smooth1, smooth2=smooth2, fillna=fillna
-    ).stochrsi_k()
+    ).stoch_rsi_k()
 
 
-def stochrsi_d(
+def stoch_rsi_d(
     close: pd.Series,
     window: int = 14,
     smooth1: int = 3,
@@ -1136,8 +1085,6 @@ def stochrsi_d(
     a specific security's historical performance rather than a generalized analysis
     of price change.
 
-    https://www.investopedia.com/terms/s/stochrsi.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period
@@ -1149,10 +1096,10 @@ def stochrsi_d(
     """
     return StochRSIIndicator(
         close=close, window=window, smooth1=smooth1, smooth2=smooth2, fillna=fillna
-    ).stochrsi_d()
+    ).stoch_rsi_d()
 
 
-def ppo(
+def percentage_price_oscillator(
     close: pd.Series,
     window_slow: int = 26,
     window_fast: int = 12,
@@ -1162,8 +1109,6 @@ def ppo(
     """
     The Percentage Price Oscillator (PPO) is a momentum oscillator that measures
     the difference between two moving averages as a percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:price_oscillators_ppo
 
     Args:
         close(pandas.Series): dataset 'Price' column.
@@ -1183,14 +1128,12 @@ def ppo(
     ).ppo()
 
 
-def ppo_signal(
+def percentage_price_oscillator_signal(
     close: pd.Series, window_slow=26, window_fast=12, window_sign=9, fillna=False
 ) -> pd.Series:
     """
     The Percentage Price Oscillator (PPO) is a momentum oscillator that measures
     the difference between two moving averages as a percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:price_oscillators_ppo
 
     Args:
         close(pandas.Series): dataset 'Price' column.
@@ -1210,7 +1153,7 @@ def ppo_signal(
     ).ppo_signal()
 
 
-def ppo_hist(
+def percentage_price_oscillator_signal_hist(
     close: pd.Series,
     window_slow: int = 26,
     window_fast: int = 12,
@@ -1220,8 +1163,6 @@ def ppo_hist(
     """
     The Percentage Price Oscillator (PPO) is a momentum oscillator that measures
     the difference between two moving averages as a percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:price_oscillators_ppo
 
     Args:
         close(pandas.Series): dataset 'Price' column.
@@ -1241,7 +1182,7 @@ def ppo_hist(
     ).ppo_hist()
 
 
-def pvo(
+def percentage_volume_oscillator(
     volume: pd.Series,
     window_slow: int = 26,
     window_fast: int = 12,
@@ -1252,8 +1193,6 @@ def pvo(
     The Percentage Volume Oscillator (PVO) is a momentum oscillator for volume.
     The PVO measures the difference between two volume-based moving averages as a
     percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:percentage_volume_oscillator_pvo
 
     Args:
         volume(pandas.Series): dataset 'Volume' column.
@@ -1275,7 +1214,7 @@ def pvo(
     return indicator.pvo()
 
 
-def pvo_signal(
+def percentage_volume_oscillator_signal(
     volume: pd.Series,
     window_slow: int = 26,
     window_fast: int = 12,
@@ -1286,8 +1225,6 @@ def pvo_signal(
     The Percentage Volume Oscillator (PVO) is a momentum oscillator for volume.
     The PVO measures the difference between two volume-based moving averages as a
     percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:percentage_volume_oscillator_pvo
 
     Args:
         volume(pandas.Series): dataset 'Volume' column.
@@ -1309,7 +1246,7 @@ def pvo_signal(
     return indicator.pvo_signal()
 
 
-def pvo_hist(
+def percentage_volume_oscillator_hist(
     volume: pd.Series,
     window_slow: int = 26,
     window_fast: int = 12,
@@ -1320,8 +1257,6 @@ def pvo_hist(
     The Percentage Volume Oscillator (PVO) is a momentum oscillator for volume.
     The PVO measures the difference between two volume-based moving averages as a
     percentage of the larger moving average.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:percentage_volume_oscillator_pvo
 
     Args:
         volume(pandas.Series): dataset 'Volume' column.

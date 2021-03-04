@@ -13,8 +13,6 @@ class AroonIndicator(IndicatorMixin):
     Aroon Down = ((N - Days Since N-day Low) / N) x 100
     Aroon Indicator = Aroon Up - Aroon Down
 
-    https://www.investopedia.com/terms/a/aroon.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -72,8 +70,6 @@ class MACD(IndicatorMixin):
     Is a trend-following momentum indicator that shows the relationship between
     two moving averages of prices.
 
-    https://school.stockcharts.com/doku.php?id=technical_indicators:moving_average_convergence_divergence_macd
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window_fast(int): n period short-term.
@@ -128,7 +124,7 @@ class MACD(IndicatorMixin):
             name=f"MACD_sign_{self._window_fast}_{self._window_slow}",
         )
 
-    def macd_diff(self) -> pd.Series:
+    def macd_histogram(self) -> pd.Series:
         """MACD Histogram
 
         Returns:
@@ -136,7 +132,7 @@ class MACD(IndicatorMixin):
         """
         macd_diff_series = self._check_fillna(self._macd_diff, value=0)
         return pd.Series(
-            macd_diff_series, name=f"MACD_diff_{self._window_fast}_{self._window_slow}"
+            macd_diff_series, name=f"macd_histogram_{self._window_fast}_{self._window_slow}"
         )
 
 
@@ -154,7 +150,7 @@ class EMAIndicator(IndicatorMixin):
         self._window = window
         self._fillna = fillna
 
-    def ema_indicator(self) -> pd.Series:
+    def ema(self) -> pd.Series:
         """Exponential Moving Average (EMA)
 
         Returns:
@@ -178,7 +174,7 @@ class SMAIndicator(IndicatorMixin):
         self._window = window
         self._fillna = fillna
 
-    def sma_indicator(self) -> pd.Series:
+    def sma(self) -> pd.Series:
         """Simple Moving Average (SMA)
 
         Returns:
@@ -237,8 +233,6 @@ class TRIXIndicator(IndicatorMixin):
     Shows the percent rate of change of a triple exponentially smoothed moving
     average.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:trix
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -276,8 +270,6 @@ class MassIndex(IndicatorMixin):
     It uses the high-low range to identify trend reversals based on range
     expansions. It identifies range bulges that can foreshadow a reversal of
     the current trend.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:mass_index
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -324,8 +316,6 @@ class MassIndex(IndicatorMixin):
 
 class IchimokuIndicator(IndicatorMixin):
     """Ichimoku Kinkō Hyō (Ichimoku)
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ichimoku_cloud
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -429,8 +419,6 @@ class KSTIndicator(IndicatorMixin):
     formula is weighed to be more greatly influenced by the longer and more
     dominant time spans, in order to better reflect the primary swings of stock
     market cycle.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:know_sure_thing_kst
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -564,8 +552,6 @@ class DPOIndicator(IndicatorMixin):
     Is an indicator designed to remove trend from price and make it easier to
     identify cycles.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:detrended_price_osci
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -605,8 +591,6 @@ class CCIIndicator(IndicatorMixin):
     above their average, which is a show of strength. Low negative readings
     indicate that prices are well below their average, which is a show of
     weakness.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:commodity_channel_index_cci
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -674,8 +658,6 @@ class ADXIndicator(IndicatorMixin):
 
     Using these three indicators together, chartists can determine both the
     direction and strength of the trend.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:average_directional_index_adx
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -818,8 +800,6 @@ class VortexIndicator(IndicatorMixin):
     movement. A bullish signal triggers when the positive trend indicator
     crosses above the negative trend indicator or a key level.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:vortex_indicator
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -890,8 +870,6 @@ class PSARIndicator(IndicatorMixin):
     J. Welles Wilder. The Parabolic SAR is displayed as a single
     parabolic line (or dots) underneath the price bars in an uptrend,
     and above the price bars in a downtrend.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:parabolic_sar
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -1051,8 +1029,6 @@ class STCIndicator(IndicatorMixin):
     the assumption that, regardless of time frame, currency trends
     accelerate and decelerate in cyclical patterns.
 
-    https://www.investopedia.com/articles/forex/10/schaff-trend-cycle-indicator.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window_fast(int): n period short-term.
@@ -1108,25 +1084,25 @@ class STCIndicator(IndicatorMixin):
         return pd.Series(stc_series, name="stc")
 
 
-def ema_indicator(close, window=12, fillna=False):
+def ema(close, window=12, fillna=False):
     """Exponential Moving Average (EMA)
 
     Returns:
         pandas.Series: New feature generated.
     """
-    return EMAIndicator(close=close, window=window, fillna=fillna).ema_indicator()
+    return EMAIndicator(close=close, window=window, fillna=fillna).ema()
 
 
-def sma_indicator(close, window=12, fillna=False):
+def sma(close, window=12, fillna=False):
     """Simple Moving Average (SMA)
 
     Returns:
         pandas.Series: New feature generated.
     """
-    return SMAIndicator(close=close, window=window, fillna=fillna).sma_indicator()
+    return SMAIndicator(close=close, window=window, fillna=fillna).sma()
 
 
-def wma_indicator(close, window=9, fillna=False):
+def wma(close, window=9, fillna=False):
     """Weighted Moving Average (WMA)
 
     Returns:
@@ -1140,8 +1116,6 @@ def macd(close, window_slow=26, window_fast=12, fillna=False):
 
     Is a trend-following momentum indicator that shows the relationship between
     two moving averages of prices.
-
-    https://en.wikipedia.org/wiki/MACD
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -1166,8 +1140,6 @@ def macd_signal(close, window_slow=26, window_fast=12, window_sign=9, fillna=Fal
 
     Shows EMA of MACD.
 
-    https://en.wikipedia.org/wiki/MACD
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window_fast(int): n period short-term.
@@ -1187,12 +1159,10 @@ def macd_signal(close, window_slow=26, window_fast=12, window_sign=9, fillna=Fal
     ).macd_signal()
 
 
-def macd_diff(close, window_slow=26, window_fast=12, window_sign=9, fillna=False):
+def macd_histogram(close, window_slow=26, window_fast=12, window_sign=9, fillna=False):
     """Moving Average Convergence Divergence (MACD Diff)
 
     Shows the relationship between MACD and MACD Signal.
-
-    https://en.wikipedia.org/wiki/MACD
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -1210,7 +1180,7 @@ def macd_diff(close, window_slow=26, window_fast=12, window_sign=9, fillna=False
         window_fast=window_fast,
         window_sign=window_sign,
         fillna=fillna,
-    ).macd_diff()
+    ).macd_histogram()
 
 
 def adx(high, low, close, window=14, fillna=False):
@@ -1227,8 +1197,6 @@ def adx(high, low, close, window=14, fillna=False):
 
     Using these three indicators together, chartists can determine both the
     direction and strength of the trend.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:average_directional_index_adx
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -1260,8 +1228,6 @@ def adx_pos(high, low, close, window=14, fillna=False):
     Using these three indicators together, chartists can determine both the
     direction and strength of the trend.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:average_directional_index_adx
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1292,8 +1258,6 @@ def adx_neg(high, low, close, window=14, fillna=False):
     Using these three indicators together, chartists can determine both the
     direction and strength of the trend.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:average_directional_index_adx
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1315,8 +1279,6 @@ def vortex_indicator_pos(high, low, close, window=14, fillna=False):
     It consists of two oscillators that capture positive and negative trend
     movement. A bullish signal triggers when the positive trend indicator
     crosses above the negative trend indicator or a key level.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:vortex_indicator
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -1340,8 +1302,6 @@ def vortex_indicator_neg(high, low, close, window=14, fillna=False):
     movement. A bearish signal triggers when the negative trend indicator
     crosses above the positive trend indicator or a key level.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:vortex_indicator
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1363,8 +1323,6 @@ def trix(close, window=15, fillna=False):
     Shows the percent rate of change of a triple exponentially smoothed moving
     average.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:trix
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -1382,8 +1340,6 @@ def mass_index(high, low, window_fast=9, window_slow=25, fillna=False):
     It uses the high-low range to identify trend reversals based on range
     expansions. It identifies range bulges that can foreshadow a reversal of
     the current trend.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:mass_index
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -1414,8 +1370,6 @@ def cci(high, low, close, window=20, constant=0.015, fillna=False):
     indicate that prices are well below their average, which is a show of
     weakness.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:commodity_channel_index_cci
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1438,8 +1392,6 @@ def dpo(close, window=20, fillna=False):
 
     Is an indicator designed to remove trend from price and make it easier to
     identify cycles.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:detrended_price_osci
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -1470,8 +1422,6 @@ def kst(
     formula is weighed to be more greatly influenced by the longer and more
     dominant time spans, in order to better reflect the primary swings of stock
     market cycle.
-
-    https://en.wikipedia.org/wiki/KST_oscillator
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -1514,8 +1464,6 @@ def stc(
     trader Doug Schaff, STC is a type of oscillator and is based on
     the assumption that, regardless of time frame, currency trends
     accelerate and decelerate in cyclical patterns.
-
-    https://www.investopedia.com/articles/forex/10/schaff-trend-cycle-indicator.asp
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -1560,8 +1508,6 @@ def kst_sig(
     dominant time spans, in order to better reflect the primary swings of stock
     market cycle.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:know_sure_thing_kst
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         roc1(int): roc1 period.
@@ -1600,8 +1546,6 @@ def ichimoku_conversion_line(
 
     It identifies the trend and look for potential signals within that trend.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ichimoku_cloud
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1631,8 +1575,6 @@ def ichimoku_base_line(
 
     It identifies the trend and look for potential signals within that trend.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ichimoku_cloud
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1660,8 +1602,6 @@ def ichimoku_a(high, low, window1=9, window2=26, visual=False, fillna=False):
 
     It identifies the trend and look for potential signals within that trend.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ichimoku_cloud
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1688,8 +1628,6 @@ def ichimoku_b(high, low, window2=26, window3=52, visual=False, fillna=False):
     """Ichimoku Kinkō Hyō (Ichimoku)
 
     It identifies the trend and look for potential signals within that trend.
-
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ichimoku_cloud
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -1720,8 +1658,6 @@ def aroon_up(close, window=25, fillna=False):
 
     Aroon Up - ((N - Days Since N-day High) / N) x 100
 
-    https://www.investopedia.com/terms/a/aroon.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -1741,8 +1677,6 @@ def aroon_down(close, window=25, fillna=False):
 
     Aroon Down - ((N - Days Since N-day Low) / N) x 100
 
-    https://www.investopedia.com/terms/a/aroon.asp
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -1758,8 +1692,6 @@ def psar_up(high, low, close, step=0.02, max_step=0.20, fillna=False):
     """Parabolic Stop and Reverse (Parabolic SAR)
 
     Returns the PSAR series with non-N/A values for upward trends
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:parabolic_sar
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -1783,8 +1715,6 @@ def psar_down(high, low, close, step=0.02, max_step=0.20, fillna=False):
 
     Returns the PSAR series with non-N/A values for downward trends
 
-    https://school.stockcharts.com/doku.php?id=technical_indicators:parabolic_sar
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1807,8 +1737,6 @@ def psar_up_indicator(high, low, close, step=0.02, max_step=0.20, fillna=False):
 
     Returns 1, if there is a reversal towards an upward trend. Else, returns 0.
 
-    https://school.stockcharts.com/doku.php?id=technical_indicators:parabolic_sar
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -1830,8 +1758,6 @@ def psar_down_indicator(high, low, close, step=0.02, max_step=0.20, fillna=False
     """Parabolic Stop and Reverse (Parabolic SAR) Downward Trend Indicator
 
     Returns 1, if there is a reversal towards an downward trend. Else, returns 0.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:parabolic_sar
 
     Args:
         high(pandas.Series): dataset 'High' column.

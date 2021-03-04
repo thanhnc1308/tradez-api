@@ -30,13 +30,11 @@ class DailyReturnIndicator(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         dr_series = self._check_fillna(self._dr, value=0)
-        return pd.Series(dr_series, name="d_ret")
+        return pd.Series(dr_series, name="daily_return")
 
 
 class DailyLogReturnIndicator(IndicatorMixin):
     """Daily Log Return (DLR)
-
-    https://stackoverflow.com/questions/31287552/logarithmic-returns-in-pandas-dataframe
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -59,7 +57,7 @@ class DailyLogReturnIndicator(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         dr_series = self._check_fillna(self._dr, value=0)
-        return pd.Series(dr_series, name="d_logret")
+        return pd.Series(dr_series, name="daily_log_return")
 
 
 class CumulativeReturnIndicator(IndicatorMixin):
@@ -86,7 +84,7 @@ class CumulativeReturnIndicator(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         cum_ret = self._check_fillna(self._cr, value=-1)
-        return pd.Series(cum_ret, name="cum_ret")
+        return pd.Series(cum_ret, name="cumulative_return")
 
 
 def daily_return(close, fillna=False):
@@ -104,8 +102,6 @@ def daily_return(close, fillna=False):
 
 def daily_log_return(close, fillna=False):
     """Daily Log Return (DLR)
-
-    https://stackoverflow.com/questions/31287552/logarithmic-returns-in-pandas-dataframe
 
     Args:
         close(pandas.Series): dataset 'Close' column.

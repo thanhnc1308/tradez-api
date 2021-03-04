@@ -11,8 +11,6 @@ class AverageTrueRange(IndicatorMixin):
     Strong moves, in either direction, are often accompanied by large ranges,
     or large True Ranges.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:average_true_range_atr
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -60,8 +58,6 @@ class AverageTrueRange(IndicatorMixin):
 class BollingerBands(IndicatorMixin):
     """Bollinger Bands
 
-    https://school.stockcharts.com/doku.php?id=technical_indicators:bollinger_bands
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -107,7 +103,7 @@ class BollingerBands(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         hband = self._check_fillna(self._hband, value=-1)
-        return pd.Series(hband, name="hband")
+        return pd.Series(hband, name="bollinger_hband")
 
     def bollinger_lband(self) -> pd.Series:
         """Bollinger Channel Low Band
@@ -116,7 +112,7 @@ class BollingerBands(IndicatorMixin):
             pandas.Series: New feature generated.
         """
         lband = self._check_fillna(self._lband, value=-1)
-        return pd.Series(lband, name="lband")
+        return pd.Series(lband, name="bollinger_lband")
 
     def bollinger_wband(self) -> pd.Series:
         """Bollinger Channel Band Width
@@ -128,7 +124,7 @@ class BollingerBands(IndicatorMixin):
         """
         wband = ((self._hband - self._lband) / self._mavg) * 100
         wband = self._check_fillna(wband, value=0)
-        return pd.Series(wband, name="bbiwband")
+        return pd.Series(wband, name="bollinger_wband")
 
     def bollinger_pband(self) -> pd.Series:
         """Bollinger Channel Percentage Band
@@ -140,7 +136,7 @@ class BollingerBands(IndicatorMixin):
         """
         pband = (self._close - self._lband) / (self._hband - self._lband)
         pband = self._check_fillna(pband, value=0)
-        return pd.Series(pband, name="bbipband")
+        return pd.Series(pband, name="bollinger_pband")
 
     def bollinger_hband_indicator(self) -> pd.Series:
         """Bollinger Channel Indicator Crossing High Band (binary).
@@ -154,7 +150,7 @@ class BollingerBands(IndicatorMixin):
             np.where(self._close > self._hband, 1.0, 0.0), index=self._close.index
         )
         hband = self._check_fillna(hband, value=0)
-        return pd.Series(hband, index=self._close.index, name="bbihband")
+        return pd.Series(hband, index=self._close.index, name="bollinger_hband_indicator")
 
     def bollinger_lband_indicator(self) -> pd.Series:
         """Bollinger Channel Indicator Crossing Low Band (binary).
@@ -168,7 +164,7 @@ class BollingerBands(IndicatorMixin):
             np.where(self._close < self._lband, 1.0, 0.0), index=self._close.index
         )
         lband = self._check_fillna(lband, value=0)
-        return pd.Series(lband, name="bbilband")
+        return pd.Series(lband, name="bollinger_lband_indicator")
 
 
 class KeltnerChannel(IndicatorMixin):
@@ -177,8 +173,6 @@ class KeltnerChannel(IndicatorMixin):
     Keltner Channels are a trend following indicator used to identify reversals with channel breakouts and
     channel direction. Channels can also be used to identify overbought and oversold levels when the trend
     is flat.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:keltner_channels
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -189,7 +183,7 @@ class KeltnerChannel(IndicatorMixin):
         fillna(bool): if True, fill nan values.
         original_version(bool): if True, use original version as the centerline (SMA of typical price)
             if False, use EMA of close as the centerline. More info:
-            https://school.stockcharts.com/doku.php?id=technical_indicators:keltner_channels
+                https://school.stockcharts.com/doku.php?id=technical_indicators:keltner_channels
     """
 
     def __init__(
@@ -322,8 +316,6 @@ class KeltnerChannel(IndicatorMixin):
 class DonchianChannel(IndicatorMixin):
     """Donchian Channel
 
-    https://www.investopedia.com/terms/d/donchianchannels.asp
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -421,8 +413,6 @@ class DonchianChannel(IndicatorMixin):
 class UlcerIndex(IndicatorMixin):
     """Ulcer Index
 
-    https://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ulcer_index
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -464,8 +454,6 @@ def average_true_range(high, low, close, window=14, fillna=False):
     Strong moves, in either direction, are often accompanied by large ranges,
     or large True Ranges.
 
-    http://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:average_true_range_atr
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -487,8 +475,6 @@ def bollinger_mavg(close, window=20, fillna=False):
 
     N-period simple moving average (MA).
 
-    https://en.wikipedia.org/wiki/Bollinger_Bands
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -506,8 +492,6 @@ def bollinger_hband(close, window=20, window_dev=2, fillna=False):
 
     Upper band at K times an N-period standard deviation above the moving
     average (MA + Kdeviation).
-
-    https://en.wikipedia.org/wiki/Bollinger_Bands
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -529,8 +513,6 @@ def bollinger_lband(close, window=20, window_dev=2, fillna=False):
 
     Lower band at K times an N-period standard deviation below the moving
     average (MA − Kdeviation).
-
-    https://en.wikipedia.org/wiki/Bollinger_Bands
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -592,8 +574,6 @@ def bollinger_hband_indicator(close, window=20, window_dev=2, fillna=False):
 
     Returns 1, if close is higher than bollinger high band. Else, return 0.
 
-    https://en.wikipedia.org/wiki/Bollinger_Bands
-
     Args:
         close(pandas.Series): dataset 'Close' column.
         window(int): n period.
@@ -613,8 +593,6 @@ def bollinger_lband_indicator(close, window=20, window_dev=2, fillna=False):
     """Bollinger Low Band Indicator
 
     Returns 1, if close is lower than bollinger low band. Else, return 0.
-
-    https://en.wikipedia.org/wiki/Bollinger_Bands
 
     Args:
         close(pandas.Series): dataset 'Close' column.
@@ -637,8 +615,6 @@ def keltner_channel_mband(
     """Keltner channel (KC)
 
     Showing a simple moving average line (central) of typical price.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:keltner_channels
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -673,8 +649,6 @@ def keltner_channel_hband(
 
     Showing a simple moving average line (high) of typical price.
 
-    https://school.stockcharts.com/doku.php?id=technical_indicators:keltner_channels
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -707,8 +681,6 @@ def keltner_channel_lband(
     """Keltner channel (KC)
 
     Showing a simple moving average line (low) of typical price.
-
-    https://school.stockcharts.com/doku.php?id=technical_indicators:keltner_channels
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -878,8 +850,6 @@ def donchian_channel_hband(high, low, close, window=20, offset=0, fillna=False):
 
     The upper band marks the highest price of an issue for n periods.
 
-    https://www.investopedia.com/terms/d/donchianchannels.asp
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -901,8 +871,6 @@ def donchian_channel_lband(high, low, close, window=20, offset=0, fillna=False):
 
     The lower band marks the lowest price for n periods.
 
-    https://www.investopedia.com/terms/d/donchianchannels.asp
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -921,8 +889,6 @@ def donchian_channel_lband(high, low, close, window=20, offset=0, fillna=False):
 
 def donchian_channel_mband(high, low, close, window=10, offset=0, fillna=False):
     """Donchian Channel Middle Band (DC)
-
-    https://www.investopedia.com/terms/d/donchianchannels.asp
 
     Args:
         high(pandas.Series): dataset 'High' column.
@@ -943,8 +909,6 @@ def donchian_channel_mband(high, low, close, window=10, offset=0, fillna=False):
 def donchian_channel_wband(high, low, close, window=10, offset=0, fillna=False):
     """Donchian Channel Band Width (DC)
 
-    https://www.investopedia.com/terms/d/donchianchannels.asp
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -964,8 +928,6 @@ def donchian_channel_wband(high, low, close, window=10, offset=0, fillna=False):
 def donchian_channel_pband(high, low, close, window=10, offset=0, fillna=False):
     """Donchian Channel Percentage Band (DC)
 
-    https://www.investopedia.com/terms/d/donchianchannels.asp
-
     Args:
         high(pandas.Series): dataset 'High' column.
         low(pandas.Series): dataset 'Low' column.
@@ -984,8 +946,6 @@ def donchian_channel_pband(high, low, close, window=10, offset=0, fillna=False):
 
 def ulcer_index(close, window=14, fillna=False):
     """Ulcer Index
-
-    https://stockcharts.com/school/doku.php?id=chart_school:technical_indicators:ulcer_index
 
     Args:
         close(pandas.Series): dataset 'Close' column.
