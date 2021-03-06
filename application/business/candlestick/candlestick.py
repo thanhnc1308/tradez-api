@@ -1,7 +1,4 @@
 import re
-import sys
-import os
-dir_path = os.path.dirname(os.path.realpath(__file__))
 BASE_PATH = 'application.business.candlestick.patterns.'
 
 __builders = dict()
