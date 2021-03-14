@@ -135,13 +135,23 @@ def get_market_info(current_user):
 # @verify_token
 # def calculate(current_user):
 def calculate():
+    """[summary]
+    Eg: http://localhost:5000/api/stock_price/calculate?indicator=rsi14-rsi7&symbol=HPG-VIC
+
+    http://localhost:5000/api/stock_price/calculate?indicator=all&symbol=limit_10-offset_0
+
+    http://localhost:5000/api/stock_price/calculate?indicator=all&symbol=all
+
+    Returns:
+        [type]: [description]
+    """
     res = ServiceResponse()
     try:
         indicator = request.args.get('indicator', 'all', type=str)
         symbol = request.args.get('symbol', 'all', type=str)
         indicators = get_indicators(indicator)
         symbols = get_symbols(symbol)
-        calculate_indicators_by_list_symbol(indicators, symbols)
+        # calculate_indicators_by_list_symbol(indicators, symbols)
     except Exception as e:
         res.on_exception(e)
     return res.build()

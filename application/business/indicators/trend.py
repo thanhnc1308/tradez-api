@@ -749,17 +749,18 @@ class ADXIndicator(IndicatorMixin):
         directional_index = 100 * np.abs((dip - din) / (dip + din))
 
         adx_series = np.zeros(len(self._trs))
-        adx_series[self._window] = directional_index[0 : self._window].mean()
+        if adx_series.size >= self._window:
+            adx_series[self._window] = directional_index[0 : self._window].mean()
 
-        for i in range(self._window + 1, len(adx_series)):
-            adx_series[i] = (
-                (adx_series[i - 1] * (self._window - 1)) + directional_index[i - 1]
-            ) / float(self._window)
+            for i in range(self._window + 1, len(adx_series)):
+                adx_series[i] = (
+                    (adx_series[i - 1] * (self._window - 1)) + directional_index[i - 1]
+                ) / float(self._window)
 
-        adx_series = np.concatenate((self._trs_initial, adx_series), axis=0)
-        adx_series = pd.Series(data=adx_series, index=self._close.index)
+            adx_series = np.concatenate((self._trs_initial, adx_series), axis=0)
+            adx_series = pd.Series(data=adx_series, index=self._close.index)
 
-        adx_series = self._check_fillna(adx_series, value=20)
+            adx_series = self._check_fillna(adx_series, value=20)
         return pd.Series(adx_series, name="adx")
 
     def adx_pos(self) -> pd.Series:
