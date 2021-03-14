@@ -52,6 +52,7 @@ class StockPrice(BaseModel):
     psar_down_indicator = db.Column(db.Numeric, nullable=True)
     keltner20_channel_hband_indicator = db.Column(db.Numeric, nullable=True)
     keltner20_channel_lband_indicator = db.Column(db.Numeric, nullable=True)
+    # keltner20_channel_lband_indicator = db.Column(db.Numeric(asdecimal=False), nullable=True)
 
     def __init__(self, **kwargs):
         db.Model.__init__(self, **kwargs)

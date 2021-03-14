@@ -1,5 +1,6 @@
 from application.api.stock.Stock import Stock
 from application.utility.number_utils import is_digit
+from application.utility.converter import alchemy_encoder, parse_sql_result
 from application.core.constants import DEFAULT_SCHEMA
 
 dict_basic_operation = {
@@ -34,7 +35,7 @@ def screen_stock(params):
     sql = f'select {sql_columns} from {DEFAULT_SCHEMA}.stock_price where (1 = 1) {sql_filters} offset {offset} limit {limit};'
     # print(sql)
     data = Stock.execute(sql)
-    return [dict(row) for row in data]
+    return parse_sql_result(data)
 
 def build_sql_filters(filters):
     sql = ''

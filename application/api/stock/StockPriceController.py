@@ -151,7 +151,7 @@ def calculate():
         symbol = request.args.get('symbol', 'all', type=str)
         indicators = get_indicators(indicator)
         symbols = get_symbols(symbol)
-        # calculate_indicators_by_list_symbol(indicators, symbols)
+        calculate_indicators_by_list_symbol(indicators, symbols)
     except Exception as e:
         res.on_exception(e)
     return res.build()

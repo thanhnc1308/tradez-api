@@ -36,12 +36,12 @@ def login():
         username = auth.get('username')
         password = auth.get('password')
         if not auth or username is None or password is None:
-            res.on_error(code=401, user_message='Could not verify')
+            res.on_error(code=401, user_message='Please enter username and password')
 
         # check if user exists
         user = User.get_by_username(username)
         if not user:
-            res.on_error(code=401, user_message='Could not verify')
+            res.on_error(code=401, user_message='Username does not exist')
 
         # check password here
         if user.check_password(password):
@@ -50,8 +50,8 @@ def login():
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60*24*7)
             }, 'SECRET_KEY')  # app.config['SECRET_KEY']
             res.on_success(data=token.decode('UTF-8'))
-
-        res.on_error(code=401, user_message='Could not verify')
+        else:
+            res.on_error(code=401, user_message='Password is not correct')
     except Exception as ex:
         res.on_exception(ex)
     return res.build()

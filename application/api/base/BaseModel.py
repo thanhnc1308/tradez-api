@@ -14,6 +14,12 @@ class CRUDMixin(object):
         return result
 
     @classmethod
+    def execute_scalar(cls, sql):
+        # TODO: check sql injection
+        result = db.engine.execute(sql).scalar()
+        return result
+
+    @classmethod
     def create(cls, **kwargs):
         """Create a new record and save it the database."""
         instance = cls(**kwargs)
