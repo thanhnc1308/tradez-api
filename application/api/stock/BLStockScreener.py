@@ -4,12 +4,13 @@ from application.utility.converter import alchemy_encoder, parse_sql_result
 from application.core.constants import DEFAULT_SCHEMA
 
 dict_basic_operation = {
-    'less' : ' {column} < {value}',
-    'eless' : ' {column} <= {value}',
-    'greater' : ' {column} > {value}',
-    'egreater' : ' {column} >= {value}',
-    'equal' : ' {column} = {value}',
-    'nequal' : ' {column} <> {value}',
+    'less' : ' {column} < {value} ',
+    'eless' : ' {column} <= {value} ',
+    'greater' : ' {column} > {value} ',
+    'egreater' : ' {column} >= {value} ',
+    'equal' : ' {column} = {value} ',
+    'nequal' : ' {column} <> {value} ',
+    'equals' : " {column} = '{value}' ",
 }
 
 dict_basic_two_operations = {
