@@ -72,7 +72,7 @@ def configure_mail_extension(app):
     app.config['MAIL_USE_TLS'] = False
     app.config['MAIL_USE_SSL'] = True
     app.config['MAIL_USERNAME'] = 'montoson138@gmail.com'
-    app.config['MAIL_PASSWORD'] = 'ACI13898'
+    app.config['MAIL_PASSWORD'] = '12345678@Abc'
     app.config['MAIL_DEFAULT_SENDER'] = 'Thanh NC'
 
 

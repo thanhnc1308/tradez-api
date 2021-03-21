@@ -9,3 +9,4 @@ backtrader
 flask_jwt_extended
 flask_mail
 marshmallow
+python-telegram-bot

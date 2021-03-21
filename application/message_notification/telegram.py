@@ -1,4 +1,0 @@
-import requests
-import json
-BOT_TOKEN = '1081744721:AAEwKlCGDE2vPAa4FSMbJtZ2kUyTzwq7puY'
-BOT_CHAT_ID = '851673528'

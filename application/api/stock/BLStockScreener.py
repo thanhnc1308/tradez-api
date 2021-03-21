@@ -33,7 +33,7 @@ def screen_stock(params):
     offset = params.get('offset') or 0
     sql_columns = build_sql_columns(columns)
     sql_filters = build_sql_filters(filters)
-    sql = f'select {sql_columns} from {DEFAULT_SCHEMA}.stock_price where (1 = 1) {sql_filters} offset {offset} limit {limit};'
+    sql = f'select {sql_columns} from {DEFAULT_SCHEMA}.stock_price where (1 = 1) {sql_filters} order by symbol offset {offset} limit {limit} ;'
     # print(sql)
     data = Stock.execute(sql)
     return parse_sql_result(data)

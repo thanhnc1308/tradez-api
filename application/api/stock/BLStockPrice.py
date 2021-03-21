@@ -10,6 +10,7 @@ from application.business.indicators.volume import chaikin_money_flow, money_flo
 from application.business.indicators.trend import ema, sma, macd, macd_signal, adx, cci, aroon_down, aroon_up, psar_up_indicator, psar_down_indicator
 import pandas as pd
 import math
+from application.utility.datetime_utils import subtract_days
 
 list_all_indicators = [
     'rsi14',
@@ -186,3 +187,30 @@ def get_df_stock_price_data(data):
     df['close'] = list(map(lambda x : x.get('close_price'), data_json))
     df['volume'] = list(map(lambda x : x.get('volume'), data_json))
     return df
+
+def calculate_indicators_by_list_symbol_in_a_date(list_indicators, list_symbols, date):
+    for symbol in list_symbols:
+        print('===================================symbol: ', symbol)
+        calculate_indicator_by_symbol_and_date(list_indicators, symbol, date)
+
+def calculate_indicator_by_symbol_and_date(indicators, symbol, date):
+    from_date = subtract_days(date, 210)
+    data = StockPrice.query.filter(StockPrice.symbol==symbol, StockPrice.stock_date >= from_date).order_by(asc('stock_date'))
+    df = get_df_stock_price_data(data)
+    for indicator in indicators:
+        # print('===================================indicator', indicator)
+        df[indicator] = calculate_by_indicator(indicator, df)
+    # print('===================================', df.tail())
+    count = 0
+    for row in data:
+        data_updated = stock_price_schema.dump(row)
+        for indicator in indicators:
+            indicator_row = df[df['stock_date'] == data_updated['stock_date']]
+            indicator_value = indicator_row[indicator].to_list()[0]
+            # print('===================================indicator', indicator)
+            data_updated[indicator] = round(indicator_value, 2) if not (math.isnan(indicator_value) or indicator_value == None or math.isinf(indicator_value)) else None
+        # count = count + 1
+        # if count == 200:
+        #     print(data_updated)
+        row.update(**data_updated)
+            # break
