@@ -1,7 +1,6 @@
 from flask import Flask
 from flask_sqlalchemy import get_debug_queries
 from application.api.users.UserController import user_api
-from application.api.mail.MailController import mail_api
 from application.api.stock.StockController import stock_api
 from application.api.stock.StockPriceController import stock_price_api
 from application.api.stock.StockScreenerController import stock_screener_api
@@ -60,7 +59,6 @@ def configure_blueprint(app):
     app.register_blueprint(stock_price_api)
     app.register_blueprint(stock_screener_api)
     app.register_blueprint(journal_api)
-    app.register_blueprint(mail_api)
     app.register_blueprint(auth_api)
 
 
