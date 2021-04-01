@@ -10,6 +10,7 @@ class Notification(BaseModel):
 
     user_id = db.Column(UUID(as_uuid=True))
     condition = db.Column(JSON)
+    description = db.Column(db.String())
     gmail = db.Column(db.String())
     tg_chat_id = db.Column(db.String())
     send_gmail = db.Column(db.Boolean())
