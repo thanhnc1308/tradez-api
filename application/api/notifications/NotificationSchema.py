@@ -9,7 +9,8 @@ class ConditionSchema(Schema):
 
 class NotificationSchema(BaseSchema):
     user_id = fields.UUID()
-    condition = fields.Nested(ConditionSchema, allow_none=True)
+    condition_key = fields.Str()
+    condition_description = fields.Str()
     gmail = fields.Str()
     tg_chat_id = fields.Str()
     send_gmail = fields.Boolean()

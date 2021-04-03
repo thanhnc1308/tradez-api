@@ -9,7 +9,8 @@ class Notification(BaseModel):
     __table_args__ = {'extend_existing': True}
 
     user_id = db.Column(UUID(as_uuid=True))
-    condition = db.Column(JSON)
+    condition_key = db.Column(JSON)
+    condition_description = db.Column(db.String())
     description = db.Column(db.String())
     gmail = db.Column(db.String())
     tg_chat_id = db.Column(db.String())
