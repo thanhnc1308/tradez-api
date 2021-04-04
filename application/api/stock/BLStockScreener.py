@@ -34,7 +34,9 @@ def screen_stock(params):
     sql_columns = build_sql_columns(columns)
     sql_filters = build_sql_filters(filters)
     sql = f'select {sql_columns} from {DEFAULT_SCHEMA}.stock_price where (1 = 1) {sql_filters} order by symbol offset {offset} limit {limit} ;'
-    # print(sql)
+    if limit == -1 and offset == -1:
+        sql = f'select {sql_columns} from {DEFAULT_SCHEMA}.stock_price where (1 = 1) {sql_filters} order by symbol;'
+    print(sql)
     data = Stock.execute(sql)
     return parse_sql_result(data)
 
@@ -66,3 +68,19 @@ def parse_filter_value(value):
 
 def build_sql_columns(columns):
     return ', '.join(columns)
+
+def check_condition_notification(filter_list):
+    res = False
+    columns = []
+    for filter_item in filter_list:
+        columns.append(filter_item['type'])
+    params = {
+        'filters': filter_list,
+        'columns': columns,
+        'limit': -1,
+        'offset': -1,
+    }
+    data = screen_stock(params)
+    if len(data) > 0:
+        res = True
+    return res

@@ -12,8 +12,8 @@ from datetime import date, timedelta, datetime
 from sqlalchemy import desc, asc
 from sqlalchemy import and_, or_, not_
 from decimal import Decimal
-from application.api.stock.BLStockPrice import calculate_indicator_by_symbol, get_indicators, get_symbols, calculate_indicators_by_list_symbol
-
+from application.api.stock.BLStockPrice import calculate_indicators_by_list_symbol_in_a_date, calculate_indicator_by_symbol, get_indicators, get_symbols, calculate_indicators_by_list_symbol
+from application.api.notifications.BLNotification import send_notification
 
 stock_price_api = Blueprint('stock_price_api', __name__, url_prefix='/api/stock_price')
 
@@ -152,6 +152,32 @@ def calculate():
         indicators = get_indicators(indicator)
         symbols = get_symbols(symbol)
         calculate_indicators_by_list_symbol(indicators, symbols)
+    except Exception as e:
+        res.on_exception(e)
+    return res.build()
+
+@stock_price_api.route('/notification', methods=['GET'])
+# @verify_token
+# def calculate(current_user):
+def notification():
+    """[summary]
+    Eg: http://localhost:5000/api/stock_price/notification?indicator=rsi14-rsi7&symbol=HPG-VIC
+
+    http://localhost:5000/api/stock_price/notification?indicator=all&symbol=limit_10-offset_0
+
+    http://localhost:5000/api/stock_price/notification?indicator=all&symbol=all
+
+    Returns:
+        [type]: [description]
+    """
+    res = ServiceResponse()
+    try:
+        indicator = request.args.get('indicator', 'all', type=str)
+        symbol = request.args.get('symbol', 'all', type=str)
+        indicators = get_indicators(indicator)
+        symbols = get_symbols(symbol)
+        # calculate_indicators_by_list_symbol_in_a_date(indicators, symbols, datetime.now())
+        send_notification()
     except Exception as e:
         res.on_exception(e)
     return res.build()

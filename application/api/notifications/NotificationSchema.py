@@ -24,3 +24,4 @@ class NotificationListSchema(BaseListSchema):
 notification_schema = NotificationSchema()
 notifications_schema = NotificationSchema(many=True)
 notifications_paging_schema = NotificationListSchema()
+condition_schema = ConditionSchema()

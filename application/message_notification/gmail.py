@@ -18,7 +18,7 @@ EMAIL_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 # EMAIL_USER, EMAIL_PASSWORD = read_creds()
 
-msg = """\
+test_msg = """\
         <!DOCTYPE html>
         <html>
             <body>
@@ -27,12 +27,12 @@ msg = """\
         </html>
         """
 
-def send_email(receivers, msg):
+def send_email(receivers, msg=test_msg):
     with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
         smtp.login(EMAIL_USER, EMAIL_PASSWORD)
 
         email_message = EmailMessage()
-        email_message['Subject'] = 'Test subject'
+        email_message['Subject'] = 'Notification Alert From Trading Assistant'
         email_message['From'] = EMAIL_USER
         email_message['To'] = ','.join(receivers)
         email_message.set_content(msg)
@@ -54,4 +54,4 @@ def send_email_html(receivers, html):
         smtp.send_message(email_message)
         smtp.quit()
 
-send_email_html(['thanhcongaone@gmail.com'], msg)
+# send_email_html(['thanhcongaone@gmail.com'], msg)
