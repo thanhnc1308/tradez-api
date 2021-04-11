@@ -146,3 +146,6 @@ dbconfig/docker-compose.yml
 business/crawler/data/
 migrations
 tests/data
+application/api/backtest/datas.csv
+application/api/backtest/datas.txt
+application/api/backtest/BTC-USD.csv

@@ -19,16 +19,16 @@ def start(update, context):
 def echo(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
-def caps(update, context):
-    text_caps = ' '.join(context.args).upper()
-    context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
+# def caps(update, context):
+#     text_caps = ' '.join(context.args).upper()
+#     context.bot.send_message(chat_id=update.effective_chat.id, text=text_caps)
 
 def unknown(update, context):
     context.bot.send_message(chat_id=update.effective_chat.id, text="Sorry, I didn't understand that command.")
 
-def help_command(update: Update, _: CallbackContext):
-    """Send a message when the command /help is issued."""
-    update.message.reply_text('Help!')
+# def help_command(update: Update, _: CallbackContext):
+#     """Send a message when the command /help is issued."""
+#     update.message.reply_text('Help!')
 
 def main():
     """Start the bot."""
@@ -40,8 +40,8 @@ def main():
 
     # on different commands - answer in Telegram
     dispatcher.add_handler(CommandHandler("start", start))
-    dispatcher.add_handler(CommandHandler("help", help_command))
-    dispatcher.add_handler(CommandHandler('caps', caps))
+    # dispatcher.add_handler(CommandHandler("help", help_command))
+    # dispatcher.add_handler(CommandHandler('caps', caps))
 
     # on noncommand i.e message - echo the message on Telegram
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, echo))

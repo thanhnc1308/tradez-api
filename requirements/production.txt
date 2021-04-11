@@ -11,3 +11,4 @@ flask_mail
 marshmallow
 python-telegram-bot
 schedule
+matplotlib
