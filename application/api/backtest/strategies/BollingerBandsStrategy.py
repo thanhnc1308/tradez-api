@@ -19,7 +19,7 @@ class BollingerBandsStrategy(BaseStrategy):
         super(BollingerBandsStrategy, self).__init__()
 
     def next(self):
-        super(Aberration, self).next()
+        super(BollingerBandsStrategy, self).next()
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -37,5 +37,5 @@ class BollingerBandsStrategy(BaseStrategy):
     def stop(self):
         from settings import CONFIG
         pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
-        print('Aberration Period: {} Final PnL: {}'.format(
+        print('BollingerBandsStrategy Period: {} Final PnL: {}'.format(
             self.params.period, pnl))

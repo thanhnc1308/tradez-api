@@ -5,7 +5,9 @@ from application.api.backtest.strategies.BaseStrategy import BaseStrategy
 class RSIStrategy(BaseStrategy):
 
     params = (
-        ('period', 21),
+        ('period', 14),
+        ('upper', 70),
+        ('lower', 30),
     )
 
     def __init__(self):
@@ -15,10 +17,10 @@ class RSIStrategy(BaseStrategy):
 
     def next(self):
         if not self.position:
-            if self.rsi < 30:
+            if self.rsi < self.params.upper:
                 self.buy()
         else:
-            if self.rsi > 70:
+            if self.rsi > self.params.lower:
                 self.sell()
 
     def stop(self):

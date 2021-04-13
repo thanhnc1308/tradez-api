@@ -20,6 +20,7 @@ CONFIG = {
         'value': 0.02,
     },
     'strategies': [ # One or more strategies to run
-        RSIStrategy
+        # RSIStrategy
+        BollingerBandsStrategy
     ],
 }

@@ -36,13 +36,17 @@ data = bt.feeds.YahooFinanceCSVData(
 
 cerebro.adddata(data)
 
+params = {
+    'period': 12,
+}
+
 if CONFIG['mode'] == 'optimization':
     # Parameters Optimization
     for strat in CONFIG['strategies']:
         cerebro.optstrategy(strat, period=range(14,21))
 elif CONFIG['mode'] == 'backtest':
     for strat in CONFIG['strategies']:
-        cerebro.addstrategy(strat)
+        cerebro.addstrategy(strat, **params)
 else:
     raise ValueError('CONFIG["mode"] value should be "backtest", "optimization" or "walk_forward".')
 

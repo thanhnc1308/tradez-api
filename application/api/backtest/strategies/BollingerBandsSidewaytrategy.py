@@ -1,16 +1,12 @@
 import backtrader as bt
 from application.api.backtest.strategies.BaseStrategy import BaseStrategy
 
-# Based on: https://community.backtrader.com/topic/122/bband-strategy
-
-# Create a Strategy
 class BollingerBandsSidewaytrategy(BaseStrategy):
     """This strategy uses Backtrader's BBand indicator and buys after the
     market dips into the lower band and sells on the moving average after the
     market hits the top band. This works great in sideways/bull markets.
     The idea is to buy during a low period and sell if the market dips below
-    a moving average. Also note I am new to algotrading and programming in
-    general so don't laugh to hard at this idea/strategy.
+    a moving average.
     """
     params = (
         ('period', 20),

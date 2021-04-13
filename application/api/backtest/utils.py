@@ -15,24 +15,24 @@ def run_strategy(cerebro):
     if CONFIG['mode'] == 'backtest':
         # Print out the final result
         _show_backtest_end(cerebro.broker)
-        _show_analyzers_end(strats[0])
+        # _show_analyzers_end(strats[0])
 
 
 def add_analyzers(cerebro):
-    cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe_ratio')
-    cerebro.addanalyzer(btanalyzers.SharpeRatio_A, _name='sharpe_ratio_a') # sharpe ratio anualized
-    cerebro.addanalyzer(btanalyzers.VWR, _name='vwr') # sharpe ratio with log returns
-    cerebro.addanalyzer(btanalyzers.DrawDown, _name='draw_down')
+    # cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe_ratio')
+    # cerebro.addanalyzer(btanalyzers.SharpeRatio_A, _name='sharpe_ratio_a') # sharpe ratio anualized
+    # cerebro.addanalyzer(btanalyzers.VWR, _name='vwr') # sharpe ratio with log returns
+    # cerebro.addanalyzer(btanalyzers.DrawDown, _name='draw_down')
     cerebro.addanalyzer(btanalyzers.Returns, _name='returns')
-    cerebro.addanalyzer(btanalyzers.SQN, _name='sqn')
-    cerebro.addanalyzer(btanalyzers.TimeDrawDown, _name='time_drawdown')
+    # cerebro.addanalyzer(btanalyzers.SQN, _name='sqn')
+    # cerebro.addanalyzer(btanalyzers.TimeDrawDown, _name='time_drawdown')
     cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='annual_return')
-    cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
+    # cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
     # cerebro.addanalyzer(btanalyzers.Calmar, _name='calmar')
     # cerebro.addanalyzer(btanalyzers.LogReturnsRolling, _name='log_returns_rolling')
     # cerebro.addanalyzer(btanalyzers.PeriodStats, _name='periods_stats')
     # cerebro.addanalyzer(btanalyzers.PyFolio, _name='pyfolio')
-    # cerebro.addanalyzer(btanalyzers.Transactions, _name='transactions')
+    cerebro.addanalyzer(btanalyzers.Transactions, _name='transactions')
     # cerebro.addanalyzer(btanalyzers.TimeReturn, _name='time_return')
     return cerebro
 
@@ -82,10 +82,10 @@ def _show_analyzers_end(strats):
     # print('Sharpe Ratio Annualized: ' + str(strats.analyzers.sharpe_ratio_a.get_analysis())) # sharpe ratio anualized
     #print('Sharpe Ratio Log Returns: ' + str(strats.analyzers.vwr.get_analysis())) # sharpe ratio with log returns
     # print('Draw Down: ' + str(strats.analyzers.draw_down.get_analysis()))
-    print('Returns: ' + str(strats.analyzers.returns.get_analysis()))
+    # print('Returns: ' + str(strats.analyzers.returns.get_analysis()))
     # print('SQN: ' + str(strats.analyzers.sqn.get_analysis()))
     # print('Time Drawdown: ' + str(strats.analyzers.time_drawdown.get_analysis()))
-    print('Annual Return: ' + str(strats.analyzers.annual_return.get_analysis()))
+    # print('Annual Return: ' + str(strats.analyzers.annual_return.get_analysis()))
     # print('TradeAnalyzer: ' + str(strats.analyzers.trade_analyzer.get_analysis()))
     # _printTradeAnalysis(strats.analyzers.trade_analyzer.get_analysis())
 
@@ -94,5 +94,5 @@ def _show_analyzers_end(strats):
     # print('Periods Stats: ' + str(strats.analyzers.periods_stats.get_analysis()))
     # print('PyFolio: ' + str(strats.analyzers.pyfolio.get_analysis()))
 
-    # print('Transactions: ' + str(strats.analyzers.transactions.get_analysis()))
+    print('Transactions: ' + str(strats.analyzers.transactions.get_analysis()))
     # print('Time Return: ' + str(strats.analyzers.time_return.get_analysis()))
