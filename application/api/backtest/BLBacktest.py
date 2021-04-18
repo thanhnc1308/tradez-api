@@ -7,8 +7,8 @@ import backtrader as bt
 import json
 from application.api.stock.StockPriceSchema import stock_price_list_schema
 from application.api.stock.StockPrice import StockPrice
-from application.api.backtest.strategy.MaCrossoverStrategy import MaCrossoverStrategy
-from application.api.backtest.strategy.TestStrategy import TestStrategy
+from application.api.backtest.strategies.MaCrossoverStrategy import MaCrossoverStrategy
+from application.api.backtest.strategies.TestStrategy import TestStrategy
 # python3 application/api/backtest/BLBacktest.py
 
 
