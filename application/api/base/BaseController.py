@@ -62,9 +62,10 @@ class BaseListController(Resource):
     def get(current_user, self):
         res = ServiceResponse()
         paging_filter = request.args.get('paging_filter', 1, type=int)
+        order_by = request.args.get('order_by', 'updated_at', type=str)
         try:
             if paging_filter == 1:
-                return self.get_paging()
+                return self.get_paging(order_by=order_by)
             else:
                 # build query
                 # filters = []
@@ -76,19 +77,19 @@ class BaseListController(Resource):
                 #             filters.append(Member.__dict__[conditions[0]].ilike('%' + term + '%'))
                 # members = Member.query.filter(or_(*filters))
                 # db.users.filter(or_(db.users.name == 'Ryan', db.users.country == 'England'))
-                data = self.model.get_all()
+                data = self.model.get_all(order_by=order_by)
                 res.on_success(data=self.list_schema.dump(data))
         except Exception as e:
             res.on_exception(e)
         return res.build()
 
-    def get_paging(self):
+    def get_paging(self, order_by):
         res = ServiceResponse()
         try:
             max_per_page = 100
             page = request.args.get('page', 1, type=int)
             per_page = min(request.args.get('per_page', max_per_page, type=int), max_per_page)
-            p = self.model.query.order_by(desc('updated_at')).paginate(page, per_page)
+            p = self.model.query.order_by(desc(order_by)).paginate(page, per_page)
 
             meta = {
                 'page': page,

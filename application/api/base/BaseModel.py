@@ -26,8 +26,9 @@ class CRUDMixin(object):
         return instance.save()
 
     @classmethod
-    def get_all(cls):
-        return cls.query.all()
+    def get_all(cls, order_by='updated_at', **kwargs):
+        # return cls.query.all()
+        return cls.query.filter_by(**kwargs).order_by(order_by).all()
 
     @classmethod
     def count_all(cls):
