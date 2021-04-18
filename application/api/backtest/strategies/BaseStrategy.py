@@ -21,14 +21,16 @@ class BaseStrategy(bt.Strategy):
         print('%s, %s' % (dt.isoformat(), txt))
 
     def next(self):
-        from settings import CONFIG
+        # from settings import CONFIG
+        from application.api.backtest.settings import CONFIG
 
         # Simply log the closing price of the series from the reference
         if CONFIG['log']:
             self.log('Close, %.2f' % self.dataclose[0])
 
     def buy(self):
-        from settings import CONFIG
+        # from settings import CONFIG
+        from application.api.backtest.settings import CONFIG
         close = self.dataclose[0]
 
         if CONFIG['take_profit']['enabled'] or CONFIG['stop_loss']['enabled']:
@@ -79,14 +81,16 @@ class BaseStrategy(bt.Strategy):
             self.order = super(BaseStrategy, self).buy(size=CONFIG['size'])
 
     def sell(self):
-        from settings import CONFIG
+        # from settings import CONFIG
+        from application.api.backtest.settings import CONFIG
 
         if not CONFIG['take_profit']['enabled'] and not CONFIG['stop_loss']['enabled']:
             self.log('SELL CREATE, %.2f' % self.dataclose[0])
             self.order = super(BaseStrategy, self).sell(size=CONFIG['size'])
 
     def notify_order(self, order):
-        from settings import CONFIG
+        # from settings import CONFIG
+        from application.api.backtest.settings import CONFIG
 
         if order.status in [order.Submitted, order.Accepted]:
             # Buy/Sell order submitted/accepted to/by broker - Nothing to do

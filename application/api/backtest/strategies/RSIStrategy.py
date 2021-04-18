@@ -24,7 +24,8 @@ class RSIStrategy(BaseStrategy):
                 self.sell()
 
     def stop(self):
-        from settings import CONFIG
+        # from settings import CONFIG
+        from application.api.backtest.settings import CONFIG
         pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
         print('RSI Period: {} Final PnL: {}'.format(
             self.params.period, pnl))
