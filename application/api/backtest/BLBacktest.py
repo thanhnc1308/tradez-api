@@ -10,7 +10,7 @@ from application.api.backtest.strategies.RSIStrategy import RSIStrategy
 from application.api.backtest.strategies.TestStrategy import TestStrategy
 import pandas as pd
 from application.utility.datetime_utils import subtract_days, is_weekday, parse_date, format_date, get_yesterday_weekday, get_the_day_before_yesterday_weekday
-
+import importlib.util
 
 def backtest_strategy(config):
     cerebro = prepare_cerebro(config)
@@ -26,11 +26,9 @@ def backtest_strategy(config):
 def prepare_cerebro(config):
     cerebro = bt.Cerebro()
     cash = config.get('cash') or 100000
-    # print(cash)
     cerebro.broker.setcash(cash)
     # Set the commission - 0.1% ... divide by 100 to remove the %
     commission = config.get('commission') or 0.001
-    # print(commission)
     cerebro.broker.setcommission(commission=commission)
     return cerebro
 
@@ -55,44 +53,32 @@ def prepare_feed_data(config):
             'High': row['high_price'],
             'Low': row['low_price'],
             'Close': row['close_price'],
-            # 'Adj Close': row['close_price'],
             'Volume': row['volume']
         }
     sql_data = list(map(map_row_to_candlestick, sql_data))
     df = pd.DataFrame(sql_data)
     df.set_index('Date', inplace=True)
-    # print(df.head(5))
     return bt.feeds.PandasData(dataname=df)
 
 def prepare_strategy(config):
-    strategy = None
     params = {}
     strategy_name = config.get('strategy')
-    if strategy_name == 'RSIStrategy':
-        strategy = RSIStrategy
-        params = prepare_params_for_rsi(config)
-    elif strategy_name == 'RSIStrategy':
-        strategy = RSIStrategy
-        params = prepare_params_for_rsi(config)
-    else:
-        strategy = RSIStrategy
-        params = prepare_params_for_rsi(config)
+    strategy_config = get_strategy_config(strategy_name)
+    fn_params = strategy_config.get('fn_params')
     return {
-        "strategy": strategy,
-        "params": params,
+        "strategy": strategy_config.get('strategy'),
+        "params": fn_params(config)
     }
 
-def prepare_params_for_rsi(config):
-    strategy_params = config.get('strategy_params')
-    period = strategy_params.get('period') or 14
-    upper = strategy_params.get('upper') or 70
-    lower = strategy_params.get('lower') or 30
-    result = {
-        'period': period,
-        'upper': upper,
-        'lower': lower
+def get_strategy_config(strategy_name):
+    file_path = f'application.api.backtest.strategies.{strategy_name}'
+    module = importlib.import_module(file_path)
+    strategy = getattr(module, strategy_name)
+    fn_params = getattr(module, f'get_{strategy_name}_params')
+    return {
+        "strategy": strategy,
+        "fn_params": fn_params
     }
-    return result
 
 def run_backtest(cerebro):
     result = []

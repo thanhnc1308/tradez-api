@@ -29,3 +29,16 @@ class RSIStrategy(BaseStrategy):
         pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
         print('RSI Period: {} Final PnL: {}'.format(
             self.params.period, pnl))
+
+
+def get_RSIStrategy_params(config):
+    strategy_params = config.get('strategy_params')
+    period = strategy_params.get('period') or 14
+    upper = strategy_params.get('upper') or 70
+    lower = strategy_params.get('lower') or 30
+    result = {
+        'period': period,
+        'upper': upper,
+        'lower': lower
+    }
+    return result
