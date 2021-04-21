@@ -51,19 +51,19 @@ def add_analyzers(cerebro):
     cerebro.addanalyzer(btanalyzers.AnnualReturn, _name='annual_return')
     cerebro.addanalyzer(btanalyzers.TradeAnalyzer, _name='trade_analyzer')
 
-    cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe_ratio')
-    cerebro.addanalyzer(btanalyzers.SharpeRatio_A, _name='sharpe_ratio_a') # sharpe ratio anualized
-    cerebro.addanalyzer(btanalyzers.DrawDown, _name='draw_down')
-    cerebro.addanalyzer(btanalyzers.Returns, _name='returns')
-    cerebro.addanalyzer(btanalyzers.Transactions, _name='transactions')
-    cerebro.addanalyzer(btanalyzers.SQN, _name='sqn')
-    cerebro.addanalyzer(btanalyzers.TimeDrawDown, _name='time_drawdown')
-    cerebro.addanalyzer(btanalyzers.PyFolio, _name='pyfolio')
-    cerebro.addanalyzer(btanalyzers.VWR, _name='vwr') # sharpe ratio with log returns
-    cerebro.addanalyzer(btanalyzers.Calmar, _name='calmar')
-    cerebro.addanalyzer(btanalyzers.LogReturnsRolling, _name='log_returns_rolling')
-    cerebro.addanalyzer(btanalyzers.PeriodStats, _name='periods_stats')
-    cerebro.addanalyzer(btanalyzers.TimeReturn, _name='time_return')
+    # cerebro.addanalyzer(btanalyzers.SharpeRatio, _name='sharpe_ratio')
+    # cerebro.addanalyzer(btanalyzers.SharpeRatio_A, _name='sharpe_ratio_a') # sharpe ratio anualized
+    # cerebro.addanalyzer(btanalyzers.DrawDown, _name='draw_down')
+    # cerebro.addanalyzer(btanalyzers.Returns, _name='returns')
+    # cerebro.addanalyzer(btanalyzers.Transactions, _name='transactions')
+    # cerebro.addanalyzer(btanalyzers.SQN, _name='sqn')
+    # cerebro.addanalyzer(btanalyzers.TimeDrawDown, _name='time_drawdown')
+    # cerebro.addanalyzer(btanalyzers.PyFolio, _name='pyfolio')
+    # cerebro.addanalyzer(btanalyzers.VWR, _name='vwr') # sharpe ratio with log returns
+    # cerebro.addanalyzer(btanalyzers.Calmar, _name='calmar')
+    # cerebro.addanalyzer(btanalyzers.LogReturnsRolling, _name='log_returns_rolling')
+    # cerebro.addanalyzer(btanalyzers.PeriodStats, _name='periods_stats')
+    # cerebro.addanalyzer(btanalyzers.TimeReturn, _name='time_return')
     return cerebro
 
 def prepare_feed_data(config):
@@ -129,19 +129,37 @@ def get_trade_result(strats, cerebro):
         win_rate = strats[0].get_win_rate()
         total_trades = strats[0].get_total_trades()
         analyzer = strats[0].analyzers.trade_analyzer.get_analysis()
-        total_open = analyzer.total.open
-        total_closed = analyzer.total.closed
-        total_won = analyzer.won.total
-        total_lost = analyzer.lost.total
-        pnl = round(analyzer.pnl.net.total, 2)
-        percent_pnl = round(pnl / (final_portfolio - pnl) * 100, 2)
+        total = analyzer.get('total')
+        if total != None:
+            total_open = analyzer.total.get('open') or 0
+            total_closed = analyzer.total.get('closed') or 0
+        else:
+            total_open = 0
+            total_closed = 0
+        won = analyzer.get('won')
+        if won != None:
+            total_won = analyzer.won.get('total') or 0
+        else:
+            total_won = 0
+        loss = analyzer.get('loss')
+        if loss != None:
+            total_lost = analyzer.lost.get('total') or 0
+        else:
+            total_lost = 0
+        pnl = analyzer.get('pnl')
+        if pnl != None and pnl.get('net') != None:
+            pnl = round(analyzer.pnl.net.total, 2)
+            percent_pnl = round(pnl / (final_portfolio - pnl) * 100, 2)
+        else:
+            pnl = 0
+            percent_pnl = 0
     return {
         'result': result,
         'total_trades': total_trades,
-        # 'total_open': total_open,
-        # 'total_closed': total_closed,
-        # 'total_won': total_won,
-        # 'total_lost': total_lost,
+        'total_open': total_open,
+        'total_closed': total_closed,
+        'total_won': total_won,
+        'total_lost': total_lost,
         'win_rate': win_rate,
         # 'analyzer': analyzer,
         'pnl': pnl,
@@ -150,9 +168,9 @@ def get_trade_result(strats, cerebro):
     }
 
 def _show_analyzers_end(strats):
-    # print('Annual Return: ' + str(strats.analyzers.annual_return.get_analysis()))
+    print('Annual Return: ' + str(strats.analyzers.annual_return.get_analysis()))
     # print('TradeAnalyzer: ' + str(strats.analyzers.trade_analyzer.get_analysis()))
-    _printTradeAnalysis(strats.analyzers.trade_analyzer.get_analysis())
+    # _printTradeAnalysis(strats.analyzers.trade_analyzer.get_analysis())
 
     # print('Returns: ' + str(strats.analyzers.returns.get_analysis()))
     # print('Transactions: ' + str(strats.analyzers.transactions.get_analysis()))

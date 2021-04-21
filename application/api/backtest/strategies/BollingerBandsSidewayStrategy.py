@@ -1,7 +1,7 @@
 import backtrader as bt
 from application.api.backtest.strategies.BaseStrategy import BaseStrategy
 
-class BollingerBandsSidewaytrategy(BaseStrategy):
+class BollingerBandsSidewayStrategy(BaseStrategy):
     """This strategy uses Backtrader's BBand indicator and buys after the
     market dips into the lower band and sells on the moving average after the
     market hits the top band. This works great in sideways/bull markets.
@@ -23,10 +23,10 @@ class BollingerBandsSidewaytrategy(BaseStrategy):
                                           period=self.params.period,
                                           devfactor=self.params.devfactor)
 
-        super(BollingerBandsSidewaytrategy, self).__init__()
+        super(BollingerBandsSidewayStrategy, self).__init__()
 
     def next(self):
-        super(BollingerBandsSidewaytrategy, self).next()
+        super(BollingerBandsSidewayStrategy, self).next()
 
         # Check if an order is pending ... if yes, we cannot send a 2nd one
         if self.order:
@@ -49,8 +49,19 @@ class BollingerBandsSidewaytrategy(BaseStrategy):
             self.blueline = False
             self.redline = False
 
-    def stop(self):
-        from settings import CONFIG
-        pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
-        print('BollingerBandsSidewaytrategy Period: {} Final PnL: {}'.format(
-            self.params.period, pnl))
+    # def stop(self):
+    #     # from settings import CONFIG
+    #     from application.api.backtest.settings import CONFIG
+    #     pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
+    #     print('BollingerBandsSidewayStrategy Period: {} Final PnL: {}'.format(
+    #         self.params.period, pnl))
+
+def get_BollingerBandsSidewayStrategy_params(config):
+    strategy_params = config.get('strategy_params')
+    period = strategy_params.get('period') or 20
+    devfactor = strategy_params.get('devfactor') or 2
+    result = {
+        'period': period,
+        'devfactor': devfactor
+    }
+    return result

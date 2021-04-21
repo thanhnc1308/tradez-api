@@ -34,8 +34,19 @@ class BollingerBandsStrategy(BaseStrategy):
         if self.dataclose > self.bband.lines.top and self.position:
             self.sell()
 
-    def stop(self):
-        from settings import CONFIG
-        pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
-        print('BollingerBandsStrategy Period: {} Final PnL: {}'.format(
-            self.params.period, pnl))
+    # def stop(self):
+    #     # from settings import CONFIG
+    #     from application.api.backtest.settings import CONFIG
+    #     pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
+    #     print('BollingerBandsStrategy Period: {} Final PnL: {}'.format(
+    #         self.params.period, pnl))
+
+def get_BollingerBandsStrategy_params(config):
+    strategy_params = config.get('strategy_params')
+    period = strategy_params.get('period') or 20
+    devfactor = strategy_params.get('devfactor') or 2
+    result = {
+        'period': period,
+        'devfactor': devfactor
+    }
+    return result

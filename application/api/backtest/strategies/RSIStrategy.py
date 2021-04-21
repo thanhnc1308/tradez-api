@@ -23,12 +23,12 @@ class RSIStrategy(BaseStrategy):
             if self.rsi > self.params.lower:
                 self.sell()
 
-    def stop(self):
-        # from settings import CONFIG
-        from application.api.backtest.settings import CONFIG
-        pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
-        print('RSI Period: {} Final PnL: {}'.format(
-            self.params.period, pnl))
+    # def stop(self):
+    #     # from settings import CONFIG
+    #     from application.api.backtest.settings import CONFIG
+    #     pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
+    #     print('RSI Period: {} Final PnL: {}'.format(
+    #         self.params.period, pnl))
 
 
 def get_RSIStrategy_params(config):

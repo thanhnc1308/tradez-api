@@ -1,4 +1,4 @@
 from .BollingerBandsStrategy import BollingerBandsStrategy
-from .BollingerBandsSidewaytrategy import BollingerBandsSidewaytrategy
+from .BollingerBandsSidewayStrategy import BollingerBandsSidewayStrategy
 from .RSIStrategy import RSIStrategy
 from .BollingerBandsAndRSIStrategy import BollingerBandsAndRSIStrategy
