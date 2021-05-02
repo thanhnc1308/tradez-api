@@ -17,6 +17,15 @@ cerebro = bt.Cerebro()
 #                                  todate=CONFIG['end_date'])
 # Datas are in a subfolder of the samples. Need to find where the script is
 # because it could have been called from anywhere
+# dayfromdate = dt.datetime(2019, 1, 1)
+#     # todate = dt.datetime(2020, 1, 1)
+#     todate = dt.datetime(2022, 12, 31)
+# data0 = bt.feeds.MySQLData(fromdate=minutefromdate, todate=todate, server='localhost', database='Stock', username='trader', password='trader', stockID='TX00', KLine='5', Session=0, timeframe=bt.TimeFrame.Minutes)
+#     data1 = bt.feeds.MySQLData(fromdate=dayfromdate, todate=todate, server='localhost', database='Stock', username='trader', password='trader', stockID='TX00', KLine='0', Session=0, timeframe=bt.TimeFrame.Days,
+#                                sessionend=dt.time(00, 00))
+# eurusd_prices = pd.read_csv('mid_data_4000_H1.csv', parse_dates=True, index_col='Time')
+
+#     feed = bt.feeds.PandasData(dataname=eurusd_prices, timeframe=bt.TimeFrame.Minutes, compression=60)
 ###################################END DATA YAHOO##################################
 
 

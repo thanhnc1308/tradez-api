@@ -38,6 +38,7 @@ class BaseStrategy(bt.Strategy):
         return self.win_quantity + self.loss_quantity
 
     def next(self):
+        '''Runs for every candlestick. Checks conditions to enter and exit trades.'''
         # from settings import CONFIG
         from application.api.backtest.settings import CONFIG
 
@@ -131,6 +132,8 @@ class BaseStrategy(bt.Strategy):
             self.order = super(BaseStrategy, self).sell(size=CONFIG['size'])
 
     def notify_order(self, order):
+        '''Run on every next iteration, logs the order execution status whenever an order is filled or rejected, 
+        setting the order parameter back to None if the order is filled or cancelled to denote that there are no more pending orders.'''
         # from settings import CONFIG
         from application.api.backtest.settings import CONFIG
 
@@ -140,7 +143,8 @@ class BaseStrategy(bt.Strategy):
 
         # Check if an order has been completed
         # Attention: broker could reject order if not enougth cash
-        if order.status in [order.Completed, order.Canceled, order.Margin]:
+        # if order.status in [order.Completed, order.Canceled, order.Margin]:
+        if order.status in [order.Completed]:
             if order.isbuy():
                 # self.log(
                 #     'BUY EXECUTED, Price: %.2f, Cost: %.2f, Comm %.2f' %
@@ -152,6 +156,8 @@ class BaseStrategy(bt.Strategy):
                     'transaction_date': self.get_date_format(),
                     'price': order.executed.price,
                     'cost': order.executed.value,
+                    'size': order.executed.size,
+                    'buytime': bt.num2date(order.executed.dt),
                     'commission': order.executed.comm,
                 })
                 self.buyprice = order.executed.price
@@ -166,9 +172,13 @@ class BaseStrategy(bt.Strategy):
                     'transaction_date': self.get_date_format(),
                     'price': order.executed.price,
                     'cost': order.executed.value,
+                    'size': order.executed.size,
+                    'buytime': bt.num2date(order.executed.dt),
                     'commission': order.executed.comm,
                 })
             self.bar_executed = len(self)
+        elif order.status in [order.Rejected, order.Canceled, order.Margin]:
+            print('%s ,' % order.Status[order.status])
 
         if CONFIG['stop_loss']['enabled'] or CONFIG['take_profit']['enabled']:
             if not order.alive() and order.ref in self.orefs:
@@ -178,6 +188,7 @@ class BaseStrategy(bt.Strategy):
             self.order = None
 
     def notify_trade(self, trade):
+        '''Run on every next iteration. Logs data on every trade when closed.'''
         if not trade.isclosed:
             return
 
@@ -193,3 +204,11 @@ class BaseStrategy(bt.Strategy):
             self.win_quantity += 1
         else:
             self.loss_quantity += 1
+
+    def stop(self):
+        '''At the end of the strategy backtest, logs the ending value of the portfolio as well as one or multiple parameter values for strategy optimization purposes.'''
+        self.log('End of the strategy')
+        # self.log('(bbma: {}, bbsd: {}, adxper: {}) Ending Value: {}'.format(self.params.BB_MA, self.params.BB_SD, self.params.ADX_Period, self.broker.getvalue()), doprint=True)
+        # fields = [[self.params.BB_MA, self.params.BB_SD, self.params.ADX_Period, self.broker.getvalue()]]
+        # df = pd.DataFrame(data=fields)
+        # df.to_csv('optimization.csv', mode='a', index=False, header=False)
