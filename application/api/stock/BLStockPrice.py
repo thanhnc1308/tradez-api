@@ -8,6 +8,7 @@ from application.business.indicators.momentum import rsi, awesome_oscillator, st
 from application.business.indicators.volatility import average_true_range, bollinger_hband_indicator, bollinger_lband_indicator, keltner_channel_hband_indicator, keltner_channel_lband_indicator
 from application.business.indicators.volume import chaikin_money_flow, money_flow_index, on_balance_volume
 from application.business.indicators.trend import ema, sma, macd, macd_signal, adx, cci, aroon_down, aroon_up, psar_up_indicator, psar_down_indicator
+from application.business.candlestick.candlestick import single_candle, double_candles, triple_candles
 import pandas as pd
 import math
 from application.utility.datetime_utils import subtract_days
@@ -45,6 +46,9 @@ list_all_indicators = [
     'psar_down_indicator',
     'keltner20_channel_hband_indicator',
     'keltner20_channel_lband_indicator',
+    'single_candle',
+    'double_candles',
+    'triple_candles',
 ]
 
 list_done_symbol = [
@@ -93,22 +97,29 @@ def calculate_indicator_by_symbol(indicators, symbol):
     data = StockPrice.query.filter_by(symbol=symbol).order_by(asc('stock_date'))
     df = get_df_stock_price_data(data)
     for indicator in indicators:
-        # print('===================================indicator', indicator)
+        print('===================================indicator', indicator)
         df[indicator] = calculate_by_indicator(indicator, df)
     # print('===================================', df.tail())
-    count = 0
+    def get_value(value):
+        if isinstance(indicator_value, str):
+            return str(indicator_value)
+        elif indicator_value == None:
+            return None
+        elif math.isnan(indicator_value) or math.isinf(indicator_value):
+            return None
+        else:
+            return round(indicator_value, 2)
     for row in data:
         data_updated = stock_price_schema.dump(row)
         for indicator in indicators:
             indicator_row = df[df['stock_date'] == data_updated['stock_date']]
             indicator_value = indicator_row[indicator].to_list()[0]
-            # print('===================================indicator', indicator)
-            data_updated[indicator] = round(indicator_value, 2) if not (math.isnan(indicator_value) or indicator_value == None or math.isinf(indicator_value)) else None
-        # count = count + 1
-        # if count == 200:
-        #     print(data_updated)
-        row.update(**data_updated)
-            # break
+            # print('===================================update indicator', indicator)
+            # print('indicator_value: ', indicator_value)
+            data_updated[indicator] = get_value(indicator_value)
+        if data_updated['double_candles'] != None:
+            print(data_updated)
+        # row.update(**data_updated)
 
 def calculate_by_indicator(indicator, df):
     if indicator == 'rsi14':
@@ -175,6 +186,12 @@ def calculate_by_indicator(indicator, df):
         return keltner_channel_hband_indicator(high=df['high'], low=df['low'], close=df['close'], window=20, window_atr=10)
     elif indicator == 'keltner20_channel_lband_indicator':
         return keltner_channel_lband_indicator(high=df['high'], low=df['low'], close=df['close'], window=20, window_atr=10)
+    elif indicator == 'single_candle':
+        return single_candle(df)
+    elif indicator == 'double_candles':
+        return double_candles(df)
+    elif indicator == 'triple_candles':
+        return triple_candles(df)
 
 def get_df_stock_price_data(data):
     df = pd.DataFrame(columns=['symbol','stock_date','open','high','low','close','volume'])

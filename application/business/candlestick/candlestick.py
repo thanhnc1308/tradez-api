@@ -1,9 +1,101 @@
 import re
 BASE_PATH = 'application.business.candlestick.patterns.'
+import sys
+import pandas as pd
+import numpy as np
+
+this_module = sys.modules[__name__]
 
 __builders = dict()
 __default_ohlc = ['open', 'high', 'low', 'close']
 
+list_single_candle = [
+    'doji',
+    'gravestone_doji',
+    'dragonfly_doji',
+    'hammer',
+    'inverted_hammer',
+]
+
+list_double_candles = [
+    'bullish_harami',
+    'bearish_harami',
+    'dark_cloud_cover',
+    'doji_star',
+    'bearish_engulfing',
+    'bullish_engulfing',
+    'piercing_pattern',
+    'rain_drop',
+    'rain_drop_doji',
+    'star',
+    'shooting_star',
+]
+
+list_triple_candles = [
+    'hanging_man',
+    'morning_star',
+    'morning_star_doji',
+]
+
+def single_candle(candles_df):
+    candles_df['single_candle'] = None
+    def get_candle_name(x):
+        result = ''
+        current_pattern = x['single_candle']
+        if x[snake_case_to_pascal_case(pattern)] == True:
+            if current_pattern == None:
+                result = pattern
+            else:
+                result = f"{current_pattern}_{pattern}"
+        else:
+            result = current_pattern
+        return result
+    for pattern in list_single_candle:
+        fn = getattr(this_module, pattern)
+        candles_df = fn(candles_df)
+        candles_df['single_candle'] = candles_df.apply(lambda x : get_candle_name(x), axis=1)
+    return pd.Series(data=candles_df['single_candle'], name='single_candle')
+
+def double_candles(candles_df):
+    candles_df['double_candles'] = None
+    def get_candle_name(x):
+        result = ''
+        current_pattern = x['double_candles']
+        if x[snake_case_to_pascal_case(pattern)] == True:
+            if current_pattern == None:
+                result = pattern
+            else:
+                result = f"{current_pattern}_{pattern}"
+        else:
+            result = current_pattern
+        return result
+    for pattern in list_double_candles:
+        fn = getattr(this_module, pattern)
+        candles_df = fn(candles_df)
+        candles_df['double_candles'] = candles_df.apply(lambda x : get_candle_name(x), axis=1)
+    return pd.Series(data=candles_df['double_candles'], name='double_candles')
+
+def triple_candles(candles_df):
+    candles_df['triple_candles'] = None
+    def get_candle_name(x):
+        result = ''
+        current_pattern = x['triple_candles']
+        if x[snake_case_to_pascal_case(pattern)] == True:
+            if current_pattern == None:
+                result = pattern
+            else:
+                result = f"{current_pattern}_{pattern}"
+        else:
+            result = current_pattern
+        return result
+    for pattern in list_triple_candles:
+        fn = getattr(this_module, pattern)
+        candles_df = fn(candles_df)
+        candles_df['triple_candles'] = candles_df.apply(lambda x : get_candle_name(x), axis=1)
+    return pd.Series(data=candles_df['triple_candles'], name='triple_candles')
+
+def snake_case_to_pascal_case(s):
+    return str(''.join(word.title() for word in s.split('_')))
 
 def __get_file_name(class_name):
     res = re.findall('[A-Z][^A-Z]*', class_name)
@@ -14,7 +106,7 @@ def __load_module(module_path):
     p = module_path.rfind('.') + 1
     super_module = module_path[p:]
     try:
-        print(module_path)
+        # print(module_path)
         module = __import__(module_path, fromlist=[super_module], level=0)
         return module
     except ImportError as e:
@@ -37,53 +129,7 @@ def __create_object(class_name, target):
     return __get_class_by_name(class_name)(target=target)
 
 
-def bullish_hanging_man(candles_df,
-                   ohlc=__default_ohlc,
-                   is_reversed=False,
-                   target=None):
-    bullhm = __create_object('BullishHangingMan', target)
-    return bullhm.has_pattern(candles_df, ohlc, is_reversed)
-
-
-def hanging_man(candles_df,
-                   ohlc=__default_ohlc,
-                   is_reversed=False,
-                   target=None):
-    bearhm = __create_object('HangingMan', target)
-    return bearhm.has_pattern(candles_df, ohlc, is_reversed)
-
-
-def bearish_harami(candles_df,
-                   ohlc=__default_ohlc,
-                   is_reversed=False,
-                   target=None):
-    bear_harami = __create_object('BearishHarami', target)
-    return bear_harami.has_pattern(candles_df, ohlc, is_reversed)
-
-
-def bullish_harami(candles_df,
-                   ohlc=__default_ohlc,
-                   is_reversed=False,
-                   target=None):
-    bull_harami = __create_object('BullishHarami', target)
-    return bull_harami.has_pattern(candles_df, ohlc, is_reversed)
-
-
-def gravestone_doji(candles_df,
-                   ohlc=__default_ohlc,
-                   is_reversed=False,
-                   target=None):
-    gs_doji = __create_object('GravestoneDoji', target)
-    return gs_doji.has_pattern(candles_df, ohlc, is_reversed)
-
-
-def dark_cloud_cover(candles_df,
-                     ohlc=__default_ohlc,
-                     is_reversed=False,
-                     target=None):
-    dcc = __create_object('DarkCloudCover', target)
-    return dcc.has_pattern(candles_df, ohlc, is_reversed)
-
+#region single candle
 
 def doji(candles_df,
          ohlc=__default_ohlc,
@@ -92,14 +138,12 @@ def doji(candles_df,
     doji = __create_object('Doji', target)
     return doji.has_pattern(candles_df, ohlc, is_reversed)
 
-
-def doji_star(candles_df,
-              ohlc=__default_ohlc,
-              is_reversed=False,
-              target=None):
-    doji = __create_object('DojiStar', target)
-    return doji.has_pattern(candles_df, ohlc, is_reversed)
-
+def gravestone_doji(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    gs_doji = __create_object('GravestoneDoji', target)
+    return gs_doji.has_pattern(candles_df, ohlc, is_reversed)
 
 def dragonfly_doji(candles_df,
                    ohlc=__default_ohlc,
@@ -108,30 +152,12 @@ def dragonfly_doji(candles_df,
     doji = __create_object('DragonflyDoji', target)
     return doji.has_pattern(candles_df, ohlc, is_reversed)
 
-
-def bearish_engulfing(candles_df,
-                   ohlc=__default_ohlc,
-                   is_reversed=False,
-                   target=None):
-    cndl = __create_object('BearishEngulfing', target)
-    return cndl.has_pattern(candles_df, ohlc, is_reversed)
-
-
-def bullish_engulfing(candles_df,
-                   ohlc=__default_ohlc,
-                   is_reversed=False,
-                   target=None):
-    cndl = __create_object('BullishEngulfing', target)
-    return cndl.has_pattern(candles_df, ohlc, is_reversed)
-
-
 def hammer(candles_df,
                    ohlc=__default_ohlc,
                    is_reversed=False,
                    target=None):
     cndl = __create_object('Hammer', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
-
 
 def inverted_hammer(candles_df,
                    ohlc=__default_ohlc,
@@ -140,22 +166,56 @@ def inverted_hammer(candles_df,
     cndl = __create_object('InvertedHammer', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
+# def bullish_hanging_man(candles_df,
+#                    ohlc=__default_ohlc,
+#                    is_reversed=False,
+#                    target=None):
+#     bullhm = __create_object('BullishHangingMan', target)
+#     return bullhm.has_pattern(candles_df, ohlc, is_reversed)
 
-def morning_star(candles_df,
+#region double candle
+
+def bearish_harami(candles_df,
                    ohlc=__default_ohlc,
                    is_reversed=False,
                    target=None):
-    cndl = __create_object('MorningStar', target)
-    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+    bear_harami = __create_object('BearishHarami', target)
+    return bear_harami.has_pattern(candles_df, ohlc, is_reversed)
 
-
-def morning_star_doji(candles_df,
+def bullish_harami(candles_df,
                    ohlc=__default_ohlc,
                    is_reversed=False,
                    target=None):
-    cndl = __create_object('MorningStarDoji', target)
+    bull_harami = __create_object('BullishHarami', target)
+    return bull_harami.has_pattern(candles_df, ohlc, is_reversed)
+
+def dark_cloud_cover(candles_df,
+                     ohlc=__default_ohlc,
+                     is_reversed=False,
+                     target=None):
+    dcc = __create_object('DarkCloudCover', target)
+    return dcc.has_pattern(candles_df, ohlc, is_reversed)
+
+def doji_star(candles_df,
+              ohlc=__default_ohlc,
+              is_reversed=False,
+              target=None):
+    doji = __create_object('DojiStar', target)
+    return doji.has_pattern(candles_df, ohlc, is_reversed)
+
+def bearish_engulfing(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BearishEngulfing', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
+def bullish_engulfing(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BullishEngulfing', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
 def piercing_pattern(candles_df,
                    ohlc=__default_ohlc,
@@ -164,14 +224,12 @@ def piercing_pattern(candles_df,
     cndl = __create_object('PiercingPattern', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
-
 def rain_drop(candles_df,
                    ohlc=__default_ohlc,
                    is_reversed=False,
                    target=None):
     cndl = __create_object('RainDrop', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
-
 
 def rain_drop_doji(candles_df,
                    ohlc=__default_ohlc,
@@ -180,7 +238,6 @@ def rain_drop_doji(candles_df,
     cndl = __create_object('RainDropDoji', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
-
 def star(candles_df,
                    ohlc=__default_ohlc,
                    is_reversed=False,
@@ -188,10 +245,33 @@ def star(candles_df,
     cndl = __create_object('Star', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
-
 def shooting_star(candles_df,
                    ohlc=__default_ohlc,
                    is_reversed=False,
                    target=None):
     cndl = __create_object('ShootingStar', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+#region triple candle
+
+def hanging_man(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    bearhm = __create_object('HangingMan', target)
+    return bearhm.has_pattern(candles_df, ohlc, is_reversed)
+
+def morning_star(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('MorningStar', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def morning_star_doji(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('MorningStarDoji', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
