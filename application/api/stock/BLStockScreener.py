@@ -29,7 +29,7 @@ def screen_stock(params):
     data = []
     filters = params.get('filters')
     columns = params.get('columns')
-    limit = params.get('limit') or 20
+    limit = params.get('limit') or 2000
     offset = params.get('offset') or 0
     sql_columns = build_sql_columns(columns)
     sql_filters = build_sql_filters(filters)
