@@ -11,6 +11,8 @@ dict_basic_operation = {
     'equal' : ' {column} = {value} ',
     'nequal' : ' {column} <> {value} ',
     'equals' : " {column} = '{value}' ",
+    'like' : " {column} like '%%{value}%%' ",
+    'ilike' : " {column} ilike '%%{value}%%' ",
 }
 
 dict_basic_two_operations = {

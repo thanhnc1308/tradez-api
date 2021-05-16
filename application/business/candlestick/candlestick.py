@@ -47,6 +47,8 @@ list_triple_candles = [
     'hanging_man',
     'morning_star',
     'morning_star_doji',
+    'evening_star',
+    'evening_star_doji',
     'abandoned_baby',
     'downside_tasuki_gap',
     'three_black_crows',
@@ -377,6 +379,20 @@ def morning_star_doji(candles_df,
                    is_reversed=False,
                    target=None):
     cndl = __create_object('MorningStarDoji', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def evening_star(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('EveningStar', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def evening_star_doji(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('EveningStarDoji', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
 def abandoned_baby(candles_df,
