@@ -1,13 +1,7 @@
 from application.business.candlestick.patterns.candlestick_finder import CandlestickFinder
 
 
-def is_doji(open, high, low, close):
-    return abs(close - open) / (high - low) < 0.1 and \
-               (high - max(close, open)) > (3 * abs(close - open)) and \
-               (min(close, open) - low) > (3 * abs(close - open))
-
-class Doji(CandlestickFinder):
-    
+class BullishInvertedHammerStick(CandlestickFinder):
     def __init__(self, target=None):
         super().__init__(self.get_class_name(), 1, target=target)
 
@@ -19,4 +13,8 @@ class Doji(CandlestickFinder):
         high = candle[self.high_column]
         low = candle[self.low_column]
 
-        return is_doji(open, high, low, close)
+        is_bullish_inverted_hammer = close > open;
+        is_bullish_inverted_hammer = is_bullish_inverted_hammer and self.approximate_equal(open, low);
+        is_bullish_inverted_hammer = is_bullish_inverted_hammer and (close - open) <= 2 * (high - close);
+
+        return is_bullish_inverted_hammer;

@@ -15,6 +15,14 @@ list_single_candle = [
     'dragonfly_doji',
     'hammer',
     'inverted_hammer',
+    'bullish_marubozu',
+    'bearish_marubozu',
+    'bearish_hammer_stick',
+    'bearish_inverted_hammer_stick',
+    'bullish_inverted_hammer_stick',
+    'bearish_spinning_top',
+    'bullish_spinning_top',
+    'bullish_hammer_stick',
 ]
 
 list_double_candles = [
@@ -29,12 +37,24 @@ list_double_candles = [
     'rain_drop_doji',
     'star',
     'shooting_star',
+    'bearish_harami_cross',
+    'bullish_harami_cross',
+    'inside_bar',
+    'outside_bar',
 ]
 
 list_triple_candles = [
     'hanging_man',
     'morning_star',
     'morning_star_doji',
+    'abandoned_baby',
+    'downside_tasuki_gap',
+    'three_black_crows',
+    'three_white_soldiers',
+    'three_outside_down',
+    'three_outside_up',
+    'three_inside_up',
+    'three_inside_down',
 ]
 
 def single_candle(candles_df):
@@ -166,6 +186,62 @@ def inverted_hammer(candles_df,
     cndl = __create_object('InvertedHammer', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
+def bullish_marubozu(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BullishMarubozu', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bearish_marubozu(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BearishMarubozu', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bearish_hammer_stick(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BearishHammerStick', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bullish_hammer_stick(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BullishHammerStick', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bearish_inverted_hammer_stick(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BearishInvertedHammerStick', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bullish_inverted_hammer_stick(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BullishInvertedHammerStick', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bearish_spinning_top(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BearishSpinningTop', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bullish_spinning_top(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BullishSpinningTop', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
 # def bullish_hanging_man(candles_df,
 #                    ohlc=__default_ohlc,
 #                    is_reversed=False,
@@ -252,6 +328,34 @@ def shooting_star(candles_df,
     cndl = __create_object('ShootingStar', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
+def bearish_harami_cross(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BearishHaramiCross', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def bullish_harami_cross(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('BullishHaramiCross', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def inside_bar(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('InsideBar', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def outside_bar(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('OutsideBar', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
 #region triple candle
 
 def hanging_man(candles_df,
@@ -275,3 +379,58 @@ def morning_star_doji(candles_df,
     cndl = __create_object('MorningStarDoji', target)
     return cndl.has_pattern(candles_df, ohlc, is_reversed)
 
+def abandoned_baby(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('AbandonedBaby', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def downside_tasuki_gap(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('DownsideTasukiGap', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def three_black_crows(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('ThreeBlackCrows', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def three_white_soldiers(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('ThreeWhiteSoldiers', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def three_outside_down(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('ThreeOutsideDown', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def three_outside_up(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('ThreeOutsideUp', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def three_inside_up(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('ThreeInsideUp', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)
+
+def three_inside_down(candles_df,
+                   ohlc=__default_ohlc,
+                   is_reversed=False,
+                   target=None):
+    cndl = __create_object('ThreeInsideDown', target)
+    return cndl.has_pattern(candles_df, ohlc, is_reversed)

@@ -1,13 +1,7 @@
 from application.business.candlestick.patterns.candlestick_finder import CandlestickFinder
 
 
-def is_doji(open, high, low, close):
-    return abs(close - open) / (high - low) < 0.1 and \
-               (high - max(close, open)) > (3 * abs(close - open)) and \
-               (min(close, open) - low) > (3 * abs(close - open))
-
-class Doji(CandlestickFinder):
-    
+class BearishMarubozu(CandlestickFinder):
     def __init__(self, target=None):
         super().__init__(self.get_class_name(), 1, target=target)
 
@@ -19,4 +13,4 @@ class Doji(CandlestickFinder):
         high = candle[self.high_column]
         low = candle[self.low_column]
 
-        return is_doji(open, high, low, close)
+        return self.approximate_equal(open, high) and self.approximate_equal(low, close) and open > close and open > low

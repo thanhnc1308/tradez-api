@@ -117,7 +117,9 @@ def calculate_indicator_by_symbol(indicators, symbol):
             # print('===================================update indicator', indicator)
             # print('indicator_value: ', indicator_value)
             data_updated[indicator] = get_value(indicator_value)
-        if data_updated['double_candles'] != None:
+        # if data_updated['single_candle'] != None:
+        # if data_updated['double_candles'] != None:
+        if data_updated['triple_candles'] != None:
             print(data_updated)
         # row.update(**data_updated)
 

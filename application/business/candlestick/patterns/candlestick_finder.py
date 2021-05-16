@@ -25,6 +25,11 @@ class CandlestickFinder(object):
     def logic(self, row_idx):
         raise Exception('Implement the logic of ' + self.get_class_name())
 
+    def approximate_equal(self, a, b):
+        left = float(round(abs(a - b), 4)) * 1
+        right = float(round((a * 0.001), 4)) * 1
+        return  left <= right
+
     def has_pattern(self,
                     candles_df,
                     ohlc,
