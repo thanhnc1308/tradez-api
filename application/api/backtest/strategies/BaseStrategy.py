@@ -4,6 +4,11 @@ import backtrader as bt
 
 class BaseStrategy(bt.Strategy):
 
+    params = (
+        ('atr_stop_loss', 1.5),
+        ('atr_stop_scale_out', 1 )
+    )
+
     def __init__(self):
         # Keep a reference to the "close" line in the data[0] dataseries
         self.dataclose = self.datas[0].close
@@ -12,6 +17,7 @@ class BaseStrategy(bt.Strategy):
         self.order = None
         self.buyprice = None
         self.buycomm = None
+        self.atr14 = None
 
         self.orefs = None
 

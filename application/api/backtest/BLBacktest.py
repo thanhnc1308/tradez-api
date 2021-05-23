@@ -14,11 +14,20 @@ import importlib.util
 import backtrader.analyzers as btanalyzers
 
 def backtest_strategy(config):
+    list_result = []
+    list_stock = config.get("symbol")
+
+    for symbol in list_stock:
+        result = do_backtest(symbol, config)
+        list_result.append(result)
+    return list_result
+
+def do_backtest(symbol, config):
     result = {}
     # cerebro
     cerebro = prepare_cerebro(config)
     # data
-    df = prepare_feed_data(config)
+    df = prepare_feed_data(symbol, config)
     if len(df) > 0:
         data = bt.feeds.PandasData(dataname=df)
         cerebro.adddata(data)
@@ -33,16 +42,17 @@ def backtest_strategy(config):
         # run
         strats = run_backtest(cerebro)
         # result
-        result = get_trade_result(strats, cerebro)
+        result = get_trade_result(symbol, strats, cerebro)
     return result
+
 
 def prepare_cerebro(config):
     cerebro = bt.Cerebro()
-    cash = config.get('cash') or 100000
-    cerebro.broker.setcash(cash)
+    # cash = config.get('cash') or 100000
+    # cerebro.broker.setcash(cash)
     # Set the commission - 0.1% ... divide by 100 to remove the %
-    commission = config.get('commission') or 0.001
-    cerebro.broker.setcommission(commission=commission)
+    # commission = config.get('commission') or 0.001
+    # cerebro.broker.setcommission(commission=commission)
     # Add a FixedSize sizer according to the stake
     # cerebro.addsizer(bt.sizers.FixedSize, stake=5)
     return cerebro
@@ -66,8 +76,8 @@ def add_analyzers(cerebro):
     # cerebro.addanalyzer(btanalyzers.TimeReturn, _name='time_return')
     return cerebro
 
-def prepare_feed_data(config):
-    symbol = config.get('symbol')
+def prepare_feed_data(symbol, config):
+    # symbol = config.get('symbol')
     from_date = config.get('from_date') or '2010-01-01'
     to_date = config.get('to_date') or '2099-12-31'
     sql_data = StockPrice.query.order_by(
@@ -80,6 +90,7 @@ def prepare_feed_data(config):
         )
     )
     sql_data = stock_price_list_schema.dump(sql_data)
+    # print(sql_data[0])
     def map_row_to_candlestick(row):
         return {
             'Date':parse_date(row['stock_date'], '%Y-%m-%d'),
@@ -87,6 +98,7 @@ def prepare_feed_data(config):
             'High': row['high_price'],
             'Low': row['low_price'],
             'Close': row['close_price'],
+            # 'ATR14': row['atr14'],
             'Volume': row['volume']
         }
     sql_data = list(map(map_row_to_candlestick, sql_data))
@@ -121,7 +133,7 @@ def run_backtest(cerebro):
     # print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
     return strats
 
-def get_trade_result(strats, cerebro):
+def get_trade_result(symbol, strats, cerebro):
     _show_analyzers_end(strats[0])
     final_portfolio = round(cerebro.broker.getvalue(), 2)
     if strats[0] is not None:
@@ -154,17 +166,18 @@ def get_trade_result(strats, cerebro):
             pnl = 0
             percent_pnl = 0
     return {
+        'symbol': symbol,
         'result': result,
         'total_trades': total_trades,
-        'total_open': total_open,
-        'total_closed': total_closed,
+        # 'total_open': total_open,
+        # 'total_closed': total_closed,
         'total_won': total_won,
         'total_lost': total_lost,
         'win_rate': win_rate,
         # 'analyzer': analyzer,
-        'pnl': pnl,
-        'percent_pnl': percent_pnl,
-        'final_portfolio': final_portfolio
+        # 'pnl': pnl,
+        # 'percent_pnl': percent_pnl,
+        # 'final_portfolio': final_portfolio
     }
 
 def _show_analyzers_end(strats):
