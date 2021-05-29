@@ -15,24 +15,11 @@ class RSIStrategy(BaseStrategy):
                                          period=self.params.period)
         super(RSIStrategy, self).__init__()
 
-    def next(self):
-        if not self.position:
-            if self.rsi < self.params.upper:
-                # print(self.atr14)
-                # print(self.dataclose - self.atr14)
-                # print(self.dataclose - self.datas[0].atr14)
-                # print(self.params.atr_stop_scale_out)
-                self.buy()
-        else:
-            if self.rsi > self.params.lower:
-                self.sell()
+    def should_buy(self):
+        return self.rsi < self.params.upper
 
-    # def stop(self):
-    #     # from settings import CONFIG
-    #     from application.api.backtest.settings import CONFIG
-    #     pnl = round(self.broker.getvalue() - CONFIG['capital_base'], 2)
-    #     print('RSI Period: {} Final PnL: {}'.format(
-    #         self.params.period, pnl))
+    def should_sell(self):
+        return self.rsi > self.params.lower
 
 
 def get_RSIStrategy_params(config):

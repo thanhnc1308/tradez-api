@@ -156,31 +156,33 @@ def get_trade_result(symbol, strats, cerebro):
         result = strats[0].get_trade_result()
         win_rate = strats[0].get_win_rate()
         total_trades = strats[0].get_total_trades()
-        analyzer = strats[0].analyzers.trade_analyzer.get_analysis()
-        total = analyzer.get('total')
-        if total != None:
-            total_open = analyzer.total.get('open') or 0
-            total_closed = analyzer.total.get('closed') or 0
-        else:
-            total_open = 0
-            total_closed = 0
-        won = analyzer.get('won')
-        if won != None:
-            total_won = analyzer.won.get('total') or 0
-        else:
-            total_won = 0
-        loss = analyzer.get('loss')
-        if loss != None:
-            total_lost = analyzer.lost.get('total') or 0
-        else:
-            total_lost = 0
-        pnl = analyzer.get('pnl')
-        if pnl != None and pnl.get('net') != None:
-            pnl = round(analyzer.pnl.net.total, 2)
-            percent_pnl = round(pnl / (final_portfolio - pnl) * 100, 2)
-        else:
-            pnl = 0
-            percent_pnl = 0
+        # analyzer = strats[0].analyzers.trade_analyzer.get_analysis()
+        # total = analyzer.get('total')
+        # if total != None:
+        #     total_open = analyzer.total.get('open') or 0
+        #     total_closed = analyzer.total.get('closed') or 0
+        # else:
+        #     total_open = 0
+        #     total_closed = 0
+        # won = analyzer.get('won')
+        # if won != None:
+        #     total_won = analyzer.won.get('total') or 0
+        # else:
+        #     total_won = 0
+        total_lost = strats[0].loss_quantity
+        # loss = analyzer.get('loss')
+        # if loss != None:
+        #     total_lost = analyzer.lost.get('total') or 0
+        # else:
+        #     total_lost = 0
+        total_won = strats[0].win_quantity
+        # pnl = analyzer.get('pnl')
+        # if pnl != None and pnl.get('net') != None:
+        #     pnl = round(analyzer.pnl.net.total, 2)
+        #     percent_pnl = round(pnl / (final_portfolio - pnl) * 100, 2)
+        # else:
+        #     pnl = 0
+        #     percent_pnl = 0
     return {
         'symbol': symbol,
         'result': result,
