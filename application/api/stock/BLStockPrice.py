@@ -119,9 +119,10 @@ def calculate_indicator_by_symbol(indicators, symbol):
             data_updated[indicator] = get_value(indicator_value)
         # if data_updated['single_candle'] != None:
         # if data_updated['double_candles'] != None:
-        if data_updated['triple_candles'] != None:
-            print(data_updated)
-        # row.update(**data_updated)
+        # if data_updated['triple_candles'] != None:
+        # print(data_up dated)
+        row.update(**data_updated)
+        # break
 
 def calculate_by_indicator(indicator, df):
     if indicator == 'rsi14':

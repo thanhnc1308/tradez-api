@@ -13,6 +13,21 @@ from application.utility.datetime_utils import subtract_days, is_weekday, parse_
 import importlib.util
 import backtrader.analyzers as btanalyzers
 
+# class PandasData(bt.feeds.PandasData):
+#     lines = ('atr14', 'ema200')
+#     params = (
+#         ('datetime', None),
+#         ('open','open'),
+#         ('high','high'),
+#         ('low','low'),
+#         ('close','close'),
+#         ('volume','volume'),
+#         ('openinterest',None),
+#         ('atr14','atr14'),
+#         ('ema200','ema200')
+#     )
+
+
 def backtest_strategy(config):
     list_result = []
     list_stock = config.get("symbol")
@@ -90,7 +105,7 @@ def prepare_feed_data(symbol, config):
         )
     )
     sql_data = stock_price_list_schema.dump(sql_data)
-    # print(sql_data[0])
+    print(sql_data[0])
     def map_row_to_candlestick(row):
         return {
             'Date':parse_date(row['stock_date'], '%Y-%m-%d'),
@@ -98,7 +113,8 @@ def prepare_feed_data(symbol, config):
             'High': row['high_price'],
             'Low': row['low_price'],
             'Close': row['close_price'],
-            # 'ATR14': row['atr14'],
+            'ATR14': row['atr14'],
+            'EMA200': row['ema200'],
             'Volume': row['volume']
         }
     sql_data = list(map(map_row_to_candlestick, sql_data))

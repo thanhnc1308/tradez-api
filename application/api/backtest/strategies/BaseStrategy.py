@@ -12,12 +12,14 @@ class BaseStrategy(bt.Strategy):
     def __init__(self):
         # Keep a reference to the "close" line in the data[0] dataseries
         self.dataclose = self.datas[0].close
+        # print(self.datas[0].volume)
+        # self.atr14 = self.datas[0].atr14
 
         # To keep track of pending orders and buy price/commission
         self.order = None
         self.buyprice = None
         self.buycomm = None
-        self.atr14 = None
+        self.atr14 = bt.indicators.ATR(self.data, period=14)
 
         self.orefs = None
 
@@ -184,7 +186,8 @@ class BaseStrategy(bt.Strategy):
                 })
             self.bar_executed = len(self)
         elif order.status in [order.Rejected, order.Canceled, order.Margin]:
-            print('%s ,' % order.Status[order.status])
+            # print('%s ,' % order.Status[order.status])
+            pass
 
         if CONFIG['stop_loss']['enabled'] or CONFIG['take_profit']['enabled']:
             if not order.alive() and order.ref in self.orefs:
@@ -218,3 +221,11 @@ class BaseStrategy(bt.Strategy):
         # fields = [[self.params.BB_MA, self.params.BB_SD, self.params.ADX_Period, self.broker.getvalue()]]
         # df = pd.DataFrame(data=fields)
         # df.to_csv('optimization.csv', mode='a', index=False, header=False)
+
+
+def get_common_params(strategy_params, result):
+    atr_stop_loss = strategy_params.get('atr_stop_loss') or 1.5
+    atr_stop_scale_out = strategy_params.get('atr_stop_scale_out') or 1
+    result['atr_stop_loss'] = atr_stop_loss
+    result['atr_stop_scale_out'] = atr_stop_scale_out
+    return result

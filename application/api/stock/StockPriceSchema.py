@@ -12,6 +12,7 @@ class StockPriceSchema(BaseSchema):
     close_price = fields.Number()
     volume = fields.Number()
     ema200 = fields.Number()
+    atr14 = fields.Number()
 
 
 class StockPriceListSchema(BaseListSchema):

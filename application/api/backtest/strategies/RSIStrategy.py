@@ -1,5 +1,5 @@
 import backtrader as bt
-from application.api.backtest.strategies.BaseStrategy import BaseStrategy
+from application.api.backtest.strategies.BaseStrategy import BaseStrategy, get_common_params
 
 
 class RSIStrategy(BaseStrategy):
@@ -18,6 +18,10 @@ class RSIStrategy(BaseStrategy):
     def next(self):
         if not self.position:
             if self.rsi < self.params.upper:
+                # print(self.atr14)
+                # print(self.dataclose - self.atr14)
+                # print(self.dataclose - self.datas[0].atr14)
+                # print(self.params.atr_stop_scale_out)
                 self.buy()
         else:
             if self.rsi > self.params.lower:
@@ -41,4 +45,5 @@ def get_RSIStrategy_params(config):
         'upper': upper,
         'lower': lower
     }
+    result = get_common_params(strategy_params, result)
     return result
