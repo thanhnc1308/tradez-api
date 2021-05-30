@@ -1,6 +1,17 @@
 import datetime
 import backtrader as bt
+from application.business.indicators.volatility import average_true_range, bollinger_hband_indicator, bollinger_lband_indicator, keltner_channel_hband_indicator, keltner_channel_lband_indicator
 
+# class ATR(bt.Indicator):
+#     lines = ('atr',)
+
+#     params = (('period', 14),)
+
+#     def __init__(self):
+#         self.lines.atr = average_true_range(high=self.datas[0].high, low=self.datas[0].low, close=self.datas[0].close, window=14)
+
+    # def next(self):
+    #     self.lines.atr[0] = average_true_range(high=self.data.high, low=self.data.low, close=self.data.close, window=14)
 
 class BaseStrategy(bt.Strategy):
 
@@ -20,6 +31,8 @@ class BaseStrategy(bt.Strategy):
         self.is_in_position = False
 
         self.atr14 = bt.indicators.ATR(self.data, period=14)
+        # self.atr14 = ATR(self.data, period=14)
+        # print(self.atr14)
         self.stop_loss_level = None
         self.scale_out_level = None
 
@@ -80,7 +93,6 @@ class BaseStrategy(bt.Strategy):
             elif self.should_sell():
                 self.sell()
         else:
-            print('manage_exist_trade')
             self.manage_exist_trade()
 
     def should_buy(self):
