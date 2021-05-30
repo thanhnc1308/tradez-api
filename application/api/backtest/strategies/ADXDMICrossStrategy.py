@@ -1,40 +1,42 @@
-from datetime import datetime
+from application.api.backtest.strategies.BaseStrategy import BaseStrategy, get_common_params
 import backtrader as bt
 
-ADX = 25
-QTY = 1
 
+class ADXDMICrossStrategy(BaseStrategy):
 
-class ADXDMICrossStrategy(bt.Strategy):
+    params = (
+        ('period', 14),
+        ('adx_strong_trend_level', 25),
+    )
 
     def __init__(self):
-        self.adx = bt.ind.ADX()
+        self.adx = bt.ind.ADX(self.data, period=self.params.period)
         self.dmiplus, self.dmimin = bt.ind.PlusDI(), bt.ind.MinusDI()
-        self.crossoverdmi = bt.ind.CrossOver(self.dmimin, self.dmiplus)
+        # self.crossoverdmi = bt.ind.CrossOver(self.dmimin, self.dmiplus)
+        super(ADXDMICrossStrategy, self).__init__()
 
-    def next(self):
-        #     if self.crossoverdmi[0] == -1.0 and self.adx[0] > ADX:
-        if self.dmiplus > self.dmimin and self.adx[0] > ADX:
-            self.buy(size=QTY)
-        #     if self.datas[0].datetime.date(0) == datetime(2020, 1, 23).date():
-        if self.dmiplus < self.dmimin and self.adx[0] > ADX:
-            self.close(size=QTY)
+    def should_buy(self):
+        return self.dmiplus > self.dmimin and self.adx[0] > self.params.adx_strong_trend_level
 
-        if self.datas[0].datetime.date(0) == datetime(2020, 1, 23).date():
-            self.close()
+    def should_sell(self):
+        return self.dmiplus < self.dmimin and self.adx[0] > self.params.adx_strong_trend_level
+
+    # def next(self):
+    #     #     if self.crossoverdmi[0] == -1.0 and self.adx[0] > ADX:
+    #     if self.dmiplus > self.dmimin and self.adx[0] > ADX:
+    #         self.buy()
+    #     #     if self.datas[0].datetime.date(0) == datetime(2020, 1, 23).date():
+    #     if self.dmiplus < self.dmimin and self.adx[0] > ADX:
+    #         self.close()
 
 
-cerebro = bt.Cerebro(stdstats=False)
-cerebro.addobserver(bt.observers.BuySell)
-
-print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
-print('Starting Portfolio Cash: %.2f' % cerebro.broker.get_cash())
-cerebro.addstrategy(ADXDMICrossStrategy)
-data0 = bt.feeds.YahooFinanceData(dataname="GOOGL", fromdate=datetime(2016, 8, 1),
-                                  todate=datetime(2020, 1, 30))
-cerebro.adddata(data0)
-cerebro.broker.set_cash(200000)
-cerebro.run()
-print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
-print('Final Portfolio Cash: %.2f' % cerebro.broker.get_cash())
-cerebro.plot()
+def get_ADXDMICrossStrategy_params(config):
+    strategy_params = config.get('strategy_params')
+    period = strategy_params.get('period') or 14
+    adx_strong_trend_level = strategy_params.get('adx_strong_trend_level') or 25
+    result = {
+        'period': period,
+        'adx_strong_trend_level': adx_strong_trend_level,
+    }
+    result = get_common_params(strategy_params, result)
+    return result

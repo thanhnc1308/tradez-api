@@ -11,8 +11,7 @@ class RSIStrategy(BaseStrategy):
     )
 
     def __init__(self):
-        self.rsi = bt.indicators.RSI_SMA(self.data.close,
-                                         period=self.params.period)
+        self.rsi = bt.indicators.RSI_SMA(self.data.close, period=self.params.period)
         super(RSIStrategy, self).__init__()
 
     def should_buy(self):
