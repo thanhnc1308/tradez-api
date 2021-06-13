@@ -19,7 +19,7 @@ def send_notification():
     for notification in all_notifications:
         if notification['condition_key'] != None:
             condition_key = json.loads(notification['condition_key'])
-            if not check_condition_notification(condition_key):
+            if check_condition_notification(condition_key):
                 if notification['send_gmail'] == True:
                     send_gmail(notification)
                 if notification['send_telegram'] == True:

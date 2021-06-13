@@ -31,8 +31,6 @@ class BaseStrategy(bt.Strategy):
         self.is_in_position = False
 
         self.atr14 = bt.indicators.ATR(self.data, period=14)
-        # self.atr14 = ATR(self.data, period=14)
-        # print(self.atr14)
         self.stop_loss_level = None
         self.scale_out_level = None
 
