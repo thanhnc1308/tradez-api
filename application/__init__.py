@@ -33,6 +33,10 @@ def create_app(config_name):
     def hello_world():
         return 'Trading Assistance'
 
+    @app.route("/test")
+    def test():
+        return 'test ok'
+
     return app
 
 
