@@ -24,6 +24,7 @@ schedule = "*"
 matplotlib = "*"
 webargs = "*"
 requests = "*"
+PyJWT = "1.6.1"
 
 [requires]
 python_version = "3.8"
