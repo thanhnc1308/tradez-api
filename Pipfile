@@ -23,6 +23,7 @@ python-telegram-bot = "*"
 schedule = "*"
 matplotlib = "*"
 webargs = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
