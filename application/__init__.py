@@ -9,7 +9,7 @@ from application.api.users.UserController import user_api
 # from application.api.backtest.BacktestController import backtest_api
 # from application.api.auth.AuthController import auth_api
 from application.extensions import db, migrate, jwt, mail, cors
-from application.config import DevelopmentConfig
+from application.config import DevelopmentConfig, ProductionConfig
 from werkzeug.exceptions import default_exceptions
 
 
@@ -43,7 +43,7 @@ def create_app(config_name):
 
 def configure_app(app, config_name=None):
     # config_module = f"application.config.{config_name.capitalize()}Config"
-    config_module = DevelopmentConfig
+    config_module = ProductionConfig
     app.config.from_object(config_module)
 
 

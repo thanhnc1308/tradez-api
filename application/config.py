@@ -5,7 +5,15 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 class Config(object):
     """Base configuration"""
+    SQLALCHEMY_TRACK_MODIFICATIONS = False
 
+
+class ProductionConfig(Config):
+    SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL_POSTGRESQL")
+
+
+class DevelopmentConfig(Config):
+    """Development configuration"""
     user = os.environ["POSTGRES_USER"]
     password = os.environ["POSTGRES_PASSWORD"]
     hostname = os.environ["POSTGRES_HOSTNAME"]
@@ -15,15 +23,7 @@ class Config(object):
     SQLALCHEMY_DATABASE_URI = (
         f"postgresql+psycopg2://{user}:{password}@{hostname}:{port}/{database}"
     )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-
-class ProductionConfig(Config):
     """Production configuration"""
-
-
-class DevelopmentConfig(Config):
-    """Development configuration"""
 
 
 class TestingConfig(Config):
