@@ -16,9 +16,9 @@ class User(BaseModel):
     facebook = db.Column(db.String(100), unique=True)
     telegram = db.Column(db.String(100), unique=True)
 
-    __mapper_args__ = {
-        "order_by": username
-    }
+    # __mapper_args__ = {
+    #     "order_by": username
+    # }
 
     def __init__(self, **kwargs):
         db.Model.__init__(self, **kwargs)

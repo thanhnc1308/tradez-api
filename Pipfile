@@ -22,6 +22,7 @@ marshmallow = "*"
 python-telegram-bot = "*"
 schedule = "*"
 matplotlib = "*"
+webargs = "*"
 
 [requires]
 python_version = "3.8"
