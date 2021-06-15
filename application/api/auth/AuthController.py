@@ -50,7 +50,10 @@ def login():
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60*24*7)
             }, 'SECRET_KEY')  # app.config['SECRET_KEY']
             print('token', token)
-            res.on_success(data=token.decode('UTF-8'))
+            if hasattr(token, 'decode'):
+                res.on_success(data=token.decode('UTF-8'))
+            else:
+                res.on_success(data=token)
         else:
             res.on_error(code=401, user_message='Password is not correct')
     except Exception as ex:
