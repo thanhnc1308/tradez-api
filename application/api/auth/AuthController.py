@@ -49,6 +49,7 @@ def login():
                 'user': username,  # it's better to return a public_id field here
                 'exp': datetime.datetime.utcnow() + datetime.timedelta(minutes=60*24*7)
             }, 'SECRET_KEY')  # app.config['SECRET_KEY']
+            print('token', token)
             res.on_success(data=token.decode('UTF-8'))
         else:
             res.on_error(code=401, user_message='Password is not correct')
