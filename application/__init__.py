@@ -9,7 +9,7 @@ from application.api.users.UserController import user_api
 # from application.api.backtest.BacktestController import backtest_api
 # from application.api.auth.AuthController import auth_api
 from application.extensions import db, migrate, jwt, mail, cors
-from application.config import DevelopmentConfig, ProductionConfig
+from application.config import ProductionConfig
 from werkzeug.exceptions import default_exceptions
 
 
