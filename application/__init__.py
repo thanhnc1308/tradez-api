@@ -4,10 +4,10 @@ from application.api.users.UserController import user_api
 from application.api.stock.StockController import stock_api
 from application.api.stock.StockPriceController import stock_price_api
 from application.api.stock.StockScreenerController import stock_screener_api
-# from application.api.journal.JournalController import journal_api
-# from application.api.notifications.NotificationController import notification_api
-# from application.api.backtest.BacktestController import backtest_api
-# from application.api.auth.AuthController import auth_api
+from application.api.journal.JournalController import journal_api
+from application.api.notifications.NotificationController import notification_api
+from application.api.backtest.BacktestController import backtest_api
+from application.api.auth.AuthController import auth_api
 from application.extensions import db, migrate, jwt, mail, cors
 from application.config import ProductionConfig
 from werkzeug.exceptions import default_exceptions
@@ -66,10 +66,10 @@ def configure_blueprint(app):
     app.register_blueprint(stock_api)
     app.register_blueprint(stock_price_api)
     app.register_blueprint(stock_screener_api)
-    # app.register_blueprint(journal_api)
-    # app.register_blueprint(auth_api)
-    # app.register_blueprint(notification_api)
-    # app.register_blueprint(backtest_api)
+    app.register_blueprint(journal_api)
+    app.register_blueprint(auth_api)
+    app.register_blueprint(notification_api)
+    app.register_blueprint(backtest_api)
 
 
 def configure_mail_extension(app):
