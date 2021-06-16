@@ -51,8 +51,10 @@ def login():
             }, 'SECRET_KEY')  # app.config['SECRET_KEY']
             print('token', token)
             if hasattr(token, 'decode'):
+                print('token jwt')
                 res.on_success(data=token.decode('UTF-8'))
             else:
+                print('token string')
                 res.on_success(data=token)
         else:
             res.on_error(code=401, user_message='Password is not correct')
