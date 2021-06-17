@@ -15,8 +15,10 @@ def verify_token(f):
         if token is None:
             return {"message": "Token is missing"}, 401
         try:
-            data = jwt.decode(token, 'SECRET_KEY')  # app.config['SECRET_KEY']
+            # data = jwt.decode(token, 'SECRET_KEY')  # app.config['SECRET_KEY']
+            data = jwt.decode(token, options={"verify_signature": False})  # app.config['SECRET_KEY']
             username = data.get('user')
+            print('username: ', username)
             current_user = User.get_by_username(username)
             return f(user_schema.dump(current_user), *args, **kwargs)
         except Exception as e:
