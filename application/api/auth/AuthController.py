@@ -77,3 +77,22 @@ def login():
     except Exception as ex:
         res.on_exception(ex)
     return res.build()
+
+@auth_api.route('/user_info', methods=['POST'])
+def user_info():
+    res = ServiceResponse()
+    try:
+        auth = json.loads(request.data)
+        token = auth.get('token')
+
+        try:
+            data = jwt.decode(token, options={"verify_signature": False})  # app.config['SECRET_KEY']
+            username = data.get('user')
+            current_user = User.get_by_username(username)
+            print('current_user', user_schema.dump(current_user))
+            res.on_success(data=user_schema.dump(current_user))
+        except Exception as e:
+            res.on_success(data={})
+    except Exception as ex:
+        res.on_exception(ex)
+    return res.build()
