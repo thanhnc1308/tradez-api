@@ -13,13 +13,27 @@ auth_api = Blueprint('auth_api', __name__, url_prefix='/api/auth')
 def register():
     res = ServiceResponse()
     try:
-        data = request.form
-        user_schema.validate(data)
-        # if username is None or password is None:
-        #     abort(400)  # missing arguments
-        # if User.query.filter_by(username=username).first() is not None:
-        #     abort(400)  # existing user
-        new_user = User.create(**data)
+        auth = json.loads(request.data)
+        email = auth.get('email')
+        username = auth.get('username')
+        password = auth.get('password')
+        if not auth or username is None or password is None:
+            res.on_error(code=99, user_message='Please enter username and password')
+            return res.build()
+        user = None
+        # check if email exists
+        user = User.get_by_email(email)
+        if user != None:
+            res.on_error(code=99, user_message='Email existed')
+            return res.build()
+
+        # check if user exists
+        user = User.get_by_username(username)
+        if user != None:
+            res.on_error(code=99, user_message='Username existed')
+            return res.build()
+
+        new_user = User.create(**auth)
         if new_user:
             res.on_success(data=user_schema.dump(new_user))
         else:
@@ -36,12 +50,14 @@ def login():
         username = auth.get('username')
         password = auth.get('password')
         if not auth or username is None or password is None:
-            res.on_error(code=401, user_message='Please enter username and password')
+            res.on_error(code=99, user_message='Please enter username and password')
+            return res.build()
 
         # check if user exists
         user = User.get_by_username(username)
         if not user:
-            res.on_error(code=401, user_message='Username does not exist')
+            res.on_error(code=99, user_message='Username does not exist')
+            return res.build()
 
         # check password here
         if user.check_password(password):
@@ -57,7 +73,7 @@ def login():
                 print('token string')
                 res.on_success(data=token)
         else:
-            res.on_error(code=401, user_message='Password is not correct')
+            res.on_error(code=99, user_message='Password is not correct')
     except Exception as ex:
         res.on_exception(ex)
     return res.build()
