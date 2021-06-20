@@ -27,6 +27,7 @@ class StockListController(BaseListController):
     schema = stock_schema
     list_schema = stock_list_schema
     paging_schema = stock_paging_schema
+    has_authent = False
 
 
 api.add_resource(StockListController, '', endpoint='journals')

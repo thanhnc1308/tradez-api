@@ -57,6 +57,7 @@ class BaseListController(Resource):
     schema = None
     list_schema = None
     paging_schema = None
+    has_authent = True
 
     @verify_token
     def get(current_user, self):
@@ -77,7 +78,11 @@ class BaseListController(Resource):
                 #             filters.append(Member.__dict__[conditions[0]].ilike('%' + term + '%'))
                 # members = Member.query.filter(or_(*filters))
                 # db.users.filter(or_(db.users.name == 'Ryan', db.users.country == 'England'))
-                data = self.model.get_all(order_by=order_by).filter_by(user_id=current_user.get('id'))
+                data = []
+                if self.has_authent:
+                    data = self.model.get_all(order_by=order_by, user_id=current_user.get('id'))
+                else:
+                    data = self.model.get_all(order_by=order_by)
                 res.on_success(data=self.list_schema.dump(data))
         except Exception as e:
             res.on_exception(e)
