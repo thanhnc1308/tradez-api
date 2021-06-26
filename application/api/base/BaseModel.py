@@ -114,6 +114,8 @@ class BaseModel(CRUDMixin, db.Model):
     created_at = db.Column(db.DateTime, default=db.func.now())
     updated_at = db.Column(db.DateTime, default=db.func.now(), onupdate=db.func.now())
 
+    __table_args__ = {"schema":"public"}
+
     # __mapper_args__ = {
     #     "order_by": created_at
     # }

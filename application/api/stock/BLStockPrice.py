@@ -68,10 +68,9 @@ def get_symbols(symbols_str):
         sql_result = Stock.execute(sql)
         list_symbol = stock_list_schema.dump(sql_result)
         for item in list_symbol:
-            if item['symbol'] >= 'DC1':
-                result.append(item['symbol'])
-        print(len(result))
-        # print(result)
+            # if item['symbol'] >= 'DC1':
+            result.append(item['symbol'])
+        print('number of symbol for calculating: ', len(result))
     elif str(symbols_str).find('limit') > -1 and str(symbols_str).find('offset') > -1:
         args = symbols_str.split('-')
         limit_str = args[0]
