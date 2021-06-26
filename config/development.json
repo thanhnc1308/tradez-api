@@ -30,5 +30,9 @@
   {
     "name": "APPLICATION_DB",
     "value": "trading_system"
+  },
+  {
+    "name": "DATABASE_URL_POSTGRESQL",
+    "value": "postgresql+psycopg2://ogwsmojrynkhmc:5e3f5b888472b53141e050ea3e366765203feab53b43a13248b65f718e477e63@ec2-52-86-2-228.compute-1.amazonaws.com:5432/dg0q8kfl0thi4"
   }
 ]
