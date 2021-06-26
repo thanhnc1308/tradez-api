@@ -2,6 +2,9 @@
 - APPLICATION_CONFIG is strictly related to my project and is used only to load a JSON configuration file with the name specified in the variable itself.
 - FLASK_CONFIG is used to select the Python object that contains the configuration for the Flask application (see application/app.py and application/config.py). The value of the variable is converted into the name of a class.
 - FLASK_ENV is a variable used by Flask itself, and its values are dictated by it. See the configuration documentation mentioned in the resources of the previous section.
+- Config database: SQLALCHEMY_DATABASE_URI = (
+        f"postgresql+psycopg2://ogwsmojrynkhmc:5e3f5b888472b53141e050ea3e366765203feab53b43a13248b65f718e477e63@ec2-52-86-2-228.compute-1.amazonaws.com:5432/dg0q8kfl0thi4"
+    )
 
 # Run the app
 1. Give permission to manage.py
