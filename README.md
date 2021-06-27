@@ -6,6 +6,11 @@
         f"postgresql+psycopg2://ogwsmojrynkhmc:5e3f5b888472b53141e050ea3e366765203feab53b43a13248b65f718e477e63@ec2-52-86-2-228.compute-1.amazonaws.com:5432/dg0q8kfl0thi4"
     )
 
+- pg_dump -U admin -h localhost -p 5432 --clean -F p trading_system > trading_system1.sql // The default output format of pg_dump is actually plaintext sql script
+- psql -U ogwsmojrynkhmc -h ec2-52-86-2-228.compute-1.amazonaws.com -p 5432 -d dg0q8kfl0thi4 < trading_system1.sql
+
+ogwsmojrynkhmc:5e3f5b888472b53141e050ea3e366765203feab53b43a13248b65f718e477e63@ec2-52-86-2-228.compute-1.amazonaws.com:5432/dg0q8kfl0thi4"
+
 # Run the app
 1. Give permission to manage.py
 - chmod 775 manage.py
