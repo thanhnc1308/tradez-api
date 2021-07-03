@@ -3,6 +3,9 @@ from application.api.notifications.NotificationSchema import condition_schema, n
 from application.api.stock.BLStockScreener import check_condition_notification
 from application.message_notification import gmail, telegram_helper
 import json
+from application.api.stock.crawler import crawl_all_list, crawl_all_list_at_a_date
+from application.api.stock.BLStockPrice import calculate_indicators_by_list_symbol_in_a_date
+from datetime import datetime
 
 dict_basic_operation = {
     'less' : ' < ',
@@ -13,6 +16,13 @@ dict_basic_operation = {
     'nequal' : ' <> ',
     'equals' : " = ",
 }
+
+def crawl_and_send_notification():
+    date = datetime.today().strftime('%Y-%m-%d')
+    print(date)
+    # crawl_all_list_at_a_date(date)
+    # calculate_indicators_by_list_symbol_in_a_date('all', 'all', datetime.now())
+    # send_notification()
 
 def send_notification():
     all_notifications = notifications_schema.dump(Notification.get_all())

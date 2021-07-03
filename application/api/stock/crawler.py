@@ -20,8 +20,12 @@ def get_stock_index(symbol):
     # else:
     #     print('not ok')
 
-
 def get_all_stock_indices():
+    stock_sql = Stock.get_all()
+    result = StockSchema.dump(stock_sql)
+    return result
+
+def get_all_stock_indices_online():
     url = 'https://svr4.fireant.vn/api/Data/Finance/AllLastestFinancialInfo'
     response = requests.get(url=url)
     if response.ok:
@@ -72,6 +76,42 @@ def crawl_all_list():
     for item in list_stock:
         result.append(item)
         crawl(item)
+    return result
+
+def crawl_at_a_date(stock_index, date):
+    url = get_crawl_url(stock_index=stock_index, start_date=date, end_date=date)
+    print("===========================crawl: %s at %s via %s".format(stock_index, date, url))
+    return
+    response = requests.get(url=url)
+    if response.ok:
+        print('ok')
+        result = json.loads(response.content)
+        sql = f"delete from public.stock where symbol = '{stock_index}';"
+        StockPrice.execute(sql)
+        for item in result:
+            new_item = {
+                'symbol': item.get('Symbol', None),
+                'stock_date': item.get('Date', None),
+                'currency_unit': 'VND',
+                'open_price': item.get('PriceOpen', None),
+                'high_price': item.get('PriceHigh', None),
+                'low_price': item.get('PriceLow', None),
+                'close_price': item.get('PriceClose', None),
+                'volume': item.get('Volume', None),
+                'market_cap': item.get('MarketCap', None)
+            }
+            StockPrice.create(**new_item)
+    else:
+        print('not ok')
+
+def crawl_all_list_at_a_date(date):
+    # list_stock = Stock.get_all()
+    list_stock = get_all_stock_indices()
+    result = []
+    list_stock.sort()
+    for item in list_stock:
+        result.append(item)
+        crawl_at_a_date(item, date)
     return result
 
 ####### endregion Crawler
