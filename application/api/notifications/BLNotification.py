@@ -21,8 +21,7 @@ dict_basic_operation = {
 }
 
 def crawl_and_send_notification():
-    print('==========================test scheduling==========================')
-    return
+    print('crawl_and_send_notification =========== at ', datetime.today().strftime('%Y-%m-%d'))
     try:
         date = datetime.today().strftime('%Y-%m-%d')
         # date = '2021-01-29'
