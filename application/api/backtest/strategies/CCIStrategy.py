@@ -9,21 +9,18 @@ class CCIStrategy(BaseStrategy):
     )
 
     def __init__(self):
-        self.aroon = bt.indicators.AroonUpDownOscillator(self.data, period=self.params.period)
-        self.prev_aroon_osc = 0
+        self.cci = bt.indicators.CCI(self.data, period=self.params.period)
         super(CCIStrategy, self).__init__()
 
     def next(self):
-        print('self.aroon.lines.aroonup', self.aroon.lines.aroonup)
-        print('self.aroon.lines.aroondown', self.aroon.lines.aroondown)
-        print('self.aroon.lines.aroonosc', self.aroon.lines.aroonosc)
+        # print('self.cci', self.cci[0])
         super(CCIStrategy, self).next()
 
     def should_buy(self):
-        return False
+        return self.cci > 100
 
     def should_sell(self):
-        return False
+        return self.cci < -100
 
 
 def get_CCIStrategy_params(config):
