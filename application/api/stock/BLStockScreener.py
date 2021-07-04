@@ -2,6 +2,8 @@ from application.api.stock.Stock import Stock
 from application.utility.number_utils import is_digit
 from application.utility.converter import alchemy_encoder, parse_sql_result
 from application.core.constants import DEFAULT_SCHEMA
+import json
+from datetime import datetime
 
 dict_basic_operation = {
     'less' : ' {column} < {value} ',
@@ -74,15 +76,21 @@ def build_sql_columns(columns):
 def check_condition_notification(filter_list):
     res = False
     columns = []
+    filters = []
+    filter_list = json.loads(filter_list)
+    # print(filter_list)
     for filter_item in filter_list:
-        columns.append(filter_item['type'])
+        if filter_item.get('type') == 'stock_date':
+            filter_item['value'] = datetime.today().strftime('%Y-%m-%d')
+        columns.append(filter_item.get('type'))
     params = {
         'filters': filter_list,
-        'columns': columns,
+        'columns': filters,
         'limit': -1,
         'offset': -1,
     }
     data = screen_stock(params)
     if len(data) > 0:
         res = True
+    # print(res)
     return res

@@ -23,15 +23,15 @@ dict_basic_operation = {
 def crawl_and_send_notification():
     try:
         date = datetime.today().strftime('%Y-%m-%d')
-        date = '2021-01-28'
+        # date = '2021-01-29'
         # print(date)
         print("========================crawl_data=============================")
         crawl_all_list_at_a_date(date)
 
-        list_symbols = get_symbols('VIC')
+        list_symbols = get_symbols('all')
         list_indicators = get_indicators('all')
         calculate_indicators_by_list_symbol_in_a_date(list_indicators, list_symbols, datetime.strptime(date, '%Y-%m-%d'))
-        # send_notification()
+        send_notification()
     except Exception as e:
         logger.exception(e)
 
@@ -43,14 +43,15 @@ def send_notification():
             if check_condition_notification(condition_key):
                 if notification['send_gmail'] == True:
                     send_gmail(notification)
-                if notification['send_telegram'] == True:
-                    send_gmail(notification)
+                # if notification['send_telegram'] == True:
+                #     send_gmail(notification)
+        break
 
 def send_gmail(notification):
     print('send_gmail to: ', notification['gmail'])
-    if notification['gmail'] != None:
-        gmail_message = build_notification_message(notification)
-        gmail.send_email([notification['gmail']], gmail_message)
+    # if notification['gmail'] != None:
+    #     gmail_message = build_notification_message(notification)
+    #     gmail.send_email([notification['gmail']], gmail_message)
 
 def build_notification_message(notification):
     arr_res = []
