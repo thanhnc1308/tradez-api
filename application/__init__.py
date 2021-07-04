@@ -20,7 +20,7 @@ import os
 from multiprocessing import Process
 
 t = None
-os.environ['CRAWL_DATA_SCHEDUALING_TIME'] = '22:40'
+# os.environ['CRAWL_DATA_SCHEDUALING_TIME'] = '10:25'
 
 def run_schedule():
     """ infinite loop for schedule """
@@ -59,8 +59,8 @@ def create_app(config_name):
         global t
         if status == 'on' and not t:
             print("CRAWL_DATA_SCHEDUALING_TIME: ", os.environ.get("CRAWL_DATA_SCHEDUALING_TIME"))
-            crawl_and_send_notification()
-            # schedule.every().day.at(os.environ.get("CRAWL_DATA_SCHEDUALING_TIME")).do(crawl_and_send_notification)
+            # crawl_and_send_notification()
+            schedule.every().day.at(os.environ.get("CRAWL_DATA_SCHEDUALING_TIME")).do(crawl_and_send_notification)
             # schedule.every(nsec).seconds.do(run_job, str(uuid.uuid4()))
             t = Process(target=run_schedule)
             t.start()
