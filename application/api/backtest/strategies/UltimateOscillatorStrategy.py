@@ -22,7 +22,7 @@ class UltimateOscillatorStrategy(BaseStrategy):
         super(UltimateOscillatorStrategy, self).__init__()
 
     def next(self):
-        self.log(f'self.ultimate_oscillator: {self.ultimate_oscillator[0]}')
+        # self.log(f'self.ultimate_oscillator: {self.ultimate_oscillator[0]}')
         super(UltimateOscillatorStrategy, self).next()
 
     def should_buy(self):
