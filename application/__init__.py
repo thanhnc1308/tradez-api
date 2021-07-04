@@ -6,12 +6,27 @@ from application.api.stock.StockPriceController import stock_price_api
 from application.api.stock.StockScreenerController import stock_screener_api
 from application.api.journal.JournalController import journal_api
 from application.api.notifications.NotificationController import notification_api
+from application.api.notifications.BLNotification import crawl_and_send_notification
 from application.api.backtest.BacktestController import backtest_api
 from application.api.auth.AuthController import auth_api
 from application.extensions import db, migrate, jwt, mail, cors
 from application.config import ProductionConfig
 from werkzeug.exceptions import default_exceptions
+import schedule
+import time
+import datetime
+import uuid
+import os
+from multiprocessing import Process
 
+t = None
+os.environ['CRAWL_DATA_SCHEDUALING_TIME'] = '22:40'
+
+def run_schedule():
+    """ infinite loop for schedule """
+    while 1:
+        schedule.run_pending()
+        time.sleep(1)
 
 def create_app(config_name):
 
@@ -37,6 +52,32 @@ def create_app(config_name):
     @app.route("/test")
     def test():
         return 'test ok'
+
+    # http://localhost:5000/timer/on
+    @app.route('/timer/<string:status>')
+    def timer(status):
+        global t
+        if status == 'on' and not t:
+            print("CRAWL_DATA_SCHEDUALING_TIME: ", os.environ.get("CRAWL_DATA_SCHEDUALING_TIME"))
+            crawl_and_send_notification()
+            # schedule.every().day.at(os.environ.get("CRAWL_DATA_SCHEDUALING_TIME")).do(crawl_and_send_notification)
+            # schedule.every(nsec).seconds.do(run_job, str(uuid.uuid4()))
+            t = Process(target=run_schedule)
+            t.start()
+            return "timer on"
+        elif status == 'off' and t:
+            if t:
+                t.terminate()
+                t = None
+                schedule.clear()
+            return "timer off\n"
+        return "timer status not changed\n"
+
+    # http://localhost:5000/crawl
+    @app.route('/crawl')
+    def crawl():
+        crawl_and_send_notification()
+        return 'ok'
 
     return app
 
