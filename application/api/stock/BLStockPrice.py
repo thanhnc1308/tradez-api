@@ -104,25 +104,27 @@ def get_value(indicator_value):
 
 def calculate_indicator_by_symbol(indicators, symbol):
     data = StockPrice.query.filter_by(symbol=symbol).order_by(asc('stock_date'))
+    data = StockPrice.query.filter(StockPrice.symbol==symbol, StockPrice.stock_date >= '2020-01-30', StockPrice.stock_date <= '2021-07-04').order_by(asc('stock_date'))
     df = get_df_stock_price_data(data)
     for indicator in indicators:
-        print('===================================indicator', indicator)
+        print('1===================================indicator', indicator)
         df[indicator] = calculate_by_indicator(indicator, df)
     # print('===================================', df.tail())
     for row in data:
         data_updated = stock_price_schema.dump(row)
-        for indicator in indicators:
-            indicator_row = df[df['stock_date'] == data_updated['stock_date']]
-            indicator_value = indicator_row[indicator].to_list()[0]
-            # print('===================================update indicator', indicator)
-            # print('indicator_value: ', indicator_value)
-            data_updated[indicator] = get_value(indicator_value)
-        # if data_updated['single_candle'] != None:
-        # if data_updated['double_candles'] != None:
-        # if data_updated['triple_candles'] != None:
-        # print(data_up dated)
-        row.update(**data_updated)
-        # break
+        if data_updated.get('stock_date') >= '2021-01-30' and data_updated.get('stock_date') <= '2021-07-04':
+            for indicator in indicators:
+                indicator_row = df[df['stock_date'] == data_updated['stock_date']]
+                indicator_value = indicator_row[indicator].to_list()[0]
+                # print('===================================update indicator', indicator)
+                # print('indicator_value: ', indicator_value)
+                data_updated[indicator] = get_value(indicator_value)
+            # if data_updated['single_candle'] != None:
+            # if data_updated['double_candles'] != None:
+            # if data_updated['triple_candles'] != None:
+            # print(data_up dated)
+            row.update(**data_updated)
+            # break
 
 def calculate_by_indicator(indicator, df):
     if indicator == 'rsi14':

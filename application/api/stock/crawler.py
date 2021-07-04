@@ -50,13 +50,13 @@ def get_all_stock_indices_online():
 def get_crawl_url(stock_index, start_date, end_date):
     return f'https://svr1.fireant.vn/api/Data/Companies/HistoricalQuotes?symbol={stock_index}&startDate={start_date}&endDate={end_date}';
 
-def crawl(stock_index):
-    url = get_crawl_url(stock_index=stock_index, start_date='2014-07-10', end_date='2021-1-29')
+def crawl(stock_index, start_date='2021-02-05', end_date='2021-07-04'):
+    url = get_crawl_url(stock_index=stock_index, start_date=start_date, end_date=end_date)
     response = requests.get(url=url)
     if response.ok:
         print('ok')
         result = json.loads(response.content)
-        sql = f"delete from public.stock where symbol = '{stock_index}';"
+        sql = f"delete from public.stock_price where symbol = '{stock_index}' and stock_date between '{start_date}' and '{end_date}';"
         StockPrice.execute(sql)
         for item in result:
             new_item = {
