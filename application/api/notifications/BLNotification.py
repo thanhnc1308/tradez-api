@@ -4,8 +4,11 @@ from application.api.stock.BLStockScreener import check_condition_notification
 from application.message_notification import gmail, telegram_helper
 import json
 from application.api.stock.crawler import crawl_all_list, crawl_all_list_at_a_date
-from application.api.stock.BLStockPrice import calculate_indicators_by_list_symbol_in_a_date
+from application.api.stock.BLStockPrice import get_indicators, get_symbols, calculate_indicators_by_list_symbol_in_a_date
 from datetime import datetime
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 dict_basic_operation = {
     'less' : ' < ',
@@ -18,11 +21,19 @@ dict_basic_operation = {
 }
 
 def crawl_and_send_notification():
-    date = datetime.today().strftime('%Y-%m-%d')
-    print(date)
-    # crawl_all_list_at_a_date(date)
-    # calculate_indicators_by_list_symbol_in_a_date('all', 'all', datetime.now())
-    # send_notification()
+    try:
+        date = datetime.today().strftime('%Y-%m-%d')
+        date = '2021-01-28'
+        # print(date)
+        print("========================crawl_data=============================")
+        crawl_all_list_at_a_date(date)
+
+        list_symbols = get_symbols('VIC')
+        list_indicators = get_indicators('all')
+        calculate_indicators_by_list_symbol_in_a_date(list_indicators, list_symbols, datetime.strptime(date, '%Y-%m-%d'))
+        # send_notification()
+    except Exception as e:
+        logger.exception(e)
 
 def send_notification():
     all_notifications = notifications_schema.dump(Notification.get_all())

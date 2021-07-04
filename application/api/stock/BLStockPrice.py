@@ -92,14 +92,7 @@ def calculate_indicators_by_list_symbol(list_indicators, list_symbols):
         print('===================================symbol: ', symbol)
         calculate_indicator_by_symbol(list_indicators, symbol)
 
-def calculate_indicator_by_symbol(indicators, symbol):
-    data = StockPrice.query.filter_by(symbol=symbol).order_by(asc('stock_date'))
-    df = get_df_stock_price_data(data)
-    for indicator in indicators:
-        print('===================================indicator', indicator)
-        df[indicator] = calculate_by_indicator(indicator, df)
-    # print('===================================', df.tail())
-    def get_value(value):
+def get_value(indicator_value):
         if isinstance(indicator_value, str):
             return str(indicator_value)
         elif indicator_value == None:
@@ -108,6 +101,14 @@ def calculate_indicator_by_symbol(indicators, symbol):
             return None
         else:
             return round(indicator_value, 2)
+
+def calculate_indicator_by_symbol(indicators, symbol):
+    data = StockPrice.query.filter_by(symbol=symbol).order_by(asc('stock_date'))
+    df = get_df_stock_price_data(data)
+    for indicator in indicators:
+        print('===================================indicator', indicator)
+        df[indicator] = calculate_by_indicator(indicator, df)
+    # print('===================================', df.tail())
     for row in data:
         data_updated = stock_price_schema.dump(row)
         for indicator in indicators:
@@ -213,23 +214,22 @@ def calculate_indicators_by_list_symbol_in_a_date(list_indicators, list_symbols,
         calculate_indicator_by_symbol_and_date(list_indicators, symbol, date)
 
 def calculate_indicator_by_symbol_and_date(indicators, symbol, date):
-    from_date = subtract_days(date, 210)
+    from_date = subtract_days(date, 300)
     data = StockPrice.query.filter(StockPrice.symbol==symbol, StockPrice.stock_date >= from_date).order_by(asc('stock_date'))
     df = get_df_stock_price_data(data)
     for indicator in indicators:
         print('===================================indicator', indicator)
         df[indicator] = calculate_by_indicator(indicator, df)
-    print('===================================', df.tail())
-    count = 0
+    # print('===================================', df.tail())
     for row in data:
         data_updated = stock_price_schema.dump(row)
-        for indicator in indicators:
-            indicator_row = df[df['stock_date'] == data_updated['stock_date']]
-            indicator_value = indicator_row[indicator].to_list()[0]
-            print('===================================indicator', indicator)
-            data_updated[indicator] = round(indicator_value, 2) if not (math.isnan(indicator_value) or indicator_value == None or math.isinf(indicator_value)) else None
-        # count = count + 1
-        # if count == 200:
-        #     print(data_updated)
-        # row.update(**data_updated)
-            # break
+        if data_updated.get('stock_date') == date.strftime('%Y-%m-%d'):
+            for indicator in indicators:
+                indicator_row = df[df['stock_date'] == date.strftime('%Y-%m-%d')]
+                indicator_value = indicator_row[indicator].to_list()[0]
+                # print('===================================update indicator', indicator)
+                # print('indicator_value: ', indicator_value)
+                data_updated[indicator] = get_value(indicator_value)
+            # print(data_updated)
+            row.update(**data_updated)
+            break

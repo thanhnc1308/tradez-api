@@ -1,8 +1,11 @@
 import requests
 import json
-from application.api.stock.StockSchema import StockSchema
+from application.api.stock.StockSchema import stock_list_schema
 from application.api.stock.StockPrice import StockPrice
 from application.api.stock.Stock import Stock
+import logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 ####### region Crawler
 def get_stock_index(symbol):
@@ -22,7 +25,10 @@ def get_stock_index(symbol):
 
 def get_all_stock_indices():
     stock_sql = Stock.get_all()
-    result = StockSchema.dump(stock_sql)
+    stock = stock_list_schema.dump(stock_sql)
+    result = []
+    for item in stock:
+        result.append(item.get('symbol'))
     return result
 
 def get_all_stock_indices_online():
@@ -80,13 +86,13 @@ def crawl_all_list():
 
 def crawl_at_a_date(stock_index, date):
     url = get_crawl_url(stock_index=stock_index, start_date=date, end_date=date)
-    print("===========================crawl: %s at %s via %s".format(stock_index, date, url))
-    return
+    print(f"==crawl: {stock_index} at {date} via {url}")
     response = requests.get(url=url)
     if response.ok:
-        print('ok')
         result = json.loads(response.content)
-        sql = f"delete from public.stock where symbol = '{stock_index}';"
+        sql = f"delete from public.stock_price where symbol = '{stock_index}' and stock_date = '{date}';"
+        # print(sql)
+        # print(result)
         StockPrice.execute(sql)
         for item in result:
             new_item = {
@@ -106,13 +112,17 @@ def crawl_at_a_date(stock_index, date):
 
 def crawl_all_list_at_a_date(date):
     # list_stock = Stock.get_all()
-    list_stock = get_all_stock_indices()
-    result = []
-    list_stock.sort()
-    for item in list_stock:
-        result.append(item)
-        crawl_at_a_date(item, date)
-    return result
+    print('crawl_all_list_at_a_date')
+    try:
+        list_stock = get_all_stock_indices()
+        result = []
+        list_stock.sort()
+        for item in list_stock:
+            result.append(item)
+            crawl_at_a_date(item, date)
+        return result
+    except Exception as e:
+        logger.exception(e)
 
 ####### endregion Crawler
 
