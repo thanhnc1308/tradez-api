@@ -10,20 +10,25 @@ class AroonUpAndDownStrategy(BaseStrategy):
 
     def __init__(self):
         self.aroon = bt.indicators.AroonUpDownOscillator(self.data, period=self.params.period)
-        self.prev_aroon_osc = 0
+        self.is_aroon_up_above_aroon_down = True
         super(AroonUpAndDownStrategy, self).__init__()
 
     def next(self):
-        print('self.aroon.lines.aroonup', self.aroon.lines.aroonup)
-        print('self.aroon.lines.aroondown', self.aroon.lines.aroondown)
-        print('self.aroon.lines.aroonosc', self.aroon.lines.aroonosc)
+        # print('date: ', self.datas[0].datetime.date(0))
+        # print('self.aroon.lines.aroonup', self.aroon.lines.aroonup[0])
+        # print('self.aroon.lines.aroondown', self.aroon.lines.aroondown[0])
+        # print('self.aroon.lines.aroonosc', self.aroon.lines.aroonosc[0])
         super(AroonUpAndDownStrategy, self).next()
-
-    def should_buy(self):
-        return False
+        if self.aroon.lines.aroonup[0] > self.aroon.lines.aroondown[0]:
+            self.is_aroon_up_above_aroon_down = True
+        else:
+            self.is_aroon_up_above_aroon_down = False
 
     def should_sell(self):
-        return False
+        return not self.is_aroon_up_above_aroon_down and self.aroon.lines.aroonup[0] > self.aroon.lines.aroondown[0]
+
+    def should_buy(self):
+        return self.is_aroon_up_above_aroon_down and self.aroon.lines.aroonup[0] < self.aroon.lines.aroondown[0]
 
 
 def get_AroonUpAndDownStrategy_params(config):

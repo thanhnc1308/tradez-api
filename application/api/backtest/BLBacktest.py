@@ -94,6 +94,9 @@ def add_analyzers(cerebro):
 def prepare_feed_data(symbol, config):
     # symbol = config.get('symbol')
     from_date = config.get('from_date') or '2010-01-01'
+    # from_date = datetime.datetime.strptime(from_date, '%Y/%m/%d')
+    # from_date = subtract_days(from_date, 300).strftime('%Y/%m/%d')
+    # print(from_date)
     to_date = config.get('to_date') or '2099-12-31'
     sql_data = StockPrice.query.order_by(
         asc('stock_date')
@@ -105,7 +108,6 @@ def prepare_feed_data(symbol, config):
         )
     )
     sql_data = stock_price_list_schema.dump(sql_data)
-    print(sql_data[0])
     def map_row_to_candlestick(row):
         return {
             'Date':parse_date(row['stock_date'], '%Y-%m-%d'),
@@ -118,6 +120,7 @@ def prepare_feed_data(symbol, config):
             'Volume': row['volume']
         }
     sql_data = list(map(map_row_to_candlestick, sql_data))
+    print('len(sql_data): ', len(sql_data))
     df = pd.DataFrame(sql_data)
     if len(sql_data) > 0:
         df.set_index('Date', inplace=True)
