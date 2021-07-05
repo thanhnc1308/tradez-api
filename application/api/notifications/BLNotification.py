@@ -46,13 +46,12 @@ def send_notification():
                     send_gmail(notification)
                 # if notification['send_telegram'] == True:
                 #     send_gmail(notification)
-        break
 
 def send_gmail(notification):
     print('send_gmail to: ', notification['gmail'])
-    # if notification['gmail'] != None:
-    #     gmail_message = build_notification_message(notification)
-    #     gmail.send_email([notification['gmail']], gmail_message)
+    if notification['gmail'] != None:
+        gmail_message = build_notification_message(notification)
+        gmail.send_email([notification['gmail']], gmail_message)
 
 def build_notification_message(notification):
     arr_res = []
